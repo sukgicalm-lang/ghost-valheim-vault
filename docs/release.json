@@ -1,15 +1,15 @@
 {
-    "version":  "1.0.5",
+    "version":  "1.0.6",
     "date":  "2026-10-23",
-    "file":  "downloads/Ghost-GhostValheimSuite-1.0.5.zip",
-    "bytes":  59194139,
-    "sha256":  "29a5e7bf6db57bed09c4aaff05d5eefb9641f48e24e7188bd428c3ad9cef1fd0",
+    "file":  "downloads/Ghost-GhostValheimSuite-1.0.6.zip",
+    "bytes":  59730154,
+    "sha256":  "af7307cca1c7f96c7de1ed611631628bd61e3cb1cf9d54b8a50896df65b55c21",
     "appIntegration":  true,
     "dependencies":  [
                          "denikson-BepInExPack_Valheim-5.4.2351",
                          "ValheimModding-JsonDotNET-13.0.4",
                          "shudnal-ConfigurationManager-1.1.25"
                      ],
-    "notes":  "광전사·해골기사 외형 추가 / 둠 포함 Valheim·Original 체형 선택 / 원작 얼굴·헤어 미포함 / 게임 내 확인용",
-    "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.5/Ghost-GhostValheimSuite-1.0.5.zip"
+    "notes":  "외형 등록 초기화 오류 수정 / 둠 원작 얼굴·헤어 머리 외형 / 광전사·해골기사 상의 망토·흔들림 / 홈페이지 회전 6초",
+    "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.6/Ghost-GhostValheimSuite-1.0.6.zip"
 }
