@@ -6,3 +6,20 @@
 @media(max-width:760px){.ghost-companion{left:86%;top:78%;width:88px}.companion-caption{display:none}.companion-aura{filter:blur(7px)}.motion-switch{left:21px;right:auto;bottom:125px;padding:3px 5px;gap:0}.motion-switch>span{display:none}.motion-switch button{font-size:12px;padding:3px 10px}.hero[data-ghost-motion=wander] .ghost-companion{animation-name:ghost-wander-mobile}.hero-fireflies i{width:1px;height:1px;opacity:.3}.ghost-body{animation-name:ghost-bob-mobile}}
 @keyframes ghost-wander-mobile{0%,100%{left:86%;top:78%;transform:translate(-50%,-50%) rotate(-4deg)}30%{left:79%;top:76%;transform:translate(-50%,-50%) rotate(5deg)}65%{left:85%;top:73%;transform:translate(-50%,-50%) rotate(-3deg)}}@keyframes ghost-bob-mobile{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-7px) rotate(3deg)}}
 @media(prefers-reduced-motion:reduce){.ghost-companion,.ghost-companion *,.hero-fireflies *{animation:none!important}.hero-fireflies{display:none}}
+
+/* ghost-origin-fix-v1: keep the existing wander route; share its first pose. */
+.hero[data-ghost-motion] .ghost-companion {
+  left: 85%;
+  top: 31%;
+  transform: translate(-50%, -50%) rotate(-4deg);
+}
+.hero[data-ghost-motion="still"] .ghost-body {
+  transform: translateY(0) rotate(-3deg);
+}
+@media (max-width: 760px) {
+  .hero[data-ghost-motion] .ghost-companion {
+    left: 86%;
+    top: 78%;
+  }
+}
+/* end-ghost-origin-fix-v1 */
