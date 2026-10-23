@@ -1,5 +1,20 @@
 [
     {
+        "version":  "1.0.8",
+        "date":  "2026-10-23",
+        "file":  "downloads/Ghost-GhostValheimSuite-1.0.8.zip",
+        "bytes":  59800336,
+        "sha256":  "7a95cab4bdf835e9cdc41932cfaa2c0d52124e14e75e8168382206673e4ab216",
+        "appIntegration":  true,
+        "dependencies":  [
+                             "denikson-BepInExPack_Valheim-5.4.2351",
+                             "ValheimModding-JsonDotNET-13.0.4",
+                             "shudnal-ConfigurationManager-1.1.25"
+                         ],
+        "notes":  "Original 거대화 수정 / 월드·렌더러 단위 보정 / 원작 비율·모션·망토 유지",
+        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.8/Ghost-GhostValheimSuite-1.0.8.zip"
+    },
+    {
         "version":  "1.0.7",
         "date":  "2026-10-23",
         "file":  "downloads/Ghost-GhostValheimSuite-1.0.7.zip",
