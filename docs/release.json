@@ -1,15 +1,15 @@
 {
-    "version":  "1.0.8",
-    "date":  "2026-10-23",
-    "file":  "downloads/Ghost-GhostValheimSuite-1.0.8.zip",
-    "bytes":  59800336,
-    "sha256":  "7a95cab4bdf835e9cdc41932cfaa2c0d52124e14e75e8168382206673e4ab216",
+    "version":  "1.0.9",
+    "date":  "2026-10-24",
+    "file":  "downloads/Ghost-GhostValheimSuite-1.0.9.zip",
+    "bytes":  59802420,
+    "sha256":  "cb92cfeafe9f9dce963cf280871f1d4aae0918a92d71bf857d33de420e634803",
     "appIntegration":  true,
     "dependencies":  [
                          "denikson-BepInExPack_Valheim-5.4.2351",
                          "ValheimModding-JsonDotNET-13.0.4",
                          "shudnal-ConfigurationManager-1.1.25"
                      ],
-    "notes":  "Original 거대화 수정 / 월드·렌더러 단위 보정 / 원작 비율·모션·망토 유지",
-    "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.8/Ghost-GhostValheimSuite-1.0.8.zip"
+    "notes":  "망토 움직임 거리·충돌체 단위 수정 / 해골기사 몸 관통 대응 / 정상 크기·모션 유지",
+    "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.9/Ghost-GhostValheimSuite-1.0.9.zip"
 }
