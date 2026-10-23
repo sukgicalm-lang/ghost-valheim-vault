@@ -1,15 +1,15 @@
 {
-    "version":  "1.0.10",
+    "version":  "1.0.11",
     "date":  "2026-10-24",
-    "file":  "downloads/Ghost-GhostValheimSuite-1.0.10.zip",
-    "bytes":  59802777,
-    "sha256":  "40bbb3075ebe92b68e465a6acec4bdfb56159de1e562109222a73db8f00e3332",
+    "file":  "downloads/Ghost-GhostValheimSuite-1.0.11.zip",
+    "bytes":  59812312,
+    "sha256":  "4cb9b1eda9b9936cee59e364457b1a1623bc71da9389a8acb815c9fc3b8b4e67",
     "appIntegration":  true,
     "dependencies":  [
                          "denikson-BepInExPack_Valheim-5.4.2351",
                          "ValheimModding-JsonDotNET-13.0.4",
                          "shudnal-ConfigurationManager-1.1.25"
                      ],
-    "notes":  "해골기사 망토 뼈대 연결 복원 / 광전사 망토·크기·모션 유지",
-    "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.10/Ghost-GhostValheimSuite-1.0.10.zip"
+    "notes":  "활 시위 당기는 속도 2배 / 숙련도 효과 유지 / Wardrobe 0.5.4 보존",
+    "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.11/Ghost-GhostValheimSuite-1.0.11.zip"
 }
