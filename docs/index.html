@@ -6,8 +6,30 @@
 <title>GHOST VAULT — A Better Way to Valheim</title>
 <link rel="icon" href="assets/mark.svg" type="image/svg+xml"><link rel="preload" href="assets/hero.webp" as="image"><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="motion.css?v=origin-fix-1">
 <link rel="stylesheet" href="doom.css"><link rel="stylesheet" href="onboarding-v1.css">
-<script src="modules.js" defer></script><script src="app.js?v=1.0.3" defer></script><script src="motion.js" defer></script>
-<link rel="canonical" href="https://sukgicalm-lang.github.io/ghost-valheim-vault/"></head>
+<script src="modules.js?v=wardrobe-1" defer></script><script src="app.js?v=1.0.3" defer></script><script src="motion.js" defer></script>
+
+<style id="ghost-wardrobe-style">
+/* ghost-wardrobe-style-v1 */
+.wardrobe-showcase{position:absolute;z-index:2;left:68%;top:46%;width:460px;transform:translate(-50%,-50%);text-align:center;isolation:isolate;margin:0;pointer-events:none}
+.wardrobe-stage{position:relative;height:465px}.wardrobe-portrait{position:absolute;width:290px;left:50%;top:0;transform-origin:center 65%;will-change:transform;opacity:.75;filter:brightness(.75);z-index:1;transform:translate(-50%,-20px) translateX(-110px) scale(.81)}
+.wardrobe-portrait[data-slot=front]{transform:translate(-50%,30px) scale(1);z-index:3;opacity:1;filter:brightness(1)}
+.wardrobe-portrait[data-slot=right]{transform:translate(-50%,-20px) translateX(110px) scale(.81);z-index:2}
+.wardrobe-portrait img{display:block;width:100%;height:auto;aspect-ratio:2/3;object-fit:contain;filter:drop-shadow(0 10px 18px #02080780);mask-image:radial-gradient(ellipse 65% 72% at 50% 35%,#000 40%,transparent 76%);-webkit-mask-image:radial-gradient(ellipse 65% 72% at 50% 35%,#000 40%,transparent 76%)}
+.wardrobe-orbit{position:absolute;left:2%;right:2%;top:67%;height:95px;border:1px solid #c9ad7626;border-radius:50%;background:radial-gradient(ellipse,#b48d4a16,transparent 65%);transform:rotate(-4deg)}
+.wardrobe-showcase figcaption{position:relative;z-index:5;display:flex;flex-direction:column;align-items:center;gap:9px;margin-top:-14px;text-shadow:0 2px 12px #020609}
+.wardrobe-kicker{font-size:8px;color:#c5ab79;letter-spacing:3px}.wardrobe-showcase figcaption strong{font-family:Georgia,serif;font-weight:400;font-size:29px;letter-spacing:3px;color:#eadcc3}
+.wardrobe-showcase [data-wardrobe-subtitle]{font-size:9px;letter-spacing:2px;color:#b3b7aa}.wardrobe-showcase figcaption a{pointer-events:auto;font-size:10px;color:#d4bb8c;margin-top:2px}.wardrobe-showcase figcaption small{font-size:8px;color:#829087}.wardrobe-dots{display:flex;gap:7px;margin:2px 0}.wardrobe-dots i{height:3px;width:15px;background:#c9ad7629}.wardrobe-dots i[data-active=true]{background:#cfb37e}
+.wardrobe-announcement{display:inline-flex;align-items:center;gap:10px;margin:0 0 18px;padding:8px 11px;border:1px solid #c9ad7635;background:#09101199;color:#d2bb94;font-size:10px;line-height:1.5}.wardrobe-announcement b{font-size:8px;letter-spacing:1px;font-weight:400;color:#101817;background:#d1b986;padding:2px 5px}
+.wardrobe-release{border-bottom:1px solid var(--line)}.wardrobe-release .section-heading{margin-bottom:36px}.wardrobe-cards{display:grid;grid-template-columns:1fr 1fr;gap:24px}.wardrobe-card{position:relative;min-height:355px;overflow:hidden;border:1px solid #c9ad7629;background:radial-gradient(ellipse at 75% 30%,#55473622,transparent 70%),#0b1214;padding:36px;isolation:isolate}.wardrobe-card img{position:absolute;right:-5%;top:-15px;width:58%;height:115%;object-fit:contain;mask-image:linear-gradient(#000 65%,transparent 98%);-webkit-mask-image:linear-gradient(#000 65%,transparent 98%);z-index:-1;opacity:.83}.wardrobe-card>div{position:relative;max-width:55%;padding-top:30px}.wardrobe-card .eyebrow{font-size:8px;letter-spacing:2px}.wardrobe-card h3{font-family:Georgia,serif;font-size:25px;letter-spacing:1px;color:#e4d6bd;font-weight:400;margin:16px 0 7px}.wardrobe-card h3 small{display:block;font-family:inherit;font-size:12px;letter-spacing:1px;margin-top:9px;color:#c9b38c}.wardrobe-card p{font-size:11px;line-height:2;color:#a7b0a6}.wardrobe-card .wardrobe-parts{font-size:9px;color:#bba980;margin-top:22px}
+.wardrobe-how{margin-top:28px;padding:28px 30px;border:1px solid #c9ad7626;background:#c9ad7605;display:grid;grid-template-columns:1fr 1fr;gap:30px}.wardrobe-how h3{font-size:13px;font-weight:500;color:#e0d4bc;margin-bottom:12px}.wardrobe-how p{font-size:12px;line-height:2;color:#a3afa3}.wardrobe-how code{font-size:11px;color:#dec49a;overflow-wrap:anywhere}.wardrobe-scope{font-size:10px;line-height:1.9;color:#7e8d83;margin-top:18px}
+@media(min-width:1600px){.wardrobe-showcase{left:66%;width:500px}.wardrobe-stage{height:490px}.wardrobe-portrait{width:310px}}
+@media(min-width:761px) and (max-width:1100px){.wardrobe-showcase{left:74%;width:350px}.wardrobe-stage{height:400px}.wardrobe-portrait{width:250px}.wardrobe-portrait[data-slot=left]{transform:translate(-50%,-20px) translateX(-74px) scale(.81)}.wardrobe-portrait[data-slot=right]{transform:translate(-50%,-20px) translateX(74px) scale(.81)}}
+@media(max-width:760px){.wardrobe-showcase{left:auto;right:-8px;top:174px;width:210px;transform:none;z-index:1}.wardrobe-stage{height:285px}.wardrobe-portrait{width:158px;transform:translate(-50%,-10px) translateX(-50px) scale(.8)}.wardrobe-portrait[data-slot=front]{transform:translate(-50%,22px) scale(1)}.wardrobe-portrait[data-slot=right]{transform:translate(-50%,-10px) translateX(50px) scale(.8)}.wardrobe-showcase figcaption{display:none}.wardrobe-orbit{top:72%;height:40px}.wardrobe-announcement{font-size:9px;gap:7px;margin-bottom:15px}.hero .hero-content{padding-top:55px}.hero h1{font-size:42px}.hero-copy{max-width:none}.wardrobe-cards{grid-template-columns:1fr;gap:16px}.wardrobe-card{min-height:310px;padding:26px}.wardrobe-card>div{padding-top:20px}.wardrobe-card img{width:60%;right:-3%}.wardrobe-card h3{font-size:22px}.wardrobe-how{grid-template-columns:1fr;gap:24px;padding:24px}.wardrobe-how p{font-size:11px}}
+@media(max-width:370px){.wardrobe-showcase{right:-24px;top:174px}.hero h1{font-size:39px}.wardrobe-announcement{font-size:8px}}
+
+.wardrobe-portrait img{animation:doom-breathe 6.4s ease-in-out infinite}.hero[data-ghost-motion=still] .wardrobe-portrait img{animation:none}@media(prefers-reduced-motion:reduce){.wardrobe-portrait img{animation:none}}
+
+</style><link rel="canonical" href="https://sukgicalm-lang.github.io/ghost-valheim-vault/"></head>
 <body>
 <a class="skip" href="#main">본문 바로가기</a>
 <svg class="svg-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
@@ -48,14 +70,20 @@
   </svg>
   <span class="companion-caption">A LITTLE GHOST. A GREAT ADVENTURE.</span>
  </div>
- <figure class="doom-showcase" aria-label="둠 경갑을 입은 다크엘프 남성 프로모션 아트">
-  <div class="doom-halo" aria-hidden="true"></div>
-  <img class="doom-character" src="assets/doom-darkelf-v1.png" width="1024" height="1536" alt="은발의 다크엘프 남성이 은빛과 금빛 장식의 둠 경갑을 입고 서 있는 프로모션 아트" fetchpriority="high">
-  <figcaption><span class="doom-kicker">A NEW APPEARANCE</span><strong>DOOM LIGHT</strong><span>DARK ELF MALE</span><a href="#doom-release">둠 경갑 외형 살펴보기 <span aria-hidden="true">↗</span></a><small>프로모션 아트</small></figcaption>
- </figure>
+ <!-- ghost-wardrobe-carousel-v1 -->
+<figure class="wardrobe-showcase" data-wardrobe-carousel aria-label="둠·광전사·해골전사 외형 프로모션. 3초마다 앞자리가 바뀝니다.">
+ <div class="wardrobe-orbit" aria-hidden="true"></div>
+ <div class="wardrobe-stage">
+  <div class="wardrobe-portrait" data-character="doom" data-slot="front"><img src="assets/doom-darkelf-v1.png" width="1024" height="1536" alt="둠 경갑을 입은 다크엘프 남성" fetchpriority="high"></div>
+  <div class="wardrobe-portrait" data-character="berserker" data-slot="right"><img src="assets/wardrobe-berserker-v1.webp" width="768" height="1152" alt="검은 갑옷과 붉은 눈의 광전사" decoding="async"></div>
+  <div class="wardrobe-portrait" data-character="skull" data-slot="left"><img src="assets/wardrobe-skullknight-v1.webp" width="768" height="1152" alt="백골 갑옷과 붉은 눈의 해골전사" decoding="async"></div>
+ </div>
+ <figcaption><span class="wardrobe-kicker">THE WARDROBE COLLECTION</span><strong data-wardrobe-name>DOOM LIGHT</strong><span data-wardrobe-subtitle>DARK ELF MALE · 둠 경갑</span><a href="#wardrobe-release">세 가지 외형 살펴보기 <span aria-hidden="true">↗</span></a><span class="wardrobe-dots" aria-hidden="true"><i data-active="true"></i><i></i><i></i></span><small>프로모션 아트 · 게임 화면과 다를 수 있습니다</small></figcaption>
+</figure>
  <div class="hero-fireflies" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
  <div class="hero-content wrap">
   <div class="eyebrow"><span class="ornament"></span> CURATED FOR GHOST &amp; FRIENDS</div>
+  <a class="wardrobe-announcement" href="#wardrobe-release"><b>NEW</b> 광전사 · 해골전사 외형 추가 <span aria-hidden="true">↗</span></a>
   <h1 id="hero-title">패링과<br>도끼질에만<br><em>집중하세요.</em></h1>
   <p class="hero-copy">처음이라면, 전용 앱부터.<br>아래 순서대로 준비하면 모험이 시작됩니다.</p>
   <ol class="entry-flow" aria-label="처음 설치하는 순서">
@@ -64,16 +92,29 @@
   </ol>
   <button class="first-time" data-dialog="install-guide">설치가 처음이신가요? <span>설치 순서 자세히</span> <span aria-hidden="true">↗</span></button>
  </div>
- <div class="motion-switch" role="group" aria-label="메인 캐릭터 움직임"><span>AMBIENT MOTION</span><div><button data-motion="float" aria-pressed="true" title="제자리에서 둥둥 떠 있기">둥둥</button><button data-motion="wander" aria-pressed="false" title="풍경 안에서 천천히 산책하기">산책</button><button data-motion="still" aria-pressed="false" title="유령과 둠 경갑 캐릭터의 움직임 정지">정지</button></div></div>
+ <div class="motion-switch" role="group" aria-label="메인 캐릭터 움직임"><span>AMBIENT MOTION</span><div><button data-motion="float" aria-pressed="true" title="제자리에서 둥둥 떠 있기">둥둥</button><button data-motion="wander" aria-pressed="false" title="풍경 안에서 천천히 산책하기">산책</button><button data-motion="still" aria-pressed="false" title="유령과 외형 컬렉션의 움직임 정지">정지</button></div></div>
  <div class="hero-bottom wrap"><a class="scroll-cue" href="#suite"><span class="scroll-line"></span>EXPLORE THE COLLECTION</a><a class="edition" href="#release"><span class="status-dot"></span><span>GHOST VALHEIM SUITE<small><span data-release-version>v1.0.5</span> <span class="edition-divider">/</span> AVAILABLE NOW</small></span><svg><use href="#arrow"/></svg></a></div>
  <div class="hero-wordmark" aria-hidden="true">GHOST</div>
 </section>
 <div class="collection-note wrap"><span>BUILT FOR OUR WORLD.</span><p>함께 모험하는 우리에게, 조금 더 좋은 발헤임.</p><span class="roman">VOL. 01 — VALHEIM</span></div>
 
 
+<!-- ghost-wardrobe-release-v1 -->
+<section id="wardrobe-release" class="wardrobe-release wrap section-space" aria-labelledby="wardrobe-title">
+ <div class="section-heading"><div><div class="eyebrow">NEW IN THE SUITE · v1.0.5</div><h2 id="wardrobe-title">어둠에서 온,<br><em>두 개의 새로운 외형.</em></h2></div><p>광전사와 해골전사를 Ghost Wardrobe에 더했습니다.<br>둠 경갑까지, 세 가지 외형을 한 번의 업데이트로.</p></div>
+ <div class="wardrobe-cards">
+  <article class="wardrobe-card"><img src="assets/wardrobe-berserker-v1.webp" width="768" height="1152" loading="lazy" alt="광전사 외형 프로모션 아트"><div><span class="eyebrow">01 / THE BLACK ARMOR</span><h3>BERSERKER<small>광전사</small></h3><p>검게 겹친 갑주와<br>어둠 속 붉은 눈빛.</p><p class="wardrobe-parts">상의 · 하의 · 투구</p></div></article>
+  <article class="wardrobe-card"><img src="assets/wardrobe-skullknight-v1.webp" width="768" height="1152" loading="lazy" alt="해골전사 외형 프로모션 아트"><div><span class="eyebrow">02 / THE SKULL KNIGHT</span><h3>SKULL KNIGHT<small>해골전사</small></h3><p>백골을 닮은 갑옷,<br>말없이 드러나는 존재감.</p><p class="wardrobe-parts">상의 · 하의 · 투구</p></div></article>
+ </div>
+ <div class="wardrobe-how"><div><h3>업데이트하고, 외형에서 선택하세요.</h3><p>Ghost r2에서 통합팩 v1.0.5 이상으로 업데이트하세요.<br>게임에 접속하면 외형이 자동 해금됩니다.<br><strong>Tab → 외형</strong>에서 상의·하의·투구를 골라 적용하세요.</p></div><div><h3>둠까지, 원하는 체형으로.</h3><p><code>F1 → Ghost Wardrobe → Appearance → BodyShape</code><br><strong>Valheim</strong> · 기본 발헤임 체형에 맞춘 옷 외형<br><strong>Original</strong> · 원작 옷의 비율에 맞춘 외형과 체형</p></div></div>
+ <p class="wardrobe-scope">현재 남성용 외형입니다. 원작 얼굴·헤어는 포함하지 않습니다. 투구를 벗으면 기존 발헤임 얼굴·헤어가 보입니다. 친구도 같은 업데이트를 받아야 새 외형을 볼 수 있습니다.<br>이미지는 프로모션 아트입니다. 실제 게임의 재질·핏·얼굴과 차이가 있으며, 새 외형과 체형 모드는 게임 내 확인이 필요합니다.</p>
+</section>
+
+<!-- /ghost-wardrobe-release-v1 -->
+
 <section id="doom-release" class="doom-release wrap section-space" aria-labelledby="doom-release-title">
  <div class="doom-release-heading"><div class="eyebrow">NEW IN THE SUITE <span class="doom-version">v1.0.5</span></div><h2 id="doom-release-title">둠 경갑,<br><em>우리의 새 외형.</em></h2><p>리니지2 다크엘프 남성용 둠 경갑을<br>Ghost 컬렉션에 더했습니다.</p><span class="doom-ready">게임 내 외형 적용 확인</span></div>
- <div class="doom-release-body"><p class="doom-lead">한 번의 업데이트.<br><strong>갈아입는 건, 외형 메뉴에서.</strong></p><ol class="doom-flow"><li><span>01</span><div><strong>Ghost r2에서 업데이트</strong><p>나와 친구 모두 같은 통합팩을 받으세요.</p></div></li><li><span>02</span><div><strong>접속하면 외형 해금</strong><p>상의와 하의가 자동으로 등록됩니다.<br>제작이나 아이템 보관은 필요 없습니다.</p></div></li><li><span>03</span><div><strong>Tab → 외형에서 선택</strong><p>고스트 둠 경갑 상의·하의를 고르세요.<br>실제 장비를 벗어도 선택한 외형을 따릅니다.</p></div></li></ol><div class="doom-detail"><span>실제 장비 능력치 유지</span><span>상의·하의 개별 선택</span><span>친구도 업데이트 한 번</span></div><p class="doom-scope">현재 배포는 남성용 옷 외형입니다. 얼굴·헤어·체형은 변경하지 않습니다.<br>둠 경갑 외형의 게임 내 표시를 확인했습니다.</p><a class="text-link install-link" href="ghostvault://v1/install/Ghost-GhostValheimSuite/latest">INSTALL THE NEW LOOK <svg><use href="#arrow"/></svg></a></div>
+ <div class="doom-release-body"><p class="doom-lead">한 번의 업데이트.<br><strong>갈아입는 건, 외형 메뉴에서.</strong></p><ol class="doom-flow"><li><span>01</span><div><strong>Ghost r2에서 업데이트</strong><p>나와 친구 모두 같은 통합팩을 받으세요.</p></div></li><li><span>02</span><div><strong>접속하면 외형 해금</strong><p>상의와 하의가 자동으로 등록됩니다.<br>제작이나 아이템 보관은 필요 없습니다.</p></div></li><li><span>03</span><div><strong>Tab → 외형에서 선택</strong><p>고스트 둠 경갑 상의·하의를 고르세요.<br>실제 장비를 벗어도 선택한 외형을 따릅니다.</p></div></li></ol><div class="doom-detail"><span>실제 장비 능력치 유지</span><span>상의·하의 개별 선택</span><span>친구도 업데이트 한 번</span></div><p class="doom-scope">현재 배포는 남성용 옷 외형입니다. 얼굴·헤어는 변경하지 않습니다. 체형은 BodyShape에서 선택할 수 있습니다.<br>둠 경갑 외형의 게임 내 표시를 확인했습니다.</p><a class="text-link install-link" href="ghostvault://v1/install/Ghost-GhostValheimSuite/latest">INSTALL THE NEW LOOK <svg><use href="#arrow"/></svg></a></div>
 </section>
 
 <section id="suite" class="suite wrap section-space" aria-labelledby="suite-title">
@@ -112,4 +153,24 @@
 <dialog id="launch-guide" aria-labelledby="launch-title"><div class="dialog-top"><span class="eyebrow">BEFORE YOU INSTALL</span><button class="close" aria-label="닫기">×</button></div><span class="micro-label">전용 앱 → 통합팩</span><h2 id="launch-title">Ghost r2를<br><em>먼저 설치해 주세요.</em></h2><p class="launch-explanation">이 버튼은 전용 앱을 열어 통합팩을 설치합니다.<br>아직 Ghost r2가 없다면 1번부터 시작하세요.</p><div class="launch-path"><a class="button gold" href="https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/client-1.0.3/GhostR2-Install-1.0.3.zip" download>① 전용 앱 다운로드 <svg><use href="#download"/></svg></a><p>압축 해제 → INSTALL_GHOST_R2.cmd 실행<br>→ 앱에서 Valheim과 프로필 선택</p><a class="button launch-confirm" href="ghostvault://v1/install/Ghost-GhostValheimSuite/latest" data-launch-confirm>② 설치했어요 · 통합팩 설치 <svg><use href="#arrow"/></svg></a></div><p class="launch-note">이미 전용 앱을 사용 중이라면 ②를 누르세요.<br>다음부터는 통합팩 설치 버튼으로 바로 연결됩니다.</p></dialog>
 <dialog id="module-dialog" aria-labelledby="module-detail-title"><div class="dialog-top"><span class="eyebrow">INSIDE THE COLLECTION</span><button class="close" aria-label="닫기">×</button></div><div id="module-detail"></div></dialog>
 <div class="toast" role="status" aria-live="polite"></div>
-</body></html>
+
+<script id="ghost-wardrobe-script">
+/* ghost-wardrobe-script-v1 */
+(()=>{'use strict';
+ const root=document.querySelector('[data-wardrobe-carousel]');if(!root)return;
+ const hero=root.closest('.hero'), portraits=[...root.querySelectorAll('[data-character]')],dots=[...root.querySelectorAll('.wardrobe-dots i')];
+ const labels=[['DOOM LIGHT','DARK ELF MALE · 둠 경갑'],['BERSERKER','BLACK ARMOR · 광전사'],['SKULL KNIGHT','BONE ARMOR · 해골전사']];
+ const reduce=matchMedia('(prefers-reduced-motion: reduce)');let current=0,timer=null,visible=true,animations=[];
+ const slots=['front','right','left'];
+ function advance(){
+  const old=portraits.map(el=>({transform:getComputedStyle(el).transform,opacity:getComputedStyle(el).opacity,filter:getComputedStyle(el).filter}));
+  current=(current+1)%3;
+  portraits.forEach((el,i)=>{el.dataset.slot=slots[(i-current+3)%3];const end=getComputedStyle(el);if(el.animate){const a=el.animate([old[i],{transform:end.transform,opacity:end.opacity,filter:end.filter}],{duration:950,easing:'cubic-bezier(.4,0,.2,1)'});animations.push(a);a.onfinish=()=>{animations=animations.filter(x=>x!==a);};}});
+  root.dataset.front=portraits[current].dataset.character;root.querySelector('[data-wardrobe-name]').textContent=labels[current][0];root.querySelector('[data-wardrobe-subtitle]').textContent=labels[current][1];dots.forEach((d,i)=>d.dataset.active=String(i===current));
+ }
+ function sync(){if(timer){clearInterval(timer);timer=null;}if(document.hidden||!visible||reduce.matches||hero.dataset.ghostMotion==='still'){animations.forEach(a=>a.finish());animations=[];return;}timer=setInterval(advance,3000);}
+ new MutationObserver(sync).observe(hero,{attributes:true,attributeFilter:['data-ghost-motion']});document.addEventListener('visibilitychange',sync);reduce.addEventListener('change',sync);
+ if('IntersectionObserver'in window)new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;sync();},{threshold:.05}).observe(hero);
+ root.dataset.front='doom';sync();
+})();
+</script></body></html>
