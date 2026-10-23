@@ -1,15 +1,15 @@
 {
-    "version":  "1.0.6",
+    "version":  "1.0.7",
     "date":  "2026-10-23",
-    "file":  "downloads/Ghost-GhostValheimSuite-1.0.6.zip",
-    "bytes":  59730154,
-    "sha256":  "af7307cca1c7f96c7de1ed611631628bd61e3cb1cf9d54b8a50896df65b55c21",
+    "file":  "downloads/Ghost-GhostValheimSuite-1.0.7.zip",
+    "bytes":  59798986,
+    "sha256":  "876bcfc2c27458429ee1d66b586616aacf7dd9a66931ff84959cfb89abf0bab4",
     "appIntegration":  true,
     "dependencies":  [
                          "denikson-BepInExPack_Valheim-5.4.2351",
                          "ValheimModding-JsonDotNET-13.0.4",
                          "shudnal-ConfigurationManager-1.1.25"
                      ],
-    "notes":  "외형 등록 초기화 오류 수정 / 둠 원작 얼굴·헤어 머리 외형 / 광전사·해골기사 상의 망토·흔들림 / 홈페이지 회전 6초",
-    "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.6/Ghost-GhostValheimSuite-1.0.6.zip"
+    "notes":  "Original 모션 정지 대응 / 원작 비율·개별 크기 배율 / 독립 망토·천 물리 / 홈페이지 구성 정리",
+    "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.7/Ghost-GhostValheimSuite-1.0.7.zip"
 }
