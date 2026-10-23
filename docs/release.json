@@ -1,0 +1,15 @@
+{
+    "version":  "1.0.4",
+    "date":  "2026-10-23",
+    "file":  "downloads/Ghost-GhostValheimSuite-1.0.4.zip",
+    "bytes":  4317584,
+    "sha256":  "e140d9be338f83189ae3fd203d29ac905c22d4c2f7362cb12bf4d55580bdf7a7",
+    "appIntegration":  true,
+    "dependencies":  [
+                         "denikson-BepInExPack_Valheim-5.4.2351",
+                         "ValheimModding-JsonDotNET-13.0.4",
+                         "shudnal-ConfigurationManager-1.1.25"
+                     ],
+    "notes":  "둠 경갑 재질 검색 오류 수정 · 게임에 로딩된 장비/캐릭터 재질을 복제해 텍스처 적용. 실제 착용 모습은 업데이트 후 확인해 주세요.",
+    "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.4/Ghost-GhostValheimSuite-1.0.4.zip"
+}

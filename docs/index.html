@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0a1012"><meta name="description" content="Ghost와 친구들을 위한 Valheim 모드 컬렉션. 한 번에 설치하고, Ghost r2에서 새 버전을 확인하세요.">
+<title>GHOST VAULT — A Better Way to Valheim</title>
+<link rel="icon" href="assets/mark.svg" type="image/svg+xml"><link rel="preload" href="assets/hero.webp" as="image"><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="motion.css">
+<link rel="stylesheet" href="doom.css"><link rel="stylesheet" href="onboarding-v1.css">
+<script src="modules.js" defer></script><script src="app.js?v=1.0.3" defer></script><script src="motion.js" defer></script>
+<link rel="canonical" href="https://sukgicalm-lang.github.io/ghost-valheim-vault/"></head>
+<body>
+<a class="skip" href="#main">본문 바로가기</a>
+<svg class="svg-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+<symbol id="arrow" viewBox="0 0 24 24"><path d="M5 19 19 5M5 5h14v14"/></symbol>
+<symbol id="download" viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 17v4h16v-4"/></symbol>
+<symbol id="refresh" viewBox="0 0 24 24"><path d="M20 8a9 9 0 1 0 1 7M20 3v6h-6"/></symbol>
+<symbol id="search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></symbol>
+<symbol id="shield" viewBox="0 0 24 24"><path d="m12 2 8 3v7c0 5-8 10-8 10S4 17 4 12V5l8-3Z"/><path d="m8 12 3 3 5-6"/></symbol>
+<symbol id="layers" viewBox="0 0 24 24"><path d="m12 3 10 5-10 5L2 8l10-5Zm-10 9 10 5 10-5M2 16l10 5 10-5"/></symbol>
+<symbol id="growth" viewBox="0 0 24 24"><path d="M12 22V9m0 6C3 15 2 7 2 7s10-1 10 8Zm0-6C12 2 22 2 22 2s0 9-10 11"/></symbol>
+</defs></svg>
+<header class="header"><div class="header-inner">
+ <a class="brand" href="#" aria-label="Ghost Vault 홈"><img src="assets/mark.svg" width="42" height="42" alt=""><span>GHOST<small>VALHEIM MOD VAULT</small></span></a>
+ <nav aria-label="주 메뉴"><a href="#suite">통합팩 소개</a><a href="#collection">모드 컬렉션</a><a href="#start">설치 안내</a></nav>
+ <a class="header-action" href="https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/client-1.0.3/GhostR2-Install-1.0.3.zip" download>① 전용 앱 설치 <svg><use href="#arrow"/></svg></a>
+ <button class="menu-toggle" aria-label="메뉴 열기" aria-expanded="false"><span></span><span></span></button>
+</div></header>
+<main id="main">
+<section class="hero" aria-labelledby="hero-title" data-ghost-motion="float">
+ <div class="hero-art" aria-hidden="true"></div><div class="hero-grain" aria-hidden="true"></div>
+ <div class="ghost-companion" aria-hidden="true">
+  <div class="companion-aura"></div>
+  <svg class="ghost-mascot" viewBox="0 0 280 300" xmlns="http://www.w3.org/2000/svg">
+   <defs><linearGradient id="ghost-pearl" x1=".15" y1="0" x2=".9" y2="1"><stop offset="0" stop-color="#fffdf1"/><stop offset=".46" stop-color="#edf6f4"/><stop offset=".82" stop-color="#b5d8df"/><stop offset="1" stop-color="#89b7c8"/></linearGradient><linearGradient id="ghost-hand" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fffdf4"/><stop offset="1" stop-color="#bad8df"/></linearGradient><radialGradient id="ghost-blush"><stop stop-color="#e9ae99" stop-opacity=".65"/><stop offset="1" stop-color="#e9ae99" stop-opacity="0"/></radialGradient><linearGradient id="ghost-gold"><stop stop-color="#f3dba4"/><stop offset="1" stop-color="#aa7d40"/></linearGradient></defs>
+   <ellipse class="ghost-shadow" cx="145" cy="280" rx="58" ry="6" fill="#b7dce4" opacity=".18"/>
+   <g class="ghost-body">
+    <path d="M81 153C67 157 52 152 43 141 34 132 29 121 21 125 11 131 24 152 35 163 49 177 66 182 84 175Z" fill="url(#ghost-hand)"/>
+    <path class="ghost-wave" d="M200 152C218 145 230 132 238 119 246 106 254 104 260 110 270 119 252 143 241 155 230 169 214 176 202 176Z" fill="url(#ghost-hand)"/>
+    <path d="M69 151C59 133 59 111 65 92 75 57 103 35 137 35 178 34 205 57 212 92 216 115 206 137 210 164 213 187 230 207 216 226 204 244 189 232 176 239 164 246 161 257 148 257 135 257 130 242 116 245 95 250 78 240 81 221 83 202 69 185 69 151Z" fill="url(#ghost-pearl)" stroke="#e5f8f4" stroke-opacity=".4" stroke-width="1.5"/>
+    <path d="M80 99C84 69 110 49 137 49" fill="none" stroke="#fffdf7" stroke-width="6" stroke-linecap="round" opacity=".7"/>
+    <ellipse cx="94" cy="137" rx="18" ry="11" fill="url(#ghost-blush)"/><ellipse cx="177" cy="137" rx="18" ry="11" fill="url(#ghost-blush)"/>
+    <g class="ghost-eye ghost-eye-left"><ellipse cx="111" cy="111" rx="9.5" ry="13" fill="#304c57"/><ellipse cx="108" cy="107" rx="3" ry="4" fill="#fff" opacity=".95"/></g>
+    <g class="ghost-eye ghost-eye-right"><ellipse cx="163" cy="111" rx="9.5" ry="13" fill="#304c57"/><ellipse cx="160" cy="107" rx="3" ry="4" fill="#fff" opacity=".95"/></g>
+    <path d="M121 139Q138 157 155 139" fill="none" stroke="#405b62" stroke-width="4" stroke-linecap="round"/>
+    <path d="m121 178 18 15 19-15" fill="none" stroke="#b9955e" stroke-width="1.5" opacity=".8"/><circle cx="139" cy="196" r="11" fill="url(#ghost-gold)" stroke="#ffedc1" stroke-width="1"/><text x="139" y="201" text-anchor="middle" fill="#5a482c" font-family="Georgia,serif" font-size="15">G</text>
+    <path d="M96 209c4 14 11 20 21 18" fill="none" stroke="#f7fff9" stroke-width="3" opacity=".35" stroke-linecap="round"/>
+   </g>
+  </svg>
+  <span class="companion-caption">A LITTLE GHOST. A GREAT ADVENTURE.</span>
+ </div>
+ <figure class="doom-showcase" aria-label="둠 경갑을 입은 다크엘프 남성 프로모션 아트">
+  <div class="doom-halo" aria-hidden="true"></div>
+  <img class="doom-character" src="assets/doom-darkelf-v1.png" width="1024" height="1536" alt="은발의 다크엘프 남성이 은빛과 금빛 장식의 둠 경갑을 입고 서 있는 프로모션 아트" fetchpriority="high">
+  <figcaption><span class="doom-kicker">A NEW APPEARANCE</span><strong>DOOM LIGHT</strong><span>DARK ELF MALE</span><a href="#doom-release">둠 경갑 외형 살펴보기 <span aria-hidden="true">↗</span></a><small>프로모션 아트</small></figcaption>
+ </figure>
+ <div class="hero-fireflies" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+ <div class="hero-content wrap">
+  <div class="eyebrow"><span class="ornament"></span> CURATED FOR GHOST &amp; FRIENDS</div>
+  <h1 id="hero-title">패링과<br>도끼질에만<br><em>집중하세요.</em></h1>
+  <p class="hero-copy">처음이라면, 전용 앱부터.<br>아래 순서대로 준비하면 모험이 시작됩니다.</p>
+  <ol class="entry-flow" aria-label="처음 설치하는 순서">
+   <li class="entry-step entry-first"><div class="entry-step-heading"><span class="entry-number">01</span><span>먼저, 전용 앱</span></div><p>Ghost r2를 설치하고<br>Valheim 프로필을 선택하세요.</p><a class="entry-action entry-primary" href="https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/client-1.0.3/GhostR2-Install-1.0.3.zip" download><span>전용 앱 먼저 설치<small>INSTALL GHOST R2</small></span><svg><use href="#download"/></svg></a></li>
+   <li class="entry-step"><div class="entry-step-heading"><span class="entry-number">02</span><span>그다음, 통합팩</span></div><p>전용 앱을 설치했다면<br>선택한 프로필에 통합팩을 연결하세요.</p><a class="entry-action install-link" href="ghostvault://v1/install/Ghost-GhostValheimSuite/latest"><span>통합팩 설치<small>WITH GHOST R2 · 앱 설치 후</small></span><svg><use href="#arrow"/></svg></a></li>
+  </ol>
+  <button class="first-time" data-dialog="install-guide">설치가 처음이신가요? <span>설치 순서 자세히</span> <span aria-hidden="true">↗</span></button>
+ </div>
+ <div class="motion-switch" role="group" aria-label="메인 캐릭터 움직임"><span>AMBIENT MOTION</span><div><button data-motion="float" aria-pressed="true" title="제자리에서 둥둥 떠 있기">둥둥</button><button data-motion="wander" aria-pressed="false" title="풍경 안에서 천천히 산책하기">산책</button><button data-motion="still" aria-pressed="false" title="유령과 둠 경갑 캐릭터의 움직임 정지">정지</button></div></div>
+ <div class="hero-bottom wrap"><a class="scroll-cue" href="#suite"><span class="scroll-line"></span>EXPLORE THE COLLECTION</a><a class="edition" href="#release"><span class="status-dot"></span><span>GHOST VALHEIM SUITE<small><span data-release-version>v1.0.4</span> <span class="edition-divider">/</span> AVAILABLE NOW</small></span><svg><use href="#arrow"/></svg></a></div>
+ <div class="hero-wordmark" aria-hidden="true">GHOST</div>
+</section>
+<div class="collection-note wrap"><span>BUILT FOR OUR WORLD.</span><p>함께 모험하는 우리에게, 조금 더 좋은 발헤임.</p><span class="roman">VOL. 01 — VALHEIM</span></div>
+
+
+<section id="doom-release" class="doom-release wrap section-space" aria-labelledby="doom-release-title">
+ <div class="doom-release-heading"><div class="eyebrow">NEW IN THE SUITE <span class="doom-version">v1.0.4</span></div><h2 id="doom-release-title">둠 경갑,<br><em>우리의 새 외형.</em></h2><p>리니지2 다크엘프 남성용 둠 경갑을<br>Ghost 컬렉션에 더했습니다.</p><span class="doom-ready">게임 내 외형 적용 확인</span></div>
+ <div class="doom-release-body"><p class="doom-lead">한 번의 업데이트.<br><strong>갈아입는 건, 외형 메뉴에서.</strong></p><ol class="doom-flow"><li><span>01</span><div><strong>Ghost r2에서 업데이트</strong><p>나와 친구 모두 같은 통합팩을 받으세요.</p></div></li><li><span>02</span><div><strong>접속하면 외형 해금</strong><p>상의와 하의가 자동으로 등록됩니다.<br>제작이나 아이템 보관은 필요 없습니다.</p></div></li><li><span>03</span><div><strong>Tab → 외형에서 선택</strong><p>고스트 둠 경갑 상의·하의를 고르세요.<br>실제 장비를 벗어도 선택한 외형을 따릅니다.</p></div></li></ol><div class="doom-detail"><span>실제 장비 능력치 유지</span><span>상의·하의 개별 선택</span><span>친구도 업데이트 한 번</span></div><p class="doom-scope">현재 배포는 남성용 옷 외형입니다. 얼굴·헤어·체형은 변경하지 않습니다.<br>둠 경갑 외형의 게임 내 표시를 확인했습니다.</p><a class="text-link install-link" href="ghostvault://v1/install/Ghost-GhostValheimSuite/latest">INSTALL THE NEW LOOK <svg><use href="#arrow"/></svg></a></div>
+</section>
+
+<section id="suite" class="suite wrap section-space" aria-labelledby="suite-title">
+ <div class="section-heading"><div><div class="eyebrow">01 / THE SIGNATURE SUITE</div><h2 id="suite-title">좋아하는 플레이만<br><em>남기다.</em></h2></div><p>가방을 정리하고, 장비를 바꾸고, 다시 수리하는 시간.<br class="desktop">그 사이의 번거로움을 줄여 모험의 흐름을 이어갑니다.</p></div>
+ <div class="feature-grid">
+  <article class="feature"><div class="feature-top"><svg><use href="#layers"/></svg><span>01</span></div><h3>필요한 장비만, 가볍게.</h3><p>저장한 세트에 있는 부위만 서로 교환합니다. 옷을 갈아입을 때 들고 있던 무기와 다른 장비는 그대로.</p><span class="feature-caption">SELECTIVE LOADOUT SWAP</span></article>
+  <article class="feature"><div class="feature-top"><svg><use href="#growth"/></svg><span>02</span></div><h3>모험의 성장은 두 배로.</h3><p>공통 숙련도 경험치에 2배 배율을 적용합니다. 달리기부터 전투, 농사와 채광까지 더 편안한 성장.</p><span class="feature-caption">SKILL EXPERIENCE × 2</span></article>
+  <article class="feature"><div class="feature-top"><svg><use href="#refresh"/></svg><span>03</span></div><h3>다음 버전도, 같은 곳에서.</h3><p>Ghost r2에서 프로필을 열면 새 버전을 확인합니다. 업데이트가 있으면 앱에 표시되고, 클릭해서 적용합니다.</p><span class="feature-caption">UPDATES INSIDE THE APP</span></article>
+ </div>
+ <div class="suite-bottom"><span><b>11</b> MODULES, ONE SUITE.</span><p>생활 편의와 수정 모드를 하나의 설치 패키지로.</p><a class="text-link" href="#collection">포함 모드 살펴보기 <svg><use href="#arrow"/></svg></a></div>
+</section>
+
+<section class="update-section" aria-labelledby="updates-title"><div class="wrap update-layout">
+ <div class="update-copy"><div class="eyebrow">A SEAMLESS CONTINUATION</div><h2 id="updates-title">좋은 준비는,<br>흐름을 끊지 않으니까.</h2><p>사이트를 다시 찾아와 새 파일을 가져올 필요 없이.<br>새로운 통합팩은 Ghost r2의 업데이트 목록에서 만나세요.</p><span class="micro-label">CHECK AUTOMATICALLY. UPDATE WHEN YOU CHOOSE.</span></div>
+ <div class="app-preview" aria-label="Ghost r2 업데이트 표시 예시"><div class="preview-title"><span class="preview-dots"><i></i><i></i><i></i></span><span>GHOST R2</span><span class="preview-example">화면 예시</span></div><div class="preview-status"><span class="status-dot"></span>모드 업데이트 확인</div><div class="preview-mod"><img src="assets/pack-icon.png" alt="" width="52" height="52"><div><strong>GhostValheimSuite</strong><small>내 사이트에서 배포하는 통합팩</small></div><svg><use href="#shield"/></svg></div><div class="preview-divider"></div><div class="preview-notice"><div><span>NEW RELEASE</span><strong>새 버전이 있으면 이곳에.</strong><p>설치된 버전과 비교해 앱 안에서 알려드립니다.</p></div><span class="preview-update">UPDATE <svg><use href="#download"/></svg></span></div><div class="preview-footer">프로필을 열 때 확인 <span>실행 중 약 5분마다 다시 확인</span></div></div>
+</div></section>
+
+<section id="collection" class="collection wrap section-space" aria-labelledby="collection-title">
+ <div class="section-heading"><div><div class="eyebrow">02 / THE COLLECTION</div><h2 id="collection-title">작은 차이로 완성하는<br><em>우리의 플레이.</em></h2></div><p>현재 통합팩에 포함된 11개 모드.<br>각 모드를 선택하면 기능과 사용 정보를 볼 수 있습니다.</p></div>
+ <div class="catalog-toolbar"><div class="filters" role="group" aria-label="모드 분류"><button class="selected" data-filter="all" aria-pressed="true">전체 <span>11</span></button><button data-filter="inventory" aria-pressed="false">인벤토리</button><button data-filter="skills" aria-pressed="false">숙련·성장</button><button data-filter="life" aria-pressed="false">생활 편의</button><button data-filter="world" aria-pressed="false">월드</button></div><label class="search-box"><svg><use href="#search"/></svg><input id="module-search" type="search" aria-label="모드 이름이나 기능 검색" placeholder="모드 이름이나 기능 검색"></label></div>
+ <div class="catalog-labels" aria-hidden="true"><span>MODULE</span><span>WHAT IT BRINGS</span><span>CATEGORY</span><span></span></div><div id="module-list"></div><div class="catalog-footer"><p id="search-result" aria-live="polite">전체 11개 중 11개 표시</p><span>THE DETAILS MAKE THE DIFFERENCE.</span></div>
+</section>
+
+<section id="start" class="start-section section-space" aria-labelledby="start-title"><div class="wrap">
+ <div class="section-heading"><div><div class="eyebrow">03 / YOUR NEXT ADVENTURE</div><h2 id="start-title">처음 한 번의 준비.<br><em>그다음은 모험.</em></h2></div><p>함께할 친구도 같은 순서로 시작하세요.<br>Windows 전용 · Ghost r2 1.0.3</p></div>
+ <ol class="start-steps"><li><span class="step-number">01</span><div><h3>Ghost r2 설치</h3><p>‘전용 앱 먼저 설치’로 설치 ZIP을 받으세요.<br>압축을 풀고 <code>INSTALL_GHOST_R2.cmd</code>를 실행합니다.</p><a class="text-link" href="https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/client-1.0.3/GhostR2-Install-1.0.3.zip" download>① 전용 앱 설치 <svg><use href="#download"/></svg></a></div></li><li><span class="step-number">02</span><div><h3>플레이할 프로필 선택</h3><p>앱에서 Valheim과 플랫폼을 고른 뒤 프로필을 선택하세요. 기존 프로필도 사용할 수 있습니다.</p><button class="text-link" data-dialog="install-guide">설치 방법 자세히 <svg><use href="#arrow"/></svg></button></div></li><li><span class="step-number">03</span><div><h3>통합팩 설치, 그리고 출발.</h3><p>INSTALL WITH GHOST R2를 누르고 앱 열기를 허용하세요. 설치 후 앱의 Start modded로 실행합니다.</p><a class="text-link install-link" href="ghostvault://v1/install/Ghost-GhostValheimSuite/latest">INSTALL THE SUITE <svg><use href="#arrow"/></svg></a></div></li></ol>
+ <div class="faq"><details><summary>새 버전은 어떻게 받나요?<span>+</span></summary><p>Ghost r2 1.0.2 이상에서 Valheim 프로필을 열면 새 버전을 자동으로 확인합니다. 새 통합팩이 있으면 일반 모드와 같은 업데이트 목록과 Ghost 안내 바에 표시됩니다. ‘Ghost 업데이트’ 또는 기존 모드 업데이트 버튼으로 적용하세요. 실행 중에는 약 5분마다 다시 확인하며, 서버 PC가 켜져 있어야 새 팩을 받을 수 있습니다.</p></details><details><summary>친구와 같은 모드 구성을 쓰고 싶어요.<span>+</span></summary><p>친구도 Ghost r2를 설치한 뒤 Import/Update → From code로 공유 코드를 가져오세요. 코드는 생성 당시의 프로필을 담으므로 Ghost 통합팩이 설치된 프로필에서 Export profile as code로 생성해야 합니다. 가져오기 미리보기에서 ‘Ghost 통합팩 포함’을 확인하세요.</p></details><details><summary>기존 프로필과 설정은 어떻게 되나요?<span>+</span></summary><p>기본 데이터 경로의 기존 프로필을 사용할 수 있습니다. 원래 r2에서 데이터 폴더를 옮겼다면 Settings → Change data folder에서 같은 경로를 선택하세요. 일반 r2와 Ghost r2를 동시에 사용하지 마세요. 같은 DLL의 개별 모드가 남아 있다면 중복 설치를 먼저 정리하세요.</p></details></div>
+</div></section>
+
+<section id="release" class="release wrap section-space" aria-labelledby="release-title"><div class="release-heading"><div><div class="eyebrow">RELEASE JOURNAL</div><h2 id="release-title">조금씩 더 좋아지는 모험.</h2></div><button id="check-release" class="text-link">배포 정보 확인 <svg><use href="#refresh"/></svg></button></div><div class="release-grid"><div class="release-version"><span class="micro-label">CURRENT SUITE</span><strong data-release-version>v1.0.4</strong><time data-release-date datetime="2026-10-23">2026.10.23</time><span data-release-size>4.12 MiB · ZIP</span></div><div class="release-description"><span class="release-tag">SUITE RELEASE</span><h3>Ghost Valheim Suite</h3><p id="release-notes">둠 경갑 재질 검색 오류 수정 &#183; 게임에 로딩된 장비/캐릭터 재질을 복제해 텍스처 적용. 실제 착용 모습은 업데이트 후 확인해 주세요.</p><p class="release-status" id="release-status" role="status">사이트의 배포 정보입니다. PC에 설치된 버전은 앱에서 확인하세요.</p><div class="release-links"><a class="text-link manual-download" href="https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.4/Ghost-GhostValheimSuite-1.0.4.zip" download>수동 ZIP 다운로드 <svg><use href="#download"/></svg></a><button class="text-link muted" id="copy-hash">검증값 복사 <svg><use href="#shield"/></svg></button></div><span class="hash-label">SHA-256 <code id="release-hash">e140d9be…0bdf7a7</code></span></div></div></section>
+
+<section class="closing"><div class="closing-glow" aria-hidden="true"></div><div class="wrap"><div class="eyebrow">THE WORLD IS WAITING.</div><h2>다시, 우리의 세계로.</h2><a class="button gold install-link" href="ghostvault://v1/install/Ghost-GhostValheimSuite/latest">INSTALL WITH GHOST R2 <svg><use href="#arrow"/></svg></a><p>처음이라면 전용 앱을 먼저 설치하세요. 이후 업데이트는 Ghost r2 안에서.</p></div></section>
+</main>
+<footer class="footer wrap"><div class="footer-top"><a class="brand" href="#"><img src="assets/mark.svg" width="40" height="40" alt=""><span>GHOST<small>VALHEIM MOD VAULT</small></span></a><p>Ghost와 친구들을 위한 작은 보관소.<br>Valheim 공식 사이트와는 별개의 개인 프로젝트입니다.</p><a class="back-top" href="#">BACK TO TOP ↑</a></div><div class="footer-bottom"><span>GHOST VAULT © 2026</span><span>FOR THE LOVE OF THE ADVENTURE.</span><a href="https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/client-1.0.3/GhostR2-Source-1.0.3.zip" download>전용 앱 소스·라이선스 ↗</a></div></footer>
+<dialog id="install-guide" aria-labelledby="guide-title"><div class="dialog-top"><span class="eyebrow">GET READY TO PLAY</span><button class="close" aria-label="닫기">×</button></div><span class="micro-label">GHOST R2 / WINDOWS / 1.0.3</span><h2 id="guide-title">설치는 한 번.<br><em>그다음부터는 간단하게.</em></h2><ol class="dialog-steps"><li><b>01</b><div><h3>전용 앱을 준비하세요.</h3><p>일반 r2와 게임을 종료하세요. 설치 ZIP을 풀고 INSTALL_GHOST_R2.cmd를 실행하면 Ghost r2가 설치됩니다.</p></div></li><li><b>02</b><div><h3>Valheim과 프로필을 선택하세요.</h3><p>앱에서 Valheim → 사용할 플랫폼 → 프로필을 선택하세요. 데이터 경로를 옮겨 쓰고 있다면 Change data folder에서 기존 경로를 선택합니다.</p></div></li><li><b>03</b><div><h3>INSTALL WITH GHOST R2를 누르세요.</h3><p>브라우저의 앱 열기 요청을 허용하면 선택한 프로필에 통합팩을 설치합니다. 설치를 마치면 앱의 Start modded로 게임을 실행하세요.</p></div></li></ol><div class="dialog-note">이후에는 앱에서 새 통합팩을 자동으로 확인합니다. 새 버전이 있으면 업데이트 버튼을 눌러 적용하세요. 전용 앱 자체의 새 설치 파일은 별도로 배포합니다.</div><a class="button gold" href="https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/client-1.0.3/GhostR2-Install-1.0.3.zip" download>① 전용 앱 설치 <svg><use href="#download"/></svg></a></dialog>
+<dialog id="launch-guide" aria-labelledby="launch-title"><div class="dialog-top"><span class="eyebrow">BEFORE YOU INSTALL</span><button class="close" aria-label="닫기">×</button></div><span class="micro-label">전용 앱 → 통합팩</span><h2 id="launch-title">Ghost r2를<br><em>먼저 설치해 주세요.</em></h2><p class="launch-explanation">이 버튼은 전용 앱을 열어 통합팩을 설치합니다.<br>아직 Ghost r2가 없다면 1번부터 시작하세요.</p><div class="launch-path"><a class="button gold" href="https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/client-1.0.3/GhostR2-Install-1.0.3.zip" download>① 전용 앱 다운로드 <svg><use href="#download"/></svg></a><p>압축 해제 → INSTALL_GHOST_R2.cmd 실행<br>→ 앱에서 Valheim과 프로필 선택</p><a class="button launch-confirm" href="ghostvault://v1/install/Ghost-GhostValheimSuite/latest" data-launch-confirm>② 설치했어요 · 통합팩 설치 <svg><use href="#arrow"/></svg></a></div><p class="launch-note">이미 전용 앱을 사용 중이라면 ②를 누르세요.<br>다음부터는 통합팩 설치 버튼으로 바로 연결됩니다.</p></dialog>
+<dialog id="module-dialog" aria-labelledby="module-detail-title"><div class="dialog-top"><span class="eyebrow">INSIDE THE COLLECTION</span><button class="close" aria-label="닫기">×</button></div><div id="module-detail"></div></dialog>
+<div class="toast" role="status" aria-live="polite"></div>
+</body></html>

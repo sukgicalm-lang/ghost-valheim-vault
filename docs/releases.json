@@ -1,0 +1,77 @@
+[
+    {
+        "version":  "1.0.4",
+        "date":  "2026-10-23",
+        "file":  "downloads/Ghost-GhostValheimSuite-1.0.4.zip",
+        "bytes":  4317584,
+        "sha256":  "e140d9be338f83189ae3fd203d29ac905c22d4c2f7362cb12bf4d55580bdf7a7",
+        "appIntegration":  true,
+        "dependencies":  [
+                             "denikson-BepInExPack_Valheim-5.4.2351",
+                             "ValheimModding-JsonDotNET-13.0.4",
+                             "shudnal-ConfigurationManager-1.1.25"
+                         ],
+        "notes":  "둠 경갑 재질 검색 오류 수정 · 게임에 로딩된 장비/캐릭터 재질을 복제해 텍스처 적용. 실제 착용 모습은 업데이트 후 확인해 주세요.",
+        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.4/Ghost-GhostValheimSuite-1.0.4.zip"
+    },
+    {
+        "version":  "1.0.3",
+        "date":  "2026-10-23",
+        "file":  "downloads/Ghost-GhostValheimSuite-1.0.3.zip",
+        "bytes":  4309256,
+        "sha256":  "ee5766091411f5aa26cde5cd5c8bca0ca82a0b7184c8ad1f6bbe71ab99368ff4",
+        "appIntegration":  true,
+        "dependencies":  [
+                             "denikson-BepInExPack_Valheim-5.4.2351",
+                             "ValheimModding-JsonDotNET-13.0.4",
+                             "shudnal-ConfigurationManager-1.1.25"
+                         ],
+        "notes":  "둠 경갑 Spine 간격 오류 수정 · 골반/어깨 기준의 몸통 변환 및 보조 관절 호환 보강. 실제 착용 모습은 업데이트 후 확인해 주세요.",
+        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.3/Ghost-GhostValheimSuite-1.0.3.zip"
+    },
+    {
+        "version":  "1.0.2",
+        "date":  "2026-10-23",
+        "file":  "downloads/Ghost-GhostValheimSuite-1.0.2.zip",
+        "bytes":  4306908,
+        "sha256":  "5068277765a66bca2d8d1c54dd13a435276eab0c642497cef67c45c8cee93d21",
+        "appIntegration":  true,
+        "dependencies":  [
+                             "denikson-BepInExPack_Valheim-5.4.2351",
+                             "ValheimModding-JsonDotNET-13.0.4",
+                             "shudnal-ConfigurationManager-1.1.25"
+                         ],
+        "notes":  "둠 경갑 외형이 표시되지 않던 모델 단위 변환 오류 수정 · 외형 해금과 기존 선택 유지. 실제 착용 모습은 업데이트 후 확인해 주세요.",
+        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.2/Ghost-GhostValheimSuite-1.0.2.zip"
+    },
+    {
+        "version":  "1.0.1",
+        "date":  "2026-10-23",
+        "file":  "downloads/Ghost-GhostValheimSuite-1.0.1.zip",
+        "bytes":  4304826,
+        "sha256":  "0e97e35174816de720157c499ddb7eee87d12c751df74327288057ae46b9fc49",
+        "appIntegration":  true,
+        "dependencies":  [
+                             "denikson-BepInExPack_Valheim-5.4.2351",
+                             "ValheimModding-JsonDotNET-13.0.4",
+                             "shudnal-ConfigurationManager-1.1.25"
+                         ],
+        "notes":  "리니지2 둠 경갑 남성 외형 추가 · 접속 시 자동 해금 · 기존 외형 메뉴에서 선택. 실제 착용은 첫 확인이 필요한 테스트 배포.",
+        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.1/Ghost-GhostValheimSuite-1.0.1.zip"
+    },
+    {
+        "version":  "1.0.0",
+        "date":  "2026-10-22",
+        "file":  "downloads/Ghost-GhostValheimSuite-1.0.0.zip",
+        "bytes":  2859190,
+        "sha256":  "8c4f1f4602d8a83e303f3bb8f1a916adc058f9050d691943ec46f4e4f7a044d3",
+        "appIntegration":  true,
+        "dependencies":  [
+                             "denikson-BepInExPack_Valheim-5.4.2351",
+                             "ValheimModding-JsonDotNET-13.0.4",
+                             "shudnal-ConfigurationManager-1.1.25"
+                         ],
+        "notes":  "장비 선택 교환, 숙련도 경험치 2배, 발효·벨트 설정과 수정 모드 통합.",
+        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.0/Ghost-GhostValheimSuite-1.0.0.zip"
+    }
+]
