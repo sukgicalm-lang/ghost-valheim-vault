@@ -1,8 +1,8 @@
 {
-    "version":  "1.0.4",
+    "version":  "1.0.5",
     "date":  "2026-10-24",
-    "file":  "installers/GhostR2-Windows-1.0.4.zip",
-    "bytes":  219329369,
-    "sha256":  "ae8821ec383091afd5927cfe6df97bc7a87701c5c256c9d061f228eb3176b9af",
-    "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/client-1.0.4/GhostR2-Windows-1.0.4.zip"
+    "file":  "installers/GhostR2-Windows-1.0.5.zip",
+    "bytes":  219330504,
+    "sha256":  "f3f9d2c4250e71ffbc8e513553aadc536495a9764988a69d0695b80fecdeb370",
+    "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/client-1.0.5/GhostR2-Windows-1.0.5.zip"
 }

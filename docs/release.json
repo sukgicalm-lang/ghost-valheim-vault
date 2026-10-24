@@ -1,15 +1,15 @@
 {
-    "version":  "1.0.13",
+    "version":  "1.0.15",
     "date":  "2026-10-24",
-    "file":  "downloads/Ghost-GhostValheimSuite-1.0.13.zip",
-    "bytes":  59824155,
-    "sha256":  "45cf13a3fff55015aff79cc7b187a65f0621cf276b1e3ce69c80e01c7ac22915",
+    "file":  "downloads/Ghost-GhostValheimSuite-1.0.15.zip",
+    "bytes":  59825345,
+    "sha256":  "84b6eefb5b32a994f904ca929ef7023d60e3ffa6617c8865fea549687143278f",
     "appIntegration":  true,
     "dependencies":  [
                          "denikson-BepInExPack_Valheim-5.4.2351",
                          "ValheimModding-JsonDotNET-13.0.4",
                          "shudnal-ConfigurationManager-1.1.25"
                      ],
-    "notes":  "활 설정 완전 고정 / 일반 사격 기본 이펙트 / 강공 이펙트1.5배 / 강공 확산각 절반 / 9발9개 소모",
-    "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.13/Ghost-GhostValheimSuite-1.0.13.zip"
+    "notes":  "강공 화살1발당 피해1.5배·9발 / 준비2.5배 / 확산20% 확대 / 런처1.0.5 버전 표시 수정",
+    "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.15/Ghost-GhostValheimSuite-1.0.15.zip"
 }
