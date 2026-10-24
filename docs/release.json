@@ -1,15 +1,15 @@
 {
-    "version":  "1.0.15",
+    "version":  "1.0.16",
     "date":  "2026-10-24",
-    "file":  "downloads/Ghost-GhostValheimSuite-1.0.15.zip",
-    "bytes":  59825345,
-    "sha256":  "84b6eefb5b32a994f904ca929ef7023d60e3ffa6617c8865fea549687143278f",
+    "file":  "downloads/Ghost-GhostValheimSuite-1.0.16.zip",
+    "bytes":  59830928,
+    "sha256":  "6cc75bc331b546995d53cc777aa39c598f911495c4653c280016effbcb720c91",
     "appIntegration":  true,
     "dependencies":  [
                          "denikson-BepInExPack_Valheim-5.4.2351",
                          "ValheimModding-JsonDotNET-13.0.4",
                          "shudnal-ConfigurationManager-1.1.25"
                      ],
-    "notes":  "강공 화살1발당 피해1.5배·9발 / 준비2.5배 / 확산20% 확대 / 런처1.0.5 버전 표시 수정",
-    "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.15/Ghost-GhostValheimSuite-1.0.15.zip"
+    "notes":  "자동 줍기 항상 켜짐·V 전환/키설정 제거 / 친구 설정 동기화 호환 오류 수정",
+    "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.16/Ghost-GhostValheimSuite-1.0.16.zip"
 }
