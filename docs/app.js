@@ -18,3 +18,6 @@ async function loadRelease(manual=false){const button=$('#check-release');if(man
 $('#check-release').addEventListener('click',()=>loadRelease(true));
 $('#copy-hash').addEventListener('click',async()=>{const hash=window.ghostRelease?.sha256;if(!hash){toast('배포 정보를 먼저 확인한 뒤 다시 시도하세요.');return}try{await navigator.clipboard.writeText(hash);toast('SHA-256 전체 검증값을 복사했습니다.')}catch{$('#release-hash').textContent=hash;$('#release-hash').style.overflowWrap='anywhere';toast('전체 검증값을 표시했습니다. 선택해서 복사하세요.')}});
 render();loadRelease();
+
+/* ghost-count-v1 */
+document.querySelectorAll('.catalog-disclosure>summary b, [data-filter=all] span').forEach(x=>x.textContent=modules.length);
