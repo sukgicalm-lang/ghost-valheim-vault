@@ -1,5 +1,20 @@
 [
     {
+        "version":  "1.0.12",
+        "date":  "2026-10-24",
+        "file":  "downloads/Ghost-GhostValheimSuite-1.0.12.zip",
+        "bytes":  59824806,
+        "sha256":  "2c02fbdb5327a1b7a570980a14549d140b880faf54cbf28f545a0ba50b48a655",
+        "appIntegration":  true,
+        "dependencies":  [
+                             "denikson-BepInExPack_Valheim-5.4.2351",
+                             "ValheimModding-JsonDotNET-13.0.4",
+                             "shudnal-ConfigurationManager-1.1.25"
+                         ],
+        "notes":  "활 강공격 9발 정식 추가 / 준비 시간 3배 / 이펙트 50% 강화 / 일반 활 당김 속도 2배 고정",
+        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.12/Ghost-GhostValheimSuite-1.0.12.zip"
+    },
+    {
         "version":  "1.0.11",
         "date":  "2026-10-24",
         "file":  "downloads/Ghost-GhostValheimSuite-1.0.11.zip",

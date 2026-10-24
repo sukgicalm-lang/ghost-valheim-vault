@@ -1,15 +1,15 @@
 {
-    "version":  "1.0.11",
+    "version":  "1.0.12",
     "date":  "2026-10-24",
-    "file":  "downloads/Ghost-GhostValheimSuite-1.0.11.zip",
-    "bytes":  59812312,
-    "sha256":  "4cb9b1eda9b9936cee59e364457b1a1623bc71da9389a8acb815c9fc3b8b4e67",
+    "file":  "downloads/Ghost-GhostValheimSuite-1.0.12.zip",
+    "bytes":  59824806,
+    "sha256":  "2c02fbdb5327a1b7a570980a14549d140b880faf54cbf28f545a0ba50b48a655",
     "appIntegration":  true,
     "dependencies":  [
                          "denikson-BepInExPack_Valheim-5.4.2351",
                          "ValheimModding-JsonDotNET-13.0.4",
                          "shudnal-ConfigurationManager-1.1.25"
                      ],
-    "notes":  "활 시위 당기는 속도 2배 / 숙련도 효과 유지 / Wardrobe 0.5.4 보존",
-    "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.11/Ghost-GhostValheimSuite-1.0.11.zip"
+    "notes":  "활 강공격 9발 정식 추가 / 준비 시간 3배 / 이펙트 50% 강화 / 일반 활 당김 속도 2배 고정",
+    "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.12/Ghost-GhostValheimSuite-1.0.12.zip"
 }
