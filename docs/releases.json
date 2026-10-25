@@ -1,5 +1,20 @@
 [
     {
+        "version":  "1.0.17",
+        "date":  "2026-10-25",
+        "file":  "downloads/Ghost-GhostValheimSuite-1.0.17.zip",
+        "bytes":  59854837,
+        "sha256":  "1bfb87c849951587ed3aa551b54e47f3acff2aab24b11c65ae7e3e9f1632414c",
+        "appIntegration":  true,
+        "dependencies":  [
+                             "denikson-BepInExPack_Valheim-5.4.2351",
+                             "ValheimModding-JsonDotNET-13.0.4",
+                             "shudnal-ConfigurationManager-1.1.25"
+                         ],
+        "notes":  "지도 순간이동 아이템·전투 제한 제거 / 미탐험 지역 금지·최소 100m 유지",
+        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.17/Ghost-GhostValheimSuite-1.0.17.zip"
+    },
+    {
         "version":  "1.0.16",
         "date":  "2026-10-24",
         "file":  "downloads/Ghost-GhostValheimSuite-1.0.16.zip",
