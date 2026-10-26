@@ -1,5 +1,20 @@
 [
     {
+        "version":  "1.0.19",
+        "date":  "2026-10-26",
+        "file":  "downloads/Ghost-GhostValheimSuite-1.0.19.zip",
+        "bytes":  86090023,
+        "sha256":  "4ab43d15188b59e7b5ff6152129ca08bede2d5ed4e4244ae3d62f47172045902",
+        "appIntegration":  true,
+        "dependencies":  [
+                             "denikson-BepInExPack_Valheim-5.4.2351",
+                             "ValheimModding-JsonDotNET-13.0.4",
+                             "shudnal-ConfigurationManager-1.1.25"
+                         ],
+        "notes":  "목·투구 연결과 목 피부 보정 / 군주 탐식자 포함·기존 의상·망토·설정 유지",
+        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.19/Ghost-GhostValheimSuite-1.0.19.zip"
+    },
+    {
         "version":  "1.0.18",
         "date":  "2026-10-26",
         "file":  "downloads/Ghost-GhostValheimSuite-1.0.18.zip",
