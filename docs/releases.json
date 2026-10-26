@@ -1,5 +1,20 @@
 [
     {
+        "version":  "1.0.20",
+        "date":  "2026-10-27",
+        "file":  "downloads/Ghost-GhostValheimSuite-1.0.20.zip",
+        "bytes":  247086247,
+        "sha256":  "ced600e7bf6423a9889f9f084a323d5589ceb8d13e6a33922ea06e3082d12032",
+        "appIntegration":  true,
+        "dependencies":  [
+                             "denikson-BepInExPack_Valheim-5.4.2351",
+                             "ValheimModding-JsonDotNET-13.0.4",
+                             "shudnal-ConfigurationManager-1.1.25"
+                         ],
+        "notes":  "원작 외형 4종 전환 테스트 / 원작 목·머리·피부·눈·수염 연결, 기존 모드·개인 설정 유지",
+        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.20/Ghost-GhostValheimSuite-1.0.20.zip"
+    },
+    {
         "version":  "1.0.19",
         "date":  "2026-10-26",
         "file":  "downloads/Ghost-GhostValheimSuite-1.0.19.zip",
