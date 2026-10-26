@@ -1,0 +1,11 @@
+/* ghost-wardrobe-four-v1.3.1 */
+.wardrobe-portrait[data-slot=back]{transform:translate(-50%,-35px) scale(.64);opacity:.28;filter:brightness(.5);z-index:0}
+.wardrobe-dots button{pointer-events:auto;display:block;border:0;border-radius:0;width:24px;min-height:24px;padding:11px 0;background:linear-gradient(#c0aa7833,#c0aa7833) center/100% 2px no-repeat}
+.wardrobe-dots button[data-active=true]{background-image:linear-gradient(#dfca9d,#dfca9d)}
+.wardrobe-dots button:hover{background-image:linear-gradient(#f3dfb9,#f3dfb9)}
+.wardrobe-cards{grid-template-columns:repeat(4,minmax(0,1fr));gap:22px}
+.look-text{padding-left:20px;padding-right:20px}
+.look-text h3{font-size:23px;letter-spacing:1.5px}
+@media(max-width:1100px) and (min-width:761px){.wardrobe-cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}.look-art{height:350px}}
+@media(max-width:760px){.wardrobe-cards{grid-template-columns:1fr;gap:18px}.look-text{padding:24px 17px 24px 0}.look-text h3{font-size:20px;letter-spacing:1.1px}}
+@media(max-width:380px){.look-text h3{font-size:18px}}
