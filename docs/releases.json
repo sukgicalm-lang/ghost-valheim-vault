@@ -1,5 +1,20 @@
 [
     {
+        "version":  "1.0.18",
+        "date":  "2026-10-26",
+        "file":  "downloads/Ghost-GhostValheimSuite-1.0.18.zip",
+        "bytes":  86052222,
+        "sha256":  "55a88bf791f90576ddbba07a471317a21938b339181d409aec27138b4f5992d6",
+        "appIntegration":  true,
+        "dependencies":  [
+                             "denikson-BepInExPack_Valheim-5.4.2351",
+                             "ValheimModding-JsonDotNET-13.0.4",
+                             "shudnal-ConfigurationManager-1.1.25"
+                         ],
+        "notes":  "군주 탐식자 외형 추가 / 기존 의상·망토·게임 설정 유지",
+        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.18/Ghost-GhostValheimSuite-1.0.18.zip"
+    },
+    {
         "version":  "1.0.17",
         "date":  "2026-10-25",
         "file":  "downloads/Ghost-GhostValheimSuite-1.0.17.zip",

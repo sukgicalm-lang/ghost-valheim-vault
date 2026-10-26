@@ -1,15 +1,15 @@
 {
-    "version":  "1.0.17",
-    "date":  "2026-10-25",
-    "file":  "downloads/Ghost-GhostValheimSuite-1.0.17.zip",
-    "bytes":  59854837,
-    "sha256":  "1bfb87c849951587ed3aa551b54e47f3acff2aab24b11c65ae7e3e9f1632414c",
+    "version":  "1.0.18",
+    "date":  "2026-10-26",
+    "file":  "downloads/Ghost-GhostValheimSuite-1.0.18.zip",
+    "bytes":  86052222,
+    "sha256":  "55a88bf791f90576ddbba07a471317a21938b339181d409aec27138b4f5992d6",
     "appIntegration":  true,
     "dependencies":  [
                          "denikson-BepInExPack_Valheim-5.4.2351",
                          "ValheimModding-JsonDotNET-13.0.4",
                          "shudnal-ConfigurationManager-1.1.25"
                      ],
-    "notes":  "지도 순간이동 아이템·전투 제한 제거 / 미탐험 지역 금지·최소 100m 유지",
-    "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.17/Ghost-GhostValheimSuite-1.0.17.zip"
+    "notes":  "군주 탐식자 외형 추가 / 기존 의상·망토·게임 설정 유지",
+    "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.18/Ghost-GhostValheimSuite-1.0.18.zip"
 }
