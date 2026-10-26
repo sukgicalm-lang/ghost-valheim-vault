@@ -1,15 +1,15 @@
 {
-    "version":  "1.0.20",
+    "version":  "1.0.21",
     "date":  "2026-10-27",
-    "file":  "downloads/Ghost-GhostValheimSuite-1.0.20.zip",
-    "bytes":  247086247,
-    "sha256":  "ced600e7bf6423a9889f9f084a323d5589ceb8d13e6a33922ea06e3082d12032",
+    "file":  "downloads/Ghost-GhostValheimSuite-1.0.21.zip",
+    "bytes":  247099956,
+    "sha256":  "704eaa4b648c03b98dfdca225a252e15e5a5cd3eec9f1a136a90b18b8752faa9",
     "appIntegration":  true,
     "dependencies":  [
                          "denikson-BepInExPack_Valheim-5.4.2351",
                          "ValheimModding-JsonDotNET-13.0.4",
                          "shudnal-ConfigurationManager-1.1.25"
                      ],
-    "notes":  "원작 외형 4종 전환 테스트 / 원작 목·머리·피부·눈·수염 연결, 기존 모드·개인 설정 유지",
-    "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.20/Ghost-GhostValheimSuite-1.0.20.zip"
+    "notes":  "원작 체형 비율·가면 피부 돌출 수정 테스트 / 4종 Original 체형, 두 체형의 얼굴 가림 보정",
+    "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.21/Ghost-GhostValheimSuite-1.0.21.zip"
 }
