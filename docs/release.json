@@ -1,15 +1,15 @@
 {
-    "version":  "1.0.26",
+    "version":  "1.0.27",
     "date":  "2026-10-27",
-    "file":  "downloads/Ghost-GhostValheimSuite-1.0.26.zip",
-    "bytes":  378521111,
-    "sha256":  "22a7267db2431bf1304f2e09c93246ce4838f6cf5297ad9e1d0154105d8b8c3f",
+    "file":  "downloads/Ghost-GhostValheimSuite-1.0.27.zip",
+    "bytes":  377409124,
+    "sha256":  "1e1145b034db09a6c5a52e4d15f73569a3fcbfddc29d45aef2eff94588c2612f",
     "appIntegration":  true,
     "dependencies":  [
                          "denikson-BepInExPack_Valheim-5.4.2351",
                          "ValheimModding-JsonDotNET-13.0.4",
                          "shudnal-ConfigurationManager-1.1.25"
                      ],
-    "notes":  "티리엘 빛의 날개 망토 / 부드러운 어깨·팔 불길 / 기존 외형·인벤토리 방어 유지",
-    "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.26/Ghost-GhostValheimSuite-1.0.26.zip"
+    "notes":  "티리엘 옷 효과 확대 오류 수정 · 은은한 갑옷 빛 · 굽이치는 별도 날개",
+    "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.27/Ghost-GhostValheimSuite-1.0.27.zip"
 }

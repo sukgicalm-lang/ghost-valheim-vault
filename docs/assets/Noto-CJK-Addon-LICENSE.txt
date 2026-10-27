@@ -1,4 +1,4 @@
-Noto CJK Sans — https://raw.githubusercontent.com/notofonts/noto-cjk/main/Sans/LICENSE
+﻿Noto CJK Sans — https://raw.githubusercontent.com/notofonts/noto-cjk/main/Sans/LICENSE
 
 This Font Software is licensed under the SIL Open Font License,
 Version 1.1.

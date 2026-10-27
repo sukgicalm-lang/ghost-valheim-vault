@@ -1,4 +1,4 @@
-/* ghost-wardrobe-five-v1.4.2 */
+/* ghost-wardrobe-five-v1.4.3 */
 .wardrobe-portrait[data-slot=back-right]{transform:translate(calc(-50% + 80px),-42px) scale(.57);opacity:.24;filter:brightness(.46);z-index:0}
 .wardrobe-portrait[data-slot=back-left]{transform:translate(calc(-50% - 80px),-42px) scale(.57);opacity:.24;filter:brightness(.46);z-index:0}
 .wardrobe-dots button{pointer-events:auto;display:block;border:0;border-radius:0;width:24px;min-height:24px;padding:11px 0;background:linear-gradient(#c0aa7833,#c0aa7833) center/100% 2px no-repeat}
