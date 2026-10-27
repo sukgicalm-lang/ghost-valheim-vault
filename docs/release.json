@@ -1,15 +1,15 @@
 {
-    "version":  "1.0.25",
+    "version":  "1.0.26",
     "date":  "2026-10-27",
-    "file":  "downloads/Ghost-GhostValheimSuite-1.0.25.zip",
-    "bytes":  377358796,
-    "sha256":  "bb242685ebb0dffd1de9cf63cf26827f8238178018790da770d468ad798735d6",
+    "file":  "downloads/Ghost-GhostValheimSuite-1.0.26.zip",
+    "bytes":  378521111,
+    "sha256":  "22a7267db2431bf1304f2e09c93246ce4838f6cf5297ad9e1d0154105d8b8c3f",
     "appIntegration":  true,
     "dependencies":  [
                          "denikson-BepInExPack_Valheim-5.4.2351",
                          "ValheimModding-JsonDotNET-13.0.4",
                          "shudnal-ConfigurationManager-1.1.25"
                      ],
-    "notes":  "티리엘 빛 흐름 / 홈페이지5종회전 / 인벤토리 방어 유지",
-    "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.25/Ghost-GhostValheimSuite-1.0.25.zip"
+    "notes":  "티리엘 빛의 날개 망토 / 부드러운 어깨·팔 불길 / 기존 외형·인벤토리 방어 유지",
+    "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.26/Ghost-GhostValheimSuite-1.0.26.zip"
 }
