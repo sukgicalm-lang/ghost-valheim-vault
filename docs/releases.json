@@ -1,5 +1,20 @@
 [
     {
+        "version":  "1.0.25",
+        "date":  "2026-10-27",
+        "file":  "downloads/Ghost-GhostValheimSuite-1.0.25.zip",
+        "bytes":  377358796,
+        "sha256":  "bb242685ebb0dffd1de9cf63cf26827f8238178018790da770d468ad798735d6",
+        "appIntegration":  true,
+        "dependencies":  [
+                             "denikson-BepInExPack_Valheim-5.4.2351",
+                             "ValheimModding-JsonDotNET-13.0.4",
+                             "shudnal-ConfigurationManager-1.1.25"
+                         ],
+        "notes":  "티리엘 빛 흐름 / 홈페이지5종회전 / 인벤토리 방어 유지",
+        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.25/Ghost-GhostValheimSuite-1.0.25.zip"
+    },
+    {
         "version":  "1.0.23",
         "date":  "2026-10-27",
         "file":  "downloads/Ghost-GhostValheimSuite-1.0.23.zip",

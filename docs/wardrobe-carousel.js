@@ -1,8 +1,8 @@
-/* ghost-wardrobe-four-v1.3.1 */
+/* ghost-wardrobe-five-v1.4.0 */
 (()=>{'use strict';
  const root=document.querySelector('[data-wardrobe-carousel]');if(!root||root.dataset.carouselReady)return;
  const hero=root.closest('.hero'),portraits=[...root.querySelectorAll('[data-character]')],dots=[...root.querySelectorAll('[data-wardrobe-index]')];
- const slots=['front','right','back','left'];if(portraits.length!==slots.length)return;root.dataset.carouselReady='true';
+ const slots=['front','right','back-right','back-left','left'];if(portraits.length!==slots.length)return;root.dataset.carouselReady='true';
  const reduce=matchMedia('(prefers-reduced-motion: reduce)');let current=0,timer=null,visible=true,animations=[];
  function stopped(){return document.hidden||!visible||reduce.matches||hero?.dataset.ghostMotion==='still';}
  function go(index,animate=true){
