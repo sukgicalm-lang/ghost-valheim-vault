@@ -1,5 +1,20 @@
 [
     {
+        "version":  "1.0.28",
+        "date":  "2026-10-28",
+        "file":  "downloads/Ghost-GhostValheimSuite-1.0.28.zip",
+        "bytes":  377416357,
+        "sha256":  "ccb90769075fe11efd72ea8c6874f83ac7d9f8db626908f547a5e6f6e6a7670f",
+        "appIntegration":  true,
+        "dependencies":  [
+                             "denikson-BepInExPack_Valheim-5.4.2351",
+                             "ValheimModding-JsonDotNET-13.0.4",
+                             "shudnal-ConfigurationManager-1.1.25"
+                         ],
+        "notes":  "티리엘 목 피부 관통 수정 · 갑옷 빛 가시성 · 넓고 흐르는 별도 날개",
+        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.28/Ghost-GhostValheimSuite-1.0.28.zip"
+    },
+    {
         "version":  "1.0.27",
         "date":  "2026-10-27",
         "file":  "downloads/Ghost-GhostValheimSuite-1.0.27.zip",
