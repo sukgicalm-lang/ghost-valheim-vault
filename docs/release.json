@@ -1,15 +1,15 @@
 {
-    "version":  "1.0.30",
+    "version":  "1.0.31",
     "date":  "2026-10-28",
-    "file":  "downloads/Ghost-GhostValheimSuite-1.0.30.zip",
-    "bytes":  381437736,
-    "sha256":  "d4afb1086ff02674a54d0677c86c04da8622271434b6da73bf25b559e778e171",
+    "file":  "downloads/Ghost-GhostValheimSuite-1.0.31.zip",
+    "bytes":  381448748,
+    "sha256":  "31b7d9694bd4ee58b935a7abfb8131437336bfc713d2dfe3c1d16222a62294ed",
     "appIntegration":  true,
     "dependencies":  [
                          "denikson-BepInExPack_Valheim-5.4.2351",
                          "ValheimModding-JsonDotNET-13.0.4",
                          "shudnal-ConfigurationManager-1.1.25"
                      ],
-    "notes":  "티리엘 플레이어 원본 날개 · 원본 비율과 cloth 연결에 따른 이동·바람 반응 (게임 검증 전)",
-    "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.30/Ghost-GhostValheimSuite-1.0.30.zip"
+    "notes":  "티리엘 날개 접힘·앞쏠림 수정 후보 — 누락 원본 blend/3점 연결/회전 운반 복원",
+    "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.31/Ghost-GhostValheimSuite-1.0.31.zip"
 }

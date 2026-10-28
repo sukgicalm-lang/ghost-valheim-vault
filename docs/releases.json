@@ -1,5 +1,20 @@
 [
     {
+        "version":  "1.0.31",
+        "date":  "2026-10-28",
+        "file":  "downloads/Ghost-GhostValheimSuite-1.0.31.zip",
+        "bytes":  381448748,
+        "sha256":  "31b7d9694bd4ee58b935a7abfb8131437336bfc713d2dfe3c1d16222a62294ed",
+        "appIntegration":  true,
+        "dependencies":  [
+                             "denikson-BepInExPack_Valheim-5.4.2351",
+                             "ValheimModding-JsonDotNET-13.0.4",
+                             "shudnal-ConfigurationManager-1.1.25"
+                         ],
+        "notes":  "티리엘 날개 접힘·앞쏠림 수정 후보 — 누락 원본 blend/3점 연결/회전 운반 복원",
+        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.31/Ghost-GhostValheimSuite-1.0.31.zip"
+    },
+    {
         "version":  "1.0.30",
         "date":  "2026-10-28",
         "file":  "downloads/Ghost-GhostValheimSuite-1.0.30.zip",
