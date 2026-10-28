@@ -1,15 +1,15 @@
 {
-    "version":  "1.0.28",
+    "version":  "1.0.29",
     "date":  "2026-10-28",
-    "file":  "downloads/Ghost-GhostValheimSuite-1.0.28.zip",
-    "bytes":  377416357,
-    "sha256":  "ccb90769075fe11efd72ea8c6874f83ac7d9f8db626908f547a5e6f6e6a7670f",
+    "file":  "downloads/Ghost-GhostValheimSuite-1.0.29.zip",
+    "bytes":  378493795,
+    "sha256":  "af2e6a76977f3288f07cff0a5cfbcc55f89d3bf27a4412a7adab5c850fa62e7c",
     "appIntegration":  true,
     "dependencies":  [
                          "denikson-BepInExPack_Valheim-5.4.2351",
                          "ValheimModding-JsonDotNET-13.0.4",
                          "shudnal-ConfigurationManager-1.1.25"
                      ],
-    "notes":  "티리엘 목 피부 관통 수정 · 갑옷 빛 가시성 · 넓고 흐르는 별도 날개",
-    "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.28/Ghost-GhostValheimSuite-1.0.28.zip"
+    "notes":  "티리엘 원본 S15 날개 애니메이션 · 원본 텍스처 기반 갑옷 빛 (게임 검증 전)",
+    "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.29/Ghost-GhostValheimSuite-1.0.29.zip"
 }
