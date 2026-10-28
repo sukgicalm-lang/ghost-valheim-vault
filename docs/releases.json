@@ -1,5 +1,20 @@
 [
     {
+        "version":  "1.0.30",
+        "date":  "2026-10-28",
+        "file":  "downloads/Ghost-GhostValheimSuite-1.0.30.zip",
+        "bytes":  381437736,
+        "sha256":  "d4afb1086ff02674a54d0677c86c04da8622271434b6da73bf25b559e778e171",
+        "appIntegration":  true,
+        "dependencies":  [
+                             "denikson-BepInExPack_Valheim-5.4.2351",
+                             "ValheimModding-JsonDotNET-13.0.4",
+                             "shudnal-ConfigurationManager-1.1.25"
+                         ],
+        "notes":  "티리엘 플레이어 원본 날개 · 원본 비율과 cloth 연결에 따른 이동·바람 반응 (게임 검증 전)",
+        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.30/Ghost-GhostValheimSuite-1.0.30.zip"
+    },
+    {
         "version":  "1.0.29",
         "date":  "2026-10-28",
         "file":  "downloads/Ghost-GhostValheimSuite-1.0.29.zip",
