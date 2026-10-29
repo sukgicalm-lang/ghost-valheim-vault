@@ -1,5 +1,20 @@
 [
     {
+        "version":  "1.0.38",
+        "date":  "2026-10-29",
+        "file":  "downloads/Ghost-GhostValheimSuite-1.0.38.zip",
+        "bytes":  398747243,
+        "sha256":  "716d4f74d62390c5afe1c641e09445beffe332ff4c1ed0b2bac9fb20ef3788d0",
+        "appIntegration":  true,
+        "dependencies":  [
+                             "denikson-BepInExPack_Valheim-5.4.2351",
+                             "ValheimModding-JsonDotNET-13.0.4",
+                             "shudnal-ConfigurationManager-1.1.25"
+                         ],
+        "notes":  "둠 양손 무기 접점·활 상하 조준·방향별 이동 보완",
+        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.38/Ghost-GhostValheimSuite-1.0.38.zip"
+    },
+    {
         "version":  "1.0.37",
         "date":  "2026-10-29",
         "file":  "downloads/Ghost-GhostValheimSuite-1.0.37.zip",

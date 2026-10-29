@@ -1,4 +1,4 @@
-/* ghost-wardrobe-five-v1.4.17 */
+/* ghost-wardrobe-five-v1.4.18 */
 (()=>{'use strict';
  const root=document.querySelector('[data-wardrobe-carousel]');if(!root||root.dataset.carouselReady)return;
  const hero=root.closest('.hero'),portraits=[...root.querySelectorAll('[data-character]')],dots=[...root.querySelectorAll('[data-wardrobe-index]')];
