@@ -1,15 +1,15 @@
 {
-    "version":  "1.0.32",
+    "version":  "1.0.33",
     "date":  "2026-10-29",
-    "file":  "downloads/Ghost-GhostValheimSuite-1.0.32.zip",
-    "bytes":  381457177,
-    "sha256":  "29b1335560c740b83a09ecd5401e684990f65c3f6c3f646fed3dc34a28141a8d",
+    "file":  "downloads/Ghost-GhostValheimSuite-1.0.33.zip",
+    "bytes":  381464847,
+    "sha256":  "b673a96ec4e90425e270e6c3cabc2aac506135ca71c5097fc580c8e60dd7a8cd",
     "appIntegration":  true,
     "dependencies":  [
                          "denikson-BepInExPack_Valheim-5.4.2351",
                          "ValheimModding-JsonDotNET-13.0.4",
                          "shudnal-ConfigurationManager-1.1.25"
                      ],
-    "notes":  "티리엘 날개 크기 90%·투명도와 빛 겹침 완화 적용 후보",
-    "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.32/Ghost-GhostValheimSuite-1.0.32.zip"
+    "notes":  "티리엘 반투명한 빛·색감·흩어지는 날개 끝·부드러운 어깨/팔 흐름",
+    "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.33/Ghost-GhostValheimSuite-1.0.33.zip"
 }
