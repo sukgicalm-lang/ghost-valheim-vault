@@ -1,15 +1,15 @@
 {
-    "version":  "1.0.33",
+    "version":  "1.0.34",
     "date":  "2026-10-29",
-    "file":  "downloads/Ghost-GhostValheimSuite-1.0.33.zip",
-    "bytes":  381464847,
-    "sha256":  "b673a96ec4e90425e270e6c3cabc2aac506135ca71c5097fc580c8e60dd7a8cd",
+    "file":  "downloads/Ghost-GhostValheimSuite-1.0.34.zip",
+    "bytes":  381480009,
+    "sha256":  "500a95ab75904d073ba8fd2f9b2a728898a7bdbf3b5ad59b852e9465a5914dbb",
     "appIntegration":  true,
     "dependencies":  [
                          "denikson-BepInExPack_Valheim-5.4.2351",
                          "ValheimModding-JsonDotNET-13.0.4",
                          "shudnal-ConfigurationManager-1.1.25"
                      ],
-    "notes":  "티리엘 반투명한 빛·색감·흩어지는 날개 끝·부드러운 어깨/팔 흐름",
-    "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.33/Ghost-GhostValheimSuite-1.0.33.zip"
+    "notes":  "둠·해골기사·군주 탐식자의 공통 광전사 체형과 자세 기준",
+    "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.34/Ghost-GhostValheimSuite-1.0.34.zip"
 }
