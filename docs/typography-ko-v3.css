@@ -1,4 +1,4 @@
-/* Ghost Homepage 1.4.16 — clean Korean typography and centered controls. */
+/* Ghost Homepage 1.4.17 — clean Korean typography and centered controls. */
 @font-face{font-family:'Ghost Korean Sans';src:url('assets/ghost-kr-sans-v2.woff') format('woff');font-weight:100 900;font-style:normal;font-display:swap}
 :root{--sans:'Ghost Korean Sans','Malgun Gothic','Apple SD Gothic Neo',sans-serif;--serif:var(--sans)}
 html{font-synthesis:none;text-size-adjust:100%;-webkit-text-size-adjust:100%}

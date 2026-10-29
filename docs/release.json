@@ -1,15 +1,15 @@
 {
-    "version":  "1.0.36",
+    "version":  "1.0.37",
     "date":  "2026-10-29",
-    "file":  "downloads/Ghost-GhostValheimSuite-1.0.36.zip",
-    "bytes":  398725811,
-    "sha256":  "f89a37a36cb39b5fc82cc014aa1718e18b7c32c375b4b0595c3b46b328e62ddc",
+    "file":  "downloads/Ghost-GhostValheimSuite-1.0.37.zip",
+    "bytes":  398735795,
+    "sha256":  "a900f9990fed21c25e9ba4efca0515c50c2e95c1668edc1f4a1fc5e41a8cd848",
     "appIntegration":  true,
     "dependencies":  [
                          "denikson-BepInExPack_Valheim-5.4.2351",
                          "ValheimModding-JsonDotNET-13.0.4",
                          "shudnal-ConfigurationManager-1.1.25"
                      ],
-    "notes":  "둠 무기별 원본 자세·손잡이 정렬·수납 잔상 수정",
-    "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.36/Ghost-GhostValheimSuite-1.0.36.zip"
+    "notes":  "둠 창 손잡이·활 당김/유지·달리기 장신구 부착 수정",
+    "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.37/Ghost-GhostValheimSuite-1.0.37.zip"
 }
