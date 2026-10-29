@@ -1,5 +1,20 @@
 [
     {
+        "version":  "1.0.35",
+        "date":  "2026-10-29",
+        "file":  "downloads/Ghost-GhostValheimSuite-1.0.35.zip",
+        "bytes":  398714119,
+        "sha256":  "3b98f23f9737846369b87449a8b2ff9668ae6253f0728a1de736775c4eff3a2c",
+        "appIntegration":  true,
+        "dependencies":  [
+                             "denikson-BepInExPack_Valheim-5.4.2351",
+                             "ValheimModding-JsonDotNET-13.0.4",
+                             "shudnal-ConfigurationManager-1.1.25"
+                         ],
+        "notes":  "둠 경갑 남자 다크엘프 원본82뼈·체형·대기/걷기/달리기",
+        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.35/Ghost-GhostValheimSuite-1.0.35.zip"
+    },
+    {
         "version":  "1.0.34",
         "date":  "2026-10-29",
         "file":  "downloads/Ghost-GhostValheimSuite-1.0.34.zip",
