@@ -1,15 +1,15 @@
 {
-    "version":  "1.0.35",
+    "version":  "1.0.36",
     "date":  "2026-10-29",
-    "file":  "downloads/Ghost-GhostValheimSuite-1.0.35.zip",
-    "bytes":  398714119,
-    "sha256":  "3b98f23f9737846369b87449a8b2ff9668ae6253f0728a1de736775c4eff3a2c",
+    "file":  "downloads/Ghost-GhostValheimSuite-1.0.36.zip",
+    "bytes":  398725811,
+    "sha256":  "f89a37a36cb39b5fc82cc014aa1718e18b7c32c375b4b0595c3b46b328e62ddc",
     "appIntegration":  true,
     "dependencies":  [
                          "denikson-BepInExPack_Valheim-5.4.2351",
                          "ValheimModding-JsonDotNET-13.0.4",
                          "shudnal-ConfigurationManager-1.1.25"
                      ],
-    "notes":  "둠 경갑 남자 다크엘프 원본82뼈·체형·대기/걷기/달리기",
-    "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.35/Ghost-GhostValheimSuite-1.0.35.zip"
+    "notes":  "둠 무기별 원본 자세·손잡이 정렬·수납 잔상 수정",
+    "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.36/Ghost-GhostValheimSuite-1.0.36.zip"
 }

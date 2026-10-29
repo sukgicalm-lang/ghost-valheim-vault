@@ -1,5 +1,20 @@
 [
     {
+        "version":  "1.0.36",
+        "date":  "2026-10-29",
+        "file":  "downloads/Ghost-GhostValheimSuite-1.0.36.zip",
+        "bytes":  398725811,
+        "sha256":  "f89a37a36cb39b5fc82cc014aa1718e18b7c32c375b4b0595c3b46b328e62ddc",
+        "appIntegration":  true,
+        "dependencies":  [
+                             "denikson-BepInExPack_Valheim-5.4.2351",
+                             "ValheimModding-JsonDotNET-13.0.4",
+                             "shudnal-ConfigurationManager-1.1.25"
+                         ],
+        "notes":  "둠 무기별 원본 자세·손잡이 정렬·수납 잔상 수정",
+        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.36/Ghost-GhostValheimSuite-1.0.36.zip"
+    },
+    {
         "version":  "1.0.35",
         "date":  "2026-10-29",
         "file":  "downloads/Ghost-GhostValheimSuite-1.0.35.zip",
