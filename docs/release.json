@@ -1,15 +1,15 @@
 {
-    "version":  "1.0.39",
-    "date":  "2026-10-29",
-    "file":  "downloads/Ghost-GhostValheimSuite-1.0.39.zip",
-    "bytes":  398765563,
-    "sha256":  "11a55d8ecb0105071f56ec980e93d5045f5f1374ed05979dc92795dcc2734b4a",
+    "version":  "1.0.40",
+    "date":  "2026-10-30",
+    "file":  "downloads/Ghost-GhostValheimSuite-1.0.40.zip",
+    "bytes":  398775554,
+    "sha256":  "0c4d2677828c48e9ce38acd528f8cfa09188e83858e1d88f7f4568cb7020dd54",
     "appIntegration":  true,
     "dependencies":  [
                          "denikson-BepInExPack_Valheim-5.4.2351",
                          "ValheimModding-JsonDotNET-13.0.4",
                          "shudnal-ConfigurationManager-1.1.25"
                      ],
-    "notes":  "둠 무기 형상 기준 접점·활 조준 공중 회전 보완",
-    "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.39/Ghost-GhostValheimSuite-1.0.39.zip"
+    "notes":  "둠 창 수직·곡괭이 공격 방향·활 실제 당김 접점 수정",
+    "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.40/Ghost-GhostValheimSuite-1.0.40.zip"
 }
