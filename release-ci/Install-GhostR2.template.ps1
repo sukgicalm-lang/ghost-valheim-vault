@@ -2,20 +2,20 @@
 param([switch]$NoLaunch, [switch]$NoPause)
 $ErrorActionPreference = 'Stop'
 $resultCode = 0
-$sourceUrl = 'https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/client-1.0.8/GhostR2-Windows-1.0.8.zip'
+$sourceUrl = 'https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/client-1.0.9/GhostR2-Windows-1.0.9.zip'
 $expectedHash = '__RUNTIME_SHA256__'
-$payloadName = 'GhostR2-Windows-1.0.8.zip'
+$payloadName = 'GhostR2-Windows-1.0.9.zip'
 $temporary = $null
 try {
     if ($env:OS -ne 'Windows_NT') { throw '이 설치 도구는 Windows 10/11용입니다.' }
     if (Get-Process -Name 'r2modman','r2modmanPlus','GhostR2' -ErrorAction SilentlyContinue) { throw 'r2modman과 Ghost r2modman을 모두 종료한 뒤 설치하세요.' }
     $installBase = Join-Path $env:LOCALAPPDATA 'GhostR2'
-    $installPath = Join-Path $installBase '1.0.8'
+    $installPath = Join-Path $installBase '1.0.9'
     $temporary = Join-Path ([IO.Path]::GetTempPath()) ('GhostR2-' + [Guid]::NewGuid().ToString('N'))
     New-Item -ItemType Directory -Path $temporary -Force | Out-Null
     $localZip = Join-Path $PSScriptRoot $payloadName
     $zipPath = $localZip
-    Write-Host "`nGhost r2modman 1.0.8 설치`n" -ForegroundColor Green
+    Write-Host "`nGhost r2modman 1.0.9 설치`n" -ForegroundColor Green
     if (-not (Test-Path -LiteralPath $localZip -PathType Leaf)) {
         $zipPath = Join-Path $temporary $payloadName
         Write-Host 'Ghost 사이트에서 전용 앱을 다운로드합니다. 공개 배포 서버에서 내려받습니다.'
