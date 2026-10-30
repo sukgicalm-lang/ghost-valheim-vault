@@ -37,7 +37,7 @@ def main():
         path = pathlib.PurePosixPath(row['path'])
         if str(path) in seen or path.is_absolute() or '..' in path.parts or ':' in str(path):
             raise ValueError('Unsafe/duplicate patch path')
-        if path.parts[0] not in ('src', 'test') and str(path) not in ('package.json', 'BUILD_GHOST_1.0.6.md'):
+        if path.parts[0] not in ('src', 'test') and str(path) not in ('package.json', 'BUILD_GHOST_1.0.6.md', 'scripts/check-ghost-release.cjs'):
             raise ValueError('Unexpected launcher patch scope')
         seen.add(str(path))
         target = launcher / str(path)
@@ -64,7 +64,7 @@ def main():
         dlls = [name for name in z.namelist() if name.endswith('.dll')]
         if manifest['name'] != 'GhostSmelterControl' or manifest['version_number'] != '1.0.0' or dlls != ['plugins/GhostSmelterControl/GhostSmelterControl.dll']:
             raise ValueError('Unexpected smelter package structure')
-    print('Verified original launcher source, applied 16 scoped changes, and verified exact smelter release inputs.')
+    print(f'Verified original launcher source, applied {len(patch)} scoped changes, and verified exact smelter release inputs.')
 
 if __name__ == '__main__':
     main()
