@@ -27,12 +27,12 @@ function Build-GhostSmelterPatch([string]$IndexHtml, $PriorClient, $PriorRelease
     $section = @"
 <!-- GHOST-SMELTER-BEGIN -->
 <details id="ghost-smelter" class="setup-option">
-<summary><span class="setup-badge">선택 설치</span><strong>제련 편의 모드</strong><span class="setup-option-hint">기능 · 설치 안내</span></summary>
+<summary><span class="setup-badge">기본 포함</span><strong>제련 편의 모드</strong><span class="setup-option-hint">기능 · 설치 안내</span></summary>
 <div class="setup-option-body">
 <h3>Ghost 제련 제어 <small>v$($release.version)</small></h3>
 <p>일반 제련소·용광로·숯가마의 기본 생산 시간을 1초, 원료 한도를 100개로 설정합니다. 제련소·용광로의 석탄 한도도 100개이며 F1에서 조절할 수 있습니다.</p>
-<p>통합팩과 별도로 설치하는 선택 모드입니다. Ghost r2 $($client.version) 이상이 필요하며, 설치 전 기존 FrizzQOL Smelter Control을 제거하세요.</p>
-<a class="button outline install-link" href="ghostvault://v1/install/Ghost-GhostSmelterControl/latest">제련 편의 모드 설치 <svg aria-hidden="true"><use href="#arrow"/></svg></a>
+<p>통합팩과 함께 사용하는 필수 모드이며, 위의 전체 모드 설치에 포함됩니다. 설치 전 기존 FrizzQOL Smelter Control을 제거하세요.</p>
+
 <p class="setup-caption">런처가 새 버전을 자동으로 확인합니다. 업데이트는 Update All에서 적용하세요. 원료·연료의 소모 규칙과 생산물의 묶음 배출 방식은 유지합니다.</p>
 </div>
 </details>
