@@ -36,7 +36,7 @@ git -C $root config user.email '41898282+github-actions[bot]@users.noreply.githu
 git -C $root add -- docs/index.html docs/client-release.json docs/smelter-release.json docs/smelter-releases.json
 git -C $root diff --cached --quiet
 if ($LASTEXITCODE -ne 0) {
-    git -C $root commit -m 'Publish standalone Ghost smelter and launcher 1.0.6'
+    git -C $root commit -m 'Publish standalone Ghost smelter and launcher 1.0.7'
     if ($LASTEXITCODE) { throw 'Could not commit website release metadata' }
     git -C $root push origin HEAD:main
     if ($LASTEXITCODE) { throw 'Concurrent website update; stopped without force-pushing' }
@@ -47,9 +47,10 @@ for ($i = 0; $i -lt 24; $i++) {
     try {
         $feed = Invoke-RestMethod ('https://sukgicalm-lang.github.io/ghost-valheim-vault/smelter-release.json?verify=' + [guid]::NewGuid().ToString('N')) -TimeoutSec 20
         $liveClient = Invoke-RestMethod ('https://sukgicalm-lang.github.io/ghost-valheim-vault/client-release.json?verify=' + [guid]::NewGuid().ToString('N')) -TimeoutSec 20
-        if ($feed.sha256 -eq $bundle.smelter.sha256 -and $feed.version -eq '1.0.0' -and $liveClient.sha256 -eq $bundle.client.sha256 -and $liveClient.version -eq '1.0.6') { $verified = $true; break }
+        if ($feed.sha256 -eq $bundle.smelter.sha256 -and $feed.version -eq '1.0.0' -and $liveClient.sha256 -eq $bundle.client.sha256 -and $liveClient.version -eq '1.0.7') { $verified = $true; break }
     } catch { }
     Start-Sleep -Seconds 10
 }
 if (-not $verified) { throw 'Release assets are uploaded, but public Pages metadata is not yet verified' }
-Write-Host 'Public Ghost smelter 1.0.0 / launcher 1.0.6 release verified.'
+Write-Host 'Public Ghost smelter 1.0.0 / launcher 1.0.7 release verified.'
+

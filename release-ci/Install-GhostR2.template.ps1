@@ -2,20 +2,20 @@
 param([switch]$NoLaunch, [switch]$NoPause)
 $ErrorActionPreference = 'Stop'
 $resultCode = 0
-$sourceUrl = 'https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/client-1.0.6/GhostR2-Windows-1.0.6.zip'
+$sourceUrl = 'https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/client-1.0.7/GhostR2-Windows-1.0.7.zip'
 $expectedHash = '__RUNTIME_SHA256__'
-$payloadName = 'GhostR2-Windows-1.0.6.zip'
+$payloadName = 'GhostR2-Windows-1.0.7.zip'
 $temporary = $null
 try {
     if ($env:OS -ne 'Windows_NT') { throw '이 설치 도구는 Windows 10/11용입니다.' }
     if (Get-Process -Name 'r2modman','r2modmanPlus','GhostR2' -ErrorAction SilentlyContinue) { throw 'r2modman과 Ghost r2modman을 모두 종료한 뒤 설치하세요.' }
     $installBase = Join-Path $env:LOCALAPPDATA 'GhostR2'
-    $installPath = Join-Path $installBase '1.0.6'
+    $installPath = Join-Path $installBase '1.0.7'
     $temporary = Join-Path ([IO.Path]::GetTempPath()) ('GhostR2-' + [Guid]::NewGuid().ToString('N'))
     New-Item -ItemType Directory -Path $temporary -Force | Out-Null
     $localZip = Join-Path $PSScriptRoot $payloadName
     $zipPath = $localZip
-    Write-Host "`nGhost r2modman 1.0.6 설치`n" -ForegroundColor Green
+    Write-Host "`nGhost r2modman 1.0.7 설치`n" -ForegroundColor Green
     if (-not (Test-Path -LiteralPath $localZip -PathType Leaf)) {
         $zipPath = Join-Path $temporary $payloadName
         Write-Host 'Ghost 사이트에서 전용 앱을 다운로드합니다. 공개 배포 서버에서 내려받습니다.'
@@ -57,7 +57,7 @@ try {
     $shortcut = $shell.CreateShortcut((Join-Path $desktop 'Ghost r2modman.lnk'))
     $shortcut.TargetPath = $exe; $shortcut.WorkingDirectory = $installPath; $shortcut.Save()
     Write-Host '설치 완료. 바탕화면에 Ghost r2modman 바로가기를 만들었습니다.' -ForegroundColor Green
-    Write-Host 'Valheim과 사용할 프로필을 선택한 뒤 사이트의 INSTALL WITH GHOST R2 버튼을 누르세요.'
+    Write-Host 'Valheim과 사용할 프로필을 선택한 뒤 홈페이지에서 전체 모드를 설치하세요. 이후 런처 새 버전은 자동으로 적용됩니다.'
     Write-Host '일반 r2modman의 설치와 ror2mm 연결은 변경하지 않았습니다.'
     if (-not $NoLaunch) { Start-Process -FilePath $exe -WorkingDirectory $installPath }
 }
@@ -67,3 +67,4 @@ finally {
 }
 if (-not $NoPause) { $null = Read-Host '엔터를 누르면 닫습니다' }
 exit $resultCode
+

@@ -49,7 +49,10 @@ jobs:
           $env:GHOST_PACK_FIXTURE = (Resolve-Path ../smelter-fixture).Path
           pnpm exec vitest run --config ghost.vitest.config.ts
           if ($LASTEXITCODE) { exit $LASTEXITCODE }
-      - name: Build Windows Ghost r2 1.0.6 and verify actual app archive
+      - name: Verify shipped Windows self-update helper
+        shell: pwsh
+        run: ./release-ci/test-self-update.ps1
+      - name: Build Windows Ghost r2 1.0.7 and verify actual app archive
         shell: pwsh
         working-directory: _smelter_build/launcher
         run: |
@@ -66,3 +69,4 @@ jobs:
           python release-ci/package.py
           if ($LASTEXITCODE) { exit $LASTEXITCODE }
           ./release-ci/publish.ps1
+
