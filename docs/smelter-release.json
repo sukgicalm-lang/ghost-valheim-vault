@@ -1,0 +1,12 @@
+{
+  "version": "1.0.0",
+  "date": "2026-10-30",
+  "file": "downloads/Ghost-GhostSmelterControl-1.0.0.zip",
+  "bytes": 147261,
+  "sha256": "b830e58841af9138349526e9b906e9bba3b7f6d6f793d40f8ca4d285bb483714",
+  "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/smelter-1.0.0/Ghost-GhostSmelterControl-1.0.0.zip",
+  "dependencies": [
+    "denikson-BepInExPack_Valheim-5.4.2333"
+  ],
+  "notes": "Ghost 두 번째 독립 모드 · 제련소/용광로/숯가마 1초 · 원료/연료 100개 · F1 설정"
+}
