@@ -1,0 +1,25 @@
+/* Installation flow: one download, numbered actions, optional tools collapsed. */
+.setup-section{scroll-margin-top:90px}
+.setup-layout{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(260px,1fr);gap:24px;align-items:start}
+.setup-card{border:1px solid var(--line);background:#101719;padding:32px;border-radius:4px}
+.setup-card>h3{font-size:22px;color:#e8e3d6;margin:0 0 24px;line-height:1.5}
+.setup-steps{list-style:none;margin:0;padding:0}
+.setup-steps>li{display:grid;grid-template-columns:34px minmax(0,1fr);gap:18px;padding:26px 0;border-top:1px solid var(--line);scroll-margin-top:110px}
+.setup-steps>li:first-child{padding-top:0;border-top:0}.setup-steps>li:last-child{padding-bottom:0}
+.setup-number{width:32px;height:32px;display:grid;place-items:center;border:1px solid #bda37480;color:#e2c694;font-size:16px;border-radius:50%;line-height:1}
+.setup-steps h4{font-size:18px;line-height:1.6;color:#e5e6dc;margin:0 0 8px}
+.setup-section p,.setup-update li{font-size:14px;line-height:1.95;color:#bac6bd}
+.setup-section code{color:#e3c896;overflow-wrap:anywhere;font-size:13px}
+.setup-section .button{display:inline-flex;min-height:48px;padding:13px 20px;gap:20px;margin-top:18px;font-size:14px;max-width:100%;white-space:normal;line-height:1.6}
+.setup-section .setup-caption{display:block;font-size:12px;line-height:1.9;color:#a9b7ae;margin-top:12px}
+.setup-update>.eyebrow{display:block;margin-bottom:14px}.setup-update>h3{margin-bottom:16px}.setup-update ol{padding-left:20px;margin:18px 0}.setup-update li+li{margin-top:10px}.setup-update .text-link{margin-top:20px;font-size:13px}
+.setup-option{border:1px solid var(--line);border-radius:4px;margin-top:24px;background:#101719;scroll-margin-top:100px}
+.setup-option>summary{list-style:none;display:flex;align-items:center;gap:16px;padding:24px 28px;cursor:pointer;position:relative;padding-right:60px;line-height:1.7}
+.setup-option>summary::-webkit-details-marker{display:none}.setup-option>summary:after{content:'+';position:absolute;right:28px;color:#d9bd87;font-size:22px}.setup-option[open]>summary:after{content:'−'}
+.setup-badge{font-size:11px;color:#d6bb89;border:1px solid #bda37460;padding:3px 8px;white-space:nowrap}
+.setup-option strong{font-size:17px;color:#e5e4d7}.setup-option-hint{font-size:12px;color:#a9b7ae;margin-left:auto}
+.setup-option-body{padding:0 28px 28px;border-top:1px solid var(--line)}.setup-option-body h3{font-size:19px;margin:24px 0 12px;color:#e7e1d1}.setup-option-body h3 small{font-size:12px;color:#a9b7ae;margin-left:8px}.setup-option-body p+p{margin-top:12px}
+.setup-manual{padding-bottom:24px}.setup-manual .text-link{display:inline-flex;margin:0 24px 18px 0;font-size:13px}.setup-manual p{margin-bottom:18px}
+.setup-section summary:focus-visible,.setup-section a:focus-visible{outline:2px solid #d8bd84;outline-offset:5px}
+@media(max-width:900px){.setup-layout{grid-template-columns:1fr}.setup-update{padding:28px}.setup-card{padding:28px}}
+@media(max-width:600px){.setup-card{padding:24px 20px}.setup-card>h3{font-size:20px}.setup-steps>li{gap:12px;grid-template-columns:28px minmax(0,1fr)}.setup-number{width:27px;height:27px;font-size:14px}.setup-steps h4{font-size:17px}.setup-section .button{font-size:13px;padding:12px 16px;gap:12px}.setup-option>summary{padding:20px 44px 20px 20px;gap:10px;flex-wrap:wrap}.setup-option>summary:after{right:18px}.setup-option strong{font-size:15px}.setup-option-hint{display:none}.setup-option-body{padding:0 20px 24px}.setup-section p,.setup-update li{font-size:13px}}
