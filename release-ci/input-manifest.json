@@ -1,0 +1,16 @@
+{
+  "payloads": [
+    {
+      "name": "Ghost-GhostSmelterControl-1.0.0.zip",
+      "base64_file": "smelter.zip.b64",
+      "bytes": 147261,
+      "sha256": "b830e58841af9138349526e9b906e9bba3b7f6d6f793d40f8ca4d285bb483714"
+    },
+    {
+      "name": "Ghost-SmelterControl-1.0.0-Source.zip",
+      "base64_file": "smelter-source.zip.b64",
+      "bytes": 43343,
+      "sha256": "a5fe5080fc980bcc10c1c206517b4115b1678bd66af41e06310239d44c86bc4d"
+    }
+  ]
+}

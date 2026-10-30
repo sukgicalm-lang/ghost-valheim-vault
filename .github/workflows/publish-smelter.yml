@@ -1,0 +1,68 @@
+name: Publish standalone Ghost smelter
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'release-ci/**'
+      - '.github/workflows/publish-smelter.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  pages: write
+concurrency:
+  group: ghost-smelter-release
+  cancel-in-progress: false
+jobs:
+  publish:
+    if: github.repository == 'sukgicalm-lang/ghost-valheim-vault'
+    runs-on: windows-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify release inputs and prepare launcher
+        shell: pwsh
+        run: |
+          python release-ci/bootstrap.py
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          npm install --global pnpm@11.8.0
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+      - name: Install pinned launcher dependencies
+        shell: pwsh
+        working-directory: _smelter_build/launcher
+        run: |
+          pnpm install --frozen-lockfile
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          pnpm exec quasar prepare
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+      - name: Typecheck and verify both Ghost update paths
+        shell: pwsh
+        working-directory: _smelter_build/launcher
+        run: |
+          pnpm typecheck
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          $env:GHOST_PACK_FIXTURE = (Resolve-Path ../smelter-fixture).Path
+          pnpm exec vitest run --config ghost.vitest.config.ts
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+      - name: Build Windows Ghost r2 1.0.6 and verify actual app archive
+        shell: pwsh
+        working-directory: _smelter_build/launcher
+        run: |
+          $env:SKIP_PACKING = 'true'
+          pnpm exec quasar build --mode electron -T win32
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          node scripts/check-ghost-release.cjs . dist/electron/Packaged/win-unpacked/resources/app.asar
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+      - name: Package final assets and publish to existing repository
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python release-ci/package.py
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          ./release-ci/publish.ps1
