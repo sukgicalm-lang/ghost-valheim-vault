@@ -1,0 +1,287 @@
+{
+  "schema": 1,
+  "revision": 1,
+  "date": "2026-10-31",
+  "packages": [
+    {
+      "name": "denikson-BepInExPack_Valheim",
+      "version": "5.4.2360",
+      "bytes": 726409,
+      "sha256": "6bca77b1016acfe0ffaebb6534c84b12ae8d12e5a96abbf59ec6e4526204fc6f",
+      "dependencies": [],
+      "description": "BepInEx pack for Valheim. Preconfigured with the correct entry point for mods and preferred defaults for the community."
+    },
+    {
+      "name": "tonsit-InteractWhileBuilding",
+      "version": "1.0.0",
+      "bytes": 82353,
+      "sha256": "00a4d82a0706622969f73378b52cd9b125a910fae3fff41ad1db553f8c91ddde",
+      "dependencies": [
+        "denikson-BepInExPack_Valheim-5.4.600"
+      ],
+      "description": "Allows you to interact with objects in the world while in build mode."
+    },
+    {
+      "name": "ValheimModding-Jotunn",
+      "version": "2.30.2",
+      "bytes": 835193,
+      "sha256": "8aae92da2be0eb6820cd4cf57e2f6c1d6ad0d738d4915966e7c3d7a94e9a9b0f",
+      "dependencies": [
+        "denikson-BepInExPack_Valheim-5.4.2333"
+      ],
+      "description": "Jötunn (/ˈjɔːtʊn/, 'giant'), the Valheim Library was created with the goal of making the lives of mod developers easier. It enables you to create mods for Valheim using an abstracted API so you can focus on the actual content creation."
+    },
+    {
+      "name": "ValheimModding-YamlDotNet",
+      "version": "16.3.1",
+      "bytes": 130222,
+      "sha256": "2280480d2add7d6a7a17b882f9b755145160c852e89a14794d1493d08495d2ac",
+      "dependencies": [],
+      "description": "Shared version 16.3.0 of YamlDotNet from Antoine Aubry and contributors, net47 package for use in Valheim mods. Maintained by the ValheimModding team."
+    },
+    {
+      "name": "MSchmoecker-VNEI",
+      "version": "0.17.6",
+      "bytes": 210003,
+      "sha256": "a5e6c3b40f845248979ba8560d3479141d4acf9ff616baaed868a5a3db7e40b8",
+      "dependencies": [
+        "denikson-BepInExPack_Valheim-5.4.2350",
+        "ValheimModding-Jotunn-2.30.0",
+        "ValheimModding-YamlDotNet-16.3.1"
+      ],
+      "description": "Valheim Not Enough Items. Displays all items and recipes inside a UI"
+    },
+    {
+      "name": "Vapok-ShieldMeBruh",
+      "version": "2.1.5",
+      "bytes": 461741,
+      "sha256": "1e3fcc2a255f7dd4efdb34de60124f1192c99b14cd156b9c3bbb253afb9effc1",
+      "dependencies": [
+        "denikson-BepInExPack_Valheim-5.4.2351",
+        "ValheimModding-Jotunn-2.30.2",
+        "ValheimModding-YamlDotNet-16.3.1"
+      ],
+      "description": "A Valheim Quality of Life Mod that will auto equip a selected shield when a one-handed weapon is equipped. I need a shield! Shield me Bruh!"
+    },
+    {
+      "name": "Goldenrevolver-Quick_Stack_Store_Sort_Trash_Restock",
+      "version": "1.4.16",
+      "bytes": 291397,
+      "sha256": "4c1dfd872972783f3eb63384ca889b51fdd75836e679a4fac1de80e097f86538",
+      "dependencies": [
+        "denikson-BepInExPack_Valheim-5.4.2350"
+      ],
+      "description": "Quick Stacking, Sorting, Trashing and more in one cohesive package"
+    },
+    {
+      "name": "sighsorry-BottleShips",
+      "version": "1.1.17",
+      "bytes": 4495112,
+      "sha256": "2d122edc16e88fdafc241a9169c09d2736fe782e40093471b94693c480940a52",
+      "dependencies": [
+        "denikson-BepInExPack_Valheim-5.4.2351"
+      ],
+      "description": "Find your ships and carts on the world map. Carry boats, carts, portals and siege weapons in bottles. Customize recipes, repair ships with wood, boost sailing and rowing, attach carts easily, auto-reload troll traps, and improve ballista targeting."
+    },
+    {
+      "name": "shudnal-ConditionalConfigSync",
+      "version": "1.0.11",
+      "bytes": 254611,
+      "sha256": "19146ae5a25cc3c7bddf47a6d17e4b8fb2c6c29c97360abd93664ba7a4433a62",
+      "dependencies": [
+        "denikson-BepInExPack_Valheim-5.4.2350"
+      ],
+      "description": "Shared config synchronization and server policy library for Valheim mods. Installed as a dependency and compatible with Jotunn and ServerSync."
+    },
+    {
+      "name": "ZenDragon-Zen_ModLib",
+      "version": "1.14.22",
+      "bytes": 159915,
+      "sha256": "f7942caebb8fc967a6aac9867c4df1d1a35826178a8d7ff8a6065538c827151e",
+      "dependencies": [
+        "denikson-BepInExPack_Valheim-5.4.2351",
+        "ValheimModding-Jotunn-2.30.0"
+      ],
+      "description": "Shared code library used in all ZenMods."
+    },
+    {
+      "name": "ZenDragon-ZenRedecorate",
+      "version": "1.5.0",
+      "bytes": 34477,
+      "sha256": "fd1829d586197cd1d3f26c09a17da12baf4615cae60b9fee7557bc1f5fba0959",
+      "dependencies": [
+        "ZenDragon-Zen_ModLib-1.14.0"
+      ],
+      "description": "Move chests and other furniture without destroying them."
+    },
+    {
+      "name": "GemHunter1-FastTeleport",
+      "version": "1.1.1",
+      "bytes": 96376,
+      "sha256": "f725dde818e01d5572353eeed9193c44857045142a2d627741638e0d38d6e942",
+      "dependencies": [
+        "denikson-BepInExPack_Valheim-5.4.2350"
+      ],
+      "description": "Shortens teleportation loading time to save those precious 8 seconds of our lives. Also makes entering dungeons instant."
+    },
+    {
+      "name": "ValheimModding-JsonDotNET",
+      "version": "13.0.4",
+      "bytes": 308392,
+      "sha256": "a221c7be7163ab9739274b962fbd1f63abde65b1418839a62f02aca210868147",
+      "dependencies": [],
+      "description": "Shared version 13.0.3 of Json.NET from Newtonsoft, net45 package for use in Valheim mods. Maintained by the ValheimModding team."
+    },
+    {
+      "name": "shudnal-ConfigurationManager",
+      "version": "1.1.27",
+      "bytes": 160962,
+      "sha256": "d191d50b538ef067c027bb6d5bd3b3c9d6340b5856e7f05ec1c5234766030561",
+      "dependencies": [
+        "denikson-BepInExPack_Valheim-5.4.2350",
+        "shudnal-ConditionalConfigSync-1.0.5",
+        "ValheimModding-YamlDotNet-16.3.0",
+        "ValheimModding-JsonDotNET-13.0.3"
+      ],
+      "description": "Localized, recolored, refined. Split view mode. Config files editor. Setting edit window. Changed values are highlighted. Prevent user input or pause the game while window is open. Window scale depends on game scale."
+    },
+    {
+      "name": "Smoothbrain-SailingSpeed",
+      "version": "1.0.3",
+      "bytes": 77370,
+      "sha256": "f3e4b1479b9d74d4cb49112dae710c082c7a84ce519fa37fa2407cf56827f521",
+      "dependencies": [
+        "denikson-BepInExPack_Valheim-5.4.2200"
+      ],
+      "description": "Lets you configure the base speed of ships."
+    },
+    {
+      "name": "kassent-SkillBasedCarryweight",
+      "version": "1.0.0",
+      "bytes": 8630,
+      "sha256": "ff1fb3f2f1f4f6c8bc56442bc6050e2dcc50b0c003d8d840eea3e83a4d1b3d37",
+      "dependencies": [
+        "denikson-BepInExPack_Valheim-5.4.602"
+      ],
+      "description": "Your jump, run, swim and sneak level can increase your carryweight..."
+    },
+    {
+      "name": "shudnal-GammaOfNightLights",
+      "version": "1.0.10",
+      "bytes": 123354,
+      "sha256": "ee8b90e41675b765bb544bd12e44f39c0d6db82be50ef79c8801c56cf18efa6f",
+      "dependencies": [
+        "denikson-BepInExPack_Valheim-5.4.2350",
+        "shudnal-ConditionalConfigSync-1.0.5"
+      ],
+      "description": "Control luminance, moonlight and sunlight intensity, fog density and day/night length. Ambient light tweaks."
+    },
+    {
+      "name": "ColdSpirit-ValheimGammaMod",
+      "version": "1.0.0",
+      "bytes": 45326,
+      "sha256": "d6a379b43aa1a27cfd6b248734384565f41364b182bd01cae3f6cabc956a799c",
+      "dependencies": [
+        "denikson-BepInExPack_Valheim-5.4.1700"
+      ],
+      "description": "Makes the game brighter in caves and at night."
+    },
+    {
+      "name": "cjayride-HotbarSwitch",
+      "version": "0.5.2",
+      "bytes": 90515,
+      "sha256": "299993f617f0462d4dd744c1b29a204dbe304e6a60f6b0c4bb2e29da2f7634cb",
+      "dependencies": [
+        "denikson-BepInExPack_Valheim-5.4.2350"
+      ],
+      "description": "Cycles which inventory row is the hotbar without moving items. Updated for Valheim 1.0."
+    },
+    {
+      "name": "MSchmoecker-FenceSnap",
+      "version": "0.3.0",
+      "bytes": 38051,
+      "sha256": "c40d7d7dedcf9ac55511bbda6c9bcc13ff9ef8bd109523c39f287ba86304a43c",
+      "dependencies": [
+        "denikson-BepInExPack_Valheim-5.4.2102"
+      ],
+      "description": "Adds snappoints to fences and sharp stakes"
+    },
+    {
+      "name": "KydlDev-ChestSnapping",
+      "version": "1.0.0",
+      "bytes": 106481,
+      "sha256": "c831ed8a3da235563255971d44d71ae8299ace55f7fa755a62294e44d3a22e81",
+      "dependencies": [
+        "ValheimModding-Jotunn-2.30.1"
+      ],
+      "description": "Lets chests use Valheim's built-in snap system. Press Q/E while placing to pick one of 14 snap points. Works with modded chests, and the snap points can be adjusted in-game."
+    },
+    {
+      "name": "TastyChickenLegs-LongerDays",
+      "version": "1.1.4",
+      "bytes": 106910,
+      "sha256": "3f518d86f8489e91a619ddc28a6430224db1fa66dbacab916a0921f0ecdb0827",
+      "dependencies": [
+        "denikson-BepInExPack_Valheim-5.4.2101"
+      ],
+      "description": "Updated for Valheim 1.0. Change speed of the day.  SpeedRate is by default 50% or twice as long days."
+    },
+    {
+      "name": "Grizzzly-CookingStationTweaks",
+      "version": "0.8.0",
+      "bytes": 115682,
+      "sha256": "4e133e1d64523d1efc6b8660cacfeb9d9e4a31eaac490e73d86e568b63df00c7",
+      "dependencies": [
+        "denikson-BepInExPack_Valheim-5.4.2350"
+      ],
+      "description": "Cooking Station Tweaks by Erinthe (aedenthorn) on Nexus."
+    },
+    {
+      "name": "ValheimPortMods-Craft_Build_Smelt_Cook_Fuel_Pull_From_Containers",
+      "version": "4.0.7",
+      "bytes": 66189,
+      "sha256": "7fc56c1751531b016971c5864d8079d357a15025d732d1827ae4fceeebc379ce",
+      "dependencies": [],
+      "description": "v4.0.7 by aedenthorn from NexusMods. A combination of more slots and equipment and quick slots that uses the vanilla inventory."
+    },
+    {
+      "name": "shudnal-MyLittleUI",
+      "version": "1.2.33",
+      "bytes": 271912,
+      "sha256": "e09c7740a4984c929401dbbdaebd0d122a2f1a3c92ff6de87cff34b55f1e13ae",
+      "dependencies": [
+        "denikson-BepInExPack_Valheim-5.4.2351",
+        "shudnal-ConditionalConfigSync-1.0.9"
+      ],
+      "description": "Bunch of little UI tweaks. Tooltips for production timers, player status, items. Custom chest names, buff list, multicraft, weather forecast, crafting sorting, filtering and so on."
+    },
+    {
+      "name": "Trinsic-Stamina_and_Health_Regeneration",
+      "version": "0.4.1",
+      "bytes": 26147,
+      "sha256": "637c5171a393f63c9bffeba3d6014ad95f1ff0da7776b6bcfebd7483af2b433c",
+      "dependencies": [
+        "denikson-BepInExPack_Valheim-5.4.2105"
+      ],
+      "description": "Adds various configurable tweaks to health and stamina loss and regeneration. By Aedenthorn."
+    },
+    {
+      "name": "Voidey-WoWArmors",
+      "version": "1.1.2",
+      "bytes": 8128090,
+      "sha256": "f39eb8b743e2b34d657d36b4962b2fa1338b416b5d49b77648c50d53148810bc",
+      "dependencies": [
+        "denikson-BepInExPack_Valheim-5.4.2202"
+      ],
+      "description": "Adds several iconic armors from World of Warcraft to Valheim. Armor yourself with Bloodfang, Dreadwyrm, Dreadnaught, Nemesis, and Judgment tier sets."
+    },
+    {
+      "name": "Ghost-GhostValheimSuite",
+      "version": "1.0.40"
+    },
+    {
+      "name": "Ghost-GhostSmelterControl",
+      "version": "1.0.0"
+    }
+  ]
+}

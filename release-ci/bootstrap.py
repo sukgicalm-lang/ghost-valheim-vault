@@ -37,7 +37,7 @@ def main():
         path = pathlib.PurePosixPath(row['path'])
         if str(path) in seen or path.is_absolute() or '..' in path.parts or ':' in str(path):
             raise ValueError('Unsafe/duplicate patch path')
-        if path.parts[0] not in ('src', 'src-electron', 'test') and str(path) not in ('package.json', 'BUILD_GHOST_1.0.6.md', 'BUILD_GHOST_1.0.7.md', 'scripts/check-ghost-release.cjs'):
+        if path.parts[0] not in ('src', 'src-electron', 'test') and str(path) not in ('package.json', 'BUILD_GHOST_1.0.6.md', 'BUILD_GHOST_1.0.7.md', 'BUILD_GHOST_1.0.8.md', 'scripts/check-ghost-release.cjs'):
             raise ValueError('Unexpected launcher patch scope')
         seen.add(str(path))
         target = launcher / str(path)
@@ -48,7 +48,7 @@ def main():
             raise ValueError('New launcher path already exists')
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(row['content'], encoding='utf-8', newline='')
-    if json.loads((launcher / 'package.json').read_text())['version'] != '1.0.7':
+    if json.loads((launcher / 'package.json').read_text())['version'] != '1.0.8':
         raise ValueError('Wrong launcher version')
     inputs = json.loads((ROOT / 'input-manifest.json').read_text())
     output = WORK / 'assets'

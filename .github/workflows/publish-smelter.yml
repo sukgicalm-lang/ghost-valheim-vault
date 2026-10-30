@@ -1,4 +1,4 @@
-name: Publish standalone Ghost smelter
+name: Publish Ghost launcher and required setup
 on:
   push:
     branches: [main]
@@ -30,6 +30,8 @@ jobs:
         run: |
           python release-ci/bootstrap.py
           if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          python release-ci/verify-setup.py
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
           npm install --global pnpm@11.8.0
           if ($LASTEXITCODE) { exit $LASTEXITCODE }
       - name: Install pinned launcher dependencies
@@ -47,12 +49,13 @@ jobs:
           pnpm typecheck
           if ($LASTEXITCODE) { exit $LASTEXITCODE }
           $env:GHOST_PACK_FIXTURE = (Resolve-Path ../smelter-fixture).Path
+          $env:GHOST_SETUP_FIXTURES = (Resolve-Path ../setup-fixtures).Path
           pnpm exec vitest run --config ghost.vitest.config.ts
           if ($LASTEXITCODE) { exit $LASTEXITCODE }
       - name: Verify shipped Windows self-update helper
         shell: pwsh
         run: ./release-ci/test-self-update.ps1
-      - name: Build Windows Ghost r2 1.0.7 and verify actual app archive
+      - name: Build Windows Ghost r2 1.0.8 and verify actual app archive
         shell: pwsh
         working-directory: _smelter_build/launcher
         run: |
