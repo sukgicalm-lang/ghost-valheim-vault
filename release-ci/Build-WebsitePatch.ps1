@@ -26,25 +26,20 @@ function Build-GhostSmelterPatch([string]$IndexHtml, $PriorClient, $PriorRelease
     $html = [regex]::Replace($html, 'https://github\.com/sukgicalm-lang/ghost-valheim-vault/releases/download/smelter-\d+\.\d+\.\d+/Ghost-GhostSmelterControl-\d+\.\d+\.\d+\.zip', [Text.RegularExpressions.MatchEvaluator]{ param($m) $release.downloadUrl })
     $section = @"
 <!-- GHOST-SMELTER-BEGIN -->
-<details id="ghost-smelter" class="setup-option">
-<summary><span class="setup-badge">기본 포함</span><strong>제련 편의 모드</strong><span class="setup-option-hint">기능 · 설치 안내</span></summary>
-<div class="setup-option-body">
-<h3>Ghost 제련 제어 <small>v$($release.version)</small></h3>
-<p>일반 제련소·용광로·숯가마의 기본 생산 시간을 1초, 원료 한도를 100개로 설정합니다. 제련소·용광로의 석탄 한도도 100개이며 F1에서 조절할 수 있습니다.</p>
-<p>통합팩과 함께 사용하는 필수 모드이며, 위의 전체 모드 설치에 포함됩니다. 설치 전 기존 FrizzQOL Smelter Control을 제거하세요.</p>
-
-<p class="setup-caption">런처가 새 버전을 자동으로 확인합니다. 업데이트는 Update All에서 적용하세요. 원료·연료의 소모 규칙과 생산물의 묶음 배출 방식은 유지합니다.</p>
-</div>
-</details>
+<article id="ghost-smelter" class="experience-card">
+<span class="experience-label">02 / 제련 · 생산</span><svg class="experience-icon" aria-hidden="true"><use href="#growth"/></svg>
+<h3>기다림은 짧게.<br>모험은 더 길게.</h3>
+<p>제련소·용광로·숯가마의 기본 생산 시간 1초.<br>원료·연료 한도는 100개, 세부 값은 F1에서.</p>
+<button class="text-link" type="button" data-module="GhostSmelterControl">제련 기능 자세히 <span aria-hidden="true">↗</span></button>
+<span class="experience-meta">기본 구성 포함 · Ghost 제련 제어 v$($release.version)</span>
+</article>
 <!-- GHOST-SMELTER-END -->
 "@
     if ($html.Contains('<!-- GHOST-SMELTER-BEGIN -->')) {
         if ([regex]::Matches($html, '<!-- GHOST-SMELTER-BEGIN -->').Count -ne 1 -or [regex]::Matches($html, '<!-- GHOST-SMELTER-END -->').Count -ne 1) { throw '기존 제련 안내 영역을 안전하게 찾지 못했습니다.' }
         $html = [regex]::Replace($html, '(?s)<!-- GHOST-SMELTER-BEGIN -->.*?<!-- GHOST-SMELTER-END -->', [Text.RegularExpressions.MatchEvaluator]{ param($m) $section })
     } else {
-        $anchor = '<section id="collection"'
-        if ([regex]::Matches($html, [regex]::Escape($anchor)).Count -ne 1) { throw '기존 모드 목록의 삽입 지점을 찾지 못했습니다.' }
-        $html = $html.Replace($anchor, $section + "`n" + $anchor)
+        throw '제련 기능 카드의 표시 영역이 없습니다. 홈페이지 구성을 확인하세요.'
     }
     return [ordered]@{
         'index.html' = $html
@@ -53,3 +48,4 @@ function Build-GhostSmelterPatch([string]$IndexHtml, $PriorClient, $PriorRelease
         'smelter-releases.json' = (ConvertTo-Json -InputObject @($catalog) -Depth 20)
     }
 }
+
