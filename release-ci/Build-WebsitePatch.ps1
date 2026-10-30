@@ -26,11 +26,11 @@ function Build-GhostSmelterPatch([string]$IndexHtml, $PriorClient, $PriorRelease
     $section = @"
 <!-- GHOST-SMELTER-BEGIN -->
 <section id="ghost-smelter" class="wrap section-space" aria-labelledby="ghost-smelter-title">
-<div class="section-heading"><div><div class="eyebrow">SECOND GHOST MOD</div><h2 id="ghost-smelter-title">Ghost 제련 제어</h2></div><p>기존 통합팩과 별도로 설치하는 작은 모드 · v$($release.version)</p></div>
+<div class="section-heading"><div><div class="eyebrow">SMELTER CONTROL</div><h2 id="ghost-smelter-title">Ghost 제련 제어</h2></div><p>독립 설치형 제련 편의 모드 · v$($release.version)</p></div>
 <p>일반 제련소·용광로·숯가마의 기본 생산 시간 1초, 원료 한도 100개. 제련소·용광로의 석탄 한도도 100개이며 F1에서 조절할 수 있습니다.</p>
-<p>기존 FrizzQOL Smelter Control을 제거하고, 본인과 친구 모두 Ghost r2 $($client.version) 이상으로 한 번 교체하세요. 이후 런처가 새 제련 버전을 자동 조회하고 Update All에서 적용할 수 있습니다. 기존 고스트 통합팩은 다시 받지 않습니다.</p>
+<p>Ghost r2 $($client.version) 이상에서 설치할 수 있습니다. 설치 전 기존 FrizzQOL Smelter Control을 제거하세요. 런처가 새 버전을 자동으로 확인하며, Update All에서 업데이트할 수 있습니다.</p>
 <div class="guide-actions"><a class="button gold" href="ghostvault://v1/install/Ghost-GhostSmelterControl/latest">제련 모드 설치 ↗</a><a class="text-link" href="$install">Ghost r2 $($client.version) 받기 ↗</a><a class="text-link" href="$($release.downloadUrl)">제련 ZIP 직접 받기 ↗</a></div>
-<p>실제 게임 실행 결과는 적용 후 확인이 필요합니다. 원료·연료 조건과 게임의 묶음 배출 동작은 유지합니다.</p>
+<p>원료·연료의 소모 규칙과 생산물의 묶음 배출 방식은 기존 게임 방식을 유지합니다.</p>
 </section>
 <!-- GHOST-SMELTER-END -->
 "@
