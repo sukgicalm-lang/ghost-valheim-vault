@@ -1,572 +1,573 @@
 [
-    {
-        "version":  "1.0.40",
-        "date":  "2026-10-30",
-        "file":  "downloads/Ghost-GhostValheimSuite-1.0.40.zip",
-        "bytes":  398775554,
-        "sha256":  "0c4d2677828c48e9ce38acd528f8cfa09188e83858e1d88f7f4568cb7020dd54",
-        "appIntegration":  true,
-        "dependencies":  [
-                             "denikson-BepInExPack_Valheim-5.4.2351",
-                             "ValheimModding-JsonDotNET-13.0.4",
-                             "shudnal-ConfigurationManager-1.1.25"
-                         ],
-        "notes":  "둠 창 수직·곡괭이 공격 방향·활 실제 당김 접점 수정",
-        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.40/Ghost-GhostValheimSuite-1.0.40.zip"
-    },
-    {
-        "version":  "1.0.39",
-        "date":  "2026-10-29",
-        "file":  "downloads/Ghost-GhostValheimSuite-1.0.39.zip",
-        "bytes":  398765563,
-        "sha256":  "11a55d8ecb0105071f56ec980e93d5045f5f1374ed05979dc92795dcc2734b4a",
-        "appIntegration":  true,
-        "dependencies":  [
-                             "denikson-BepInExPack_Valheim-5.4.2351",
-                             "ValheimModding-JsonDotNET-13.0.4",
-                             "shudnal-ConfigurationManager-1.1.25"
-                         ],
-        "notes":  "둠 무기 형상 기준 접점·활 조준 공중 회전 보완",
-        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.39/Ghost-GhostValheimSuite-1.0.39.zip"
-    },
-    {
-        "version":  "1.0.38",
-        "date":  "2026-10-29",
-        "file":  "downloads/Ghost-GhostValheimSuite-1.0.38.zip",
-        "bytes":  398747243,
-        "sha256":  "716d4f74d62390c5afe1c641e09445beffe332ff4c1ed0b2bac9fb20ef3788d0",
-        "appIntegration":  true,
-        "dependencies":  [
-                             "denikson-BepInExPack_Valheim-5.4.2351",
-                             "ValheimModding-JsonDotNET-13.0.4",
-                             "shudnal-ConfigurationManager-1.1.25"
-                         ],
-        "notes":  "둠 양손 무기 접점·활 상하 조준·방향별 이동 보완",
-        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.38/Ghost-GhostValheimSuite-1.0.38.zip"
-    },
-    {
-        "version":  "1.0.37",
-        "date":  "2026-10-29",
-        "file":  "downloads/Ghost-GhostValheimSuite-1.0.37.zip",
-        "bytes":  398735795,
-        "sha256":  "a900f9990fed21c25e9ba4efca0515c50c2e95c1668edc1f4a1fc5e41a8cd848",
-        "appIntegration":  true,
-        "dependencies":  [
-                             "denikson-BepInExPack_Valheim-5.4.2351",
-                             "ValheimModding-JsonDotNET-13.0.4",
-                             "shudnal-ConfigurationManager-1.1.25"
-                         ],
-        "notes":  "둠 창 손잡이·활 당김/유지·달리기 장신구 부착 수정",
-        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.37/Ghost-GhostValheimSuite-1.0.37.zip"
-    },
-    {
-        "version":  "1.0.36",
-        "date":  "2026-10-29",
-        "file":  "downloads/Ghost-GhostValheimSuite-1.0.36.zip",
-        "bytes":  398725811,
-        "sha256":  "f89a37a36cb39b5fc82cc014aa1718e18b7c32c375b4b0595c3b46b328e62ddc",
-        "appIntegration":  true,
-        "dependencies":  [
-                             "denikson-BepInExPack_Valheim-5.4.2351",
-                             "ValheimModding-JsonDotNET-13.0.4",
-                             "shudnal-ConfigurationManager-1.1.25"
-                         ],
-        "notes":  "둠 무기별 원본 자세·손잡이 정렬·수납 잔상 수정",
-        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.36/Ghost-GhostValheimSuite-1.0.36.zip"
-    },
-    {
-        "version":  "1.0.35",
-        "date":  "2026-10-29",
-        "file":  "downloads/Ghost-GhostValheimSuite-1.0.35.zip",
-        "bytes":  398714119,
-        "sha256":  "3b98f23f9737846369b87449a8b2ff9668ae6253f0728a1de736775c4eff3a2c",
-        "appIntegration":  true,
-        "dependencies":  [
-                             "denikson-BepInExPack_Valheim-5.4.2351",
-                             "ValheimModding-JsonDotNET-13.0.4",
-                             "shudnal-ConfigurationManager-1.1.25"
-                         ],
-        "notes":  "둠 경갑 남자 다크엘프 원본82뼈·체형·대기/걷기/달리기",
-        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.35/Ghost-GhostValheimSuite-1.0.35.zip"
-    },
-    {
-        "version":  "1.0.34",
-        "date":  "2026-10-29",
-        "file":  "downloads/Ghost-GhostValheimSuite-1.0.34.zip",
-        "bytes":  381480009,
-        "sha256":  "500a95ab75904d073ba8fd2f9b2a728898a7bdbf3b5ad59b852e9465a5914dbb",
-        "appIntegration":  true,
-        "dependencies":  [
-                             "denikson-BepInExPack_Valheim-5.4.2351",
-                             "ValheimModding-JsonDotNET-13.0.4",
-                             "shudnal-ConfigurationManager-1.1.25"
-                         ],
-        "notes":  "둠·해골기사·군주 탐식자의 공통 광전사 체형과 자세 기준",
-        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.34/Ghost-GhostValheimSuite-1.0.34.zip"
-    },
-    {
-        "version":  "1.0.33",
-        "date":  "2026-10-29",
-        "file":  "downloads/Ghost-GhostValheimSuite-1.0.33.zip",
-        "bytes":  381464847,
-        "sha256":  "b673a96ec4e90425e270e6c3cabc2aac506135ca71c5097fc580c8e60dd7a8cd",
-        "appIntegration":  true,
-        "dependencies":  [
-                             "denikson-BepInExPack_Valheim-5.4.2351",
-                             "ValheimModding-JsonDotNET-13.0.4",
-                             "shudnal-ConfigurationManager-1.1.25"
-                         ],
-        "notes":  "티리엘 반투명한 빛·색감·흩어지는 날개 끝·부드러운 어깨/팔 흐름",
-        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.33/Ghost-GhostValheimSuite-1.0.33.zip"
-    },
-    {
-        "version":  "1.0.32",
-        "date":  "2026-10-29",
-        "file":  "downloads/Ghost-GhostValheimSuite-1.0.32.zip",
-        "bytes":  381457177,
-        "sha256":  "29b1335560c740b83a09ecd5401e684990f65c3f6c3f646fed3dc34a28141a8d",
-        "appIntegration":  true,
-        "dependencies":  [
-                             "denikson-BepInExPack_Valheim-5.4.2351",
-                             "ValheimModding-JsonDotNET-13.0.4",
-                             "shudnal-ConfigurationManager-1.1.25"
-                         ],
-        "notes":  "티리엘 날개 크기 90%·투명도와 빛 겹침 완화 적용 후보",
-        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.32/Ghost-GhostValheimSuite-1.0.32.zip"
-    },
-    {
-        "version":  "1.0.31",
-        "date":  "2026-10-28",
-        "file":  "downloads/Ghost-GhostValheimSuite-1.0.31.zip",
-        "bytes":  381448748,
-        "sha256":  "31b7d9694bd4ee58b935a7abfb8131437336bfc713d2dfe3c1d16222a62294ed",
-        "appIntegration":  true,
-        "dependencies":  [
-                             "denikson-BepInExPack_Valheim-5.4.2351",
-                             "ValheimModding-JsonDotNET-13.0.4",
-                             "shudnal-ConfigurationManager-1.1.25"
-                         ],
-        "notes":  "티리엘 날개 접힘·앞쏠림 수정 후보 — 누락 원본 blend/3점 연결/회전 운반 복원",
-        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.31/Ghost-GhostValheimSuite-1.0.31.zip"
-    },
-    {
-        "version":  "1.0.30",
-        "date":  "2026-10-28",
-        "file":  "downloads/Ghost-GhostValheimSuite-1.0.30.zip",
-        "bytes":  381437736,
-        "sha256":  "d4afb1086ff02674a54d0677c86c04da8622271434b6da73bf25b559e778e171",
-        "appIntegration":  true,
-        "dependencies":  [
-                             "denikson-BepInExPack_Valheim-5.4.2351",
-                             "ValheimModding-JsonDotNET-13.0.4",
-                             "shudnal-ConfigurationManager-1.1.25"
-                         ],
-        "notes":  "티리엘 플레이어 원본 날개 · 원본 비율과 cloth 연결에 따른 이동·바람 반응 (게임 검증 전)",
-        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.30/Ghost-GhostValheimSuite-1.0.30.zip"
-    },
-    {
-        "version":  "1.0.29",
-        "date":  "2026-10-28",
-        "file":  "downloads/Ghost-GhostValheimSuite-1.0.29.zip",
-        "bytes":  378493795,
-        "sha256":  "af2e6a76977f3288f07cff0a5cfbcc55f89d3bf27a4412a7adab5c850fa62e7c",
-        "appIntegration":  true,
-        "dependencies":  [
-                             "denikson-BepInExPack_Valheim-5.4.2351",
-                             "ValheimModding-JsonDotNET-13.0.4",
-                             "shudnal-ConfigurationManager-1.1.25"
-                         ],
-        "notes":  "티리엘 원본 S15 날개 애니메이션 · 원본 텍스처 기반 갑옷 빛 (게임 검증 전)",
-        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.29/Ghost-GhostValheimSuite-1.0.29.zip"
-    },
-    {
-        "version":  "1.0.28",
-        "date":  "2026-10-28",
-        "file":  "downloads/Ghost-GhostValheimSuite-1.0.28.zip",
-        "bytes":  377416357,
-        "sha256":  "ccb90769075fe11efd72ea8c6874f83ac7d9f8db626908f547a5e6f6e6a7670f",
-        "appIntegration":  true,
-        "dependencies":  [
-                             "denikson-BepInExPack_Valheim-5.4.2351",
-                             "ValheimModding-JsonDotNET-13.0.4",
-                             "shudnal-ConfigurationManager-1.1.25"
-                         ],
-        "notes":  "티리엘 목 피부 관통 수정 · 갑옷 빛 가시성 · 넓고 흐르는 별도 날개",
-        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.28/Ghost-GhostValheimSuite-1.0.28.zip"
-    },
-    {
-        "version":  "1.0.27",
-        "date":  "2026-10-27",
-        "file":  "downloads/Ghost-GhostValheimSuite-1.0.27.zip",
-        "bytes":  377409124,
-        "sha256":  "1e1145b034db09a6c5a52e4d15f73569a3fcbfddc29d45aef2eff94588c2612f",
-        "appIntegration":  true,
-        "dependencies":  [
-                             "denikson-BepInExPack_Valheim-5.4.2351",
-                             "ValheimModding-JsonDotNET-13.0.4",
-                             "shudnal-ConfigurationManager-1.1.25"
-                         ],
-        "notes":  "티리엘 옷 효과 확대 오류 수정 · 은은한 갑옷 빛 · 굽이치는 별도 날개",
-        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.27/Ghost-GhostValheimSuite-1.0.27.zip"
-    },
-    {
-        "version":  "1.0.26",
-        "date":  "2026-10-27",
-        "file":  "downloads/Ghost-GhostValheimSuite-1.0.26.zip",
-        "bytes":  378521111,
-        "sha256":  "22a7267db2431bf1304f2e09c93246ce4838f6cf5297ad9e1d0154105d8b8c3f",
-        "appIntegration":  true,
-        "dependencies":  [
-                             "denikson-BepInExPack_Valheim-5.4.2351",
-                             "ValheimModding-JsonDotNET-13.0.4",
-                             "shudnal-ConfigurationManager-1.1.25"
-                         ],
-        "notes":  "티리엘 빛의 날개 망토 / 부드러운 어깨·팔 불길 / 기존 외형·인벤토리 방어 유지",
-        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.26/Ghost-GhostValheimSuite-1.0.26.zip"
-    },
-    {
-        "version":  "1.0.25",
-        "date":  "2026-10-27",
-        "file":  "downloads/Ghost-GhostValheimSuite-1.0.25.zip",
-        "bytes":  377358796,
-        "sha256":  "bb242685ebb0dffd1de9cf63cf26827f8238178018790da770d468ad798735d6",
-        "appIntegration":  true,
-        "dependencies":  [
-                             "denikson-BepInExPack_Valheim-5.4.2351",
-                             "ValheimModding-JsonDotNET-13.0.4",
-                             "shudnal-ConfigurationManager-1.1.25"
-                         ],
-        "notes":  "티리엘 빛 흐름 / 홈페이지5종회전 / 인벤토리 방어 유지",
-        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.25/Ghost-GhostValheimSuite-1.0.25.zip"
-    },
-    {
-        "version":  "1.0.23",
-        "date":  "2026-10-27",
-        "file":  "downloads/Ghost-GhostValheimSuite-1.0.23.zip",
-        "bytes":  301078831,
-        "sha256":  "05b0fd43f985a60067e7aebb8bcdef22d189ec03e9e15346f5b9e4f0377e4907",
-        "appIntegration":  true,
-        "dependencies":  [
-                             "denikson-BepInExPack_Valheim-5.4.2351",
-                             "ValheimModding-JsonDotNET-13.0.4",
-                             "shudnal-ConfigurationManager-1.1.25"
-                         ],
-        "notes":  "인벤토리 재귀 방지 추가 / 목·눈·4종 부분착용 수정 유지",
-        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.23/Ghost-GhostValheimSuite-1.0.23.zip"
-    },
-    {
-        "version":  "1.0.21",
-        "date":  "2026-10-27",
-        "file":  "downloads/Ghost-GhostValheimSuite-1.0.21.zip",
-        "bytes":  247099956,
-        "sha256":  "704eaa4b648c03b98dfdca225a252e15e5a5cd3eec9f1a136a90b18b8752faa9",
-        "appIntegration":  true,
-        "dependencies":  [
-                             "denikson-BepInExPack_Valheim-5.4.2351",
-                             "ValheimModding-JsonDotNET-13.0.4",
-                             "shudnal-ConfigurationManager-1.1.25"
-                         ],
-        "notes":  "원작 체형 비율·가면 피부 돌출 수정 테스트 / 4종 Original 체형, 두 체형의 얼굴 가림 보정",
-        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.21/Ghost-GhostValheimSuite-1.0.21.zip"
-    },
-    {
-        "version":  "1.0.20",
-        "date":  "2026-10-27",
-        "file":  "downloads/Ghost-GhostValheimSuite-1.0.20.zip",
-        "bytes":  247086247,
-        "sha256":  "ced600e7bf6423a9889f9f084a323d5589ceb8d13e6a33922ea06e3082d12032",
-        "appIntegration":  true,
-        "dependencies":  [
-                             "denikson-BepInExPack_Valheim-5.4.2351",
-                             "ValheimModding-JsonDotNET-13.0.4",
-                             "shudnal-ConfigurationManager-1.1.25"
-                         ],
-        "notes":  "원작 외형 4종 전환 테스트 / 원작 목·머리·피부·눈·수염 연결, 기존 모드·개인 설정 유지",
-        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.20/Ghost-GhostValheimSuite-1.0.20.zip"
-    },
-    {
-        "version":  "1.0.19",
-        "date":  "2026-10-26",
-        "file":  "downloads/Ghost-GhostValheimSuite-1.0.19.zip",
-        "bytes":  86090023,
-        "sha256":  "4ab43d15188b59e7b5ff6152129ca08bede2d5ed4e4244ae3d62f47172045902",
-        "appIntegration":  true,
-        "dependencies":  [
-                             "denikson-BepInExPack_Valheim-5.4.2351",
-                             "ValheimModding-JsonDotNET-13.0.4",
-                             "shudnal-ConfigurationManager-1.1.25"
-                         ],
-        "notes":  "목·투구 연결과 목 피부 보정 / 군주 탐식자 포함·기존 의상·망토·설정 유지",
-        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.19/Ghost-GhostValheimSuite-1.0.19.zip"
-    },
-    {
-        "version":  "1.0.18",
-        "date":  "2026-10-26",
-        "file":  "downloads/Ghost-GhostValheimSuite-1.0.18.zip",
-        "bytes":  86052222,
-        "sha256":  "55a88bf791f90576ddbba07a471317a21938b339181d409aec27138b4f5992d6",
-        "appIntegration":  true,
-        "dependencies":  [
-                             "denikson-BepInExPack_Valheim-5.4.2351",
-                             "ValheimModding-JsonDotNET-13.0.4",
-                             "shudnal-ConfigurationManager-1.1.25"
-                         ],
-        "notes":  "군주 탐식자 외형 추가 / 기존 의상·망토·게임 설정 유지",
-        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.18/Ghost-GhostValheimSuite-1.0.18.zip"
-    },
-    {
-        "version":  "1.0.17",
-        "date":  "2026-10-25",
-        "file":  "downloads/Ghost-GhostValheimSuite-1.0.17.zip",
-        "bytes":  59854837,
-        "sha256":  "1bfb87c849951587ed3aa551b54e47f3acff2aab24b11c65ae7e3e9f1632414c",
-        "appIntegration":  true,
-        "dependencies":  [
-                             "denikson-BepInExPack_Valheim-5.4.2351",
-                             "ValheimModding-JsonDotNET-13.0.4",
-                             "shudnal-ConfigurationManager-1.1.25"
-                         ],
-        "notes":  "지도 순간이동 아이템·전투 제한 제거 / 미탐험 지역 금지·최소 100m 유지",
-        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.17/Ghost-GhostValheimSuite-1.0.17.zip"
-    },
-    {
-        "version":  "1.0.16",
-        "date":  "2026-10-24",
-        "file":  "downloads/Ghost-GhostValheimSuite-1.0.16.zip",
-        "bytes":  59830928,
-        "sha256":  "6cc75bc331b546995d53cc777aa39c598f911495c4653c280016effbcb720c91",
-        "appIntegration":  true,
-        "dependencies":  [
-                             "denikson-BepInExPack_Valheim-5.4.2351",
-                             "ValheimModding-JsonDotNET-13.0.4",
-                             "shudnal-ConfigurationManager-1.1.25"
-                         ],
-        "notes":  "자동 줍기 항상 켜짐·V 전환/키설정 제거 / 친구 설정 동기화 호환 오류 수정",
-        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.16/Ghost-GhostValheimSuite-1.0.16.zip"
-    },
-    {
-        "version":  "1.0.15",
-        "date":  "2026-10-24",
-        "file":  "downloads/Ghost-GhostValheimSuite-1.0.15.zip",
-        "bytes":  59825345,
-        "sha256":  "84b6eefb5b32a994f904ca929ef7023d60e3ffa6617c8865fea549687143278f",
-        "appIntegration":  true,
-        "dependencies":  [
-                             "denikson-BepInExPack_Valheim-5.4.2351",
-                             "ValheimModding-JsonDotNET-13.0.4",
-                             "shudnal-ConfigurationManager-1.1.25"
-                         ],
-        "notes":  "강공 화살1발당 피해1.5배·9발 / 준비2.5배 / 확산20% 확대 / 런처1.0.5 버전 표시 수정",
-        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.15/Ghost-GhostValheimSuite-1.0.15.zip"
-    },
-    {
-        "version":  "1.0.13",
-        "date":  "2026-10-24",
-        "file":  "downloads/Ghost-GhostValheimSuite-1.0.13.zip",
-        "bytes":  59824155,
-        "sha256":  "45cf13a3fff55015aff79cc7b187a65f0621cf276b1e3ce69c80e01c7ac22915",
-        "appIntegration":  true,
-        "dependencies":  [
-                             "denikson-BepInExPack_Valheim-5.4.2351",
-                             "ValheimModding-JsonDotNET-13.0.4",
-                             "shudnal-ConfigurationManager-1.1.25"
-                         ],
-        "notes":  "활 설정 완전 고정 / 일반 사격 기본 이펙트 / 강공 이펙트1.5배 / 강공 확산각 절반 / 9발9개 소모",
-        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.13/Ghost-GhostValheimSuite-1.0.13.zip"
-    },
-    {
-        "version":  "1.0.12",
-        "date":  "2026-10-24",
-        "file":  "downloads/Ghost-GhostValheimSuite-1.0.12.zip",
-        "bytes":  59824806,
-        "sha256":  "2c02fbdb5327a1b7a570980a14549d140b880faf54cbf28f545a0ba50b48a655",
-        "appIntegration":  true,
-        "dependencies":  [
-                             "denikson-BepInExPack_Valheim-5.4.2351",
-                             "ValheimModding-JsonDotNET-13.0.4",
-                             "shudnal-ConfigurationManager-1.1.25"
-                         ],
-        "notes":  "활 강공격 9발 정식 추가 / 준비 시간 3배 / 이펙트 50% 강화 / 일반 활 당김 속도 2배 고정",
-        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.12/Ghost-GhostValheimSuite-1.0.12.zip"
-    },
-    {
-        "version":  "1.0.11",
-        "date":  "2026-10-24",
-        "file":  "downloads/Ghost-GhostValheimSuite-1.0.11.zip",
-        "bytes":  59812312,
-        "sha256":  "4cb9b1eda9b9936cee59e364457b1a1623bc71da9389a8acb815c9fc3b8b4e67",
-        "appIntegration":  true,
-        "dependencies":  [
-                             "denikson-BepInExPack_Valheim-5.4.2351",
-                             "ValheimModding-JsonDotNET-13.0.4",
-                             "shudnal-ConfigurationManager-1.1.25"
-                         ],
-        "notes":  "활 시위 당기는 속도 2배 / 숙련도 효과 유지 / Wardrobe 0.5.4 보존",
-        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.11/Ghost-GhostValheimSuite-1.0.11.zip"
-    },
-    {
-        "version":  "1.0.10",
-        "date":  "2026-10-24",
-        "file":  "downloads/Ghost-GhostValheimSuite-1.0.10.zip",
-        "bytes":  59802777,
-        "sha256":  "40bbb3075ebe92b68e465a6acec4bdfb56159de1e562109222a73db8f00e3332",
-        "appIntegration":  true,
-        "dependencies":  [
-                             "denikson-BepInExPack_Valheim-5.4.2351",
-                             "ValheimModding-JsonDotNET-13.0.4",
-                             "shudnal-ConfigurationManager-1.1.25"
-                         ],
-        "notes":  "해골기사 망토 뼈대 연결 복원 / 광전사 망토·크기·모션 유지",
-        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.10/Ghost-GhostValheimSuite-1.0.10.zip"
-    },
-    {
-        "version":  "1.0.9",
-        "date":  "2026-10-24",
-        "file":  "downloads/Ghost-GhostValheimSuite-1.0.9.zip",
-        "bytes":  59802420,
-        "sha256":  "cb92cfeafe9f9dce963cf280871f1d4aae0918a92d71bf857d33de420e634803",
-        "appIntegration":  true,
-        "dependencies":  [
-                             "denikson-BepInExPack_Valheim-5.4.2351",
-                             "ValheimModding-JsonDotNET-13.0.4",
-                             "shudnal-ConfigurationManager-1.1.25"
-                         ],
-        "notes":  "망토 움직임 거리·충돌체 단위 수정 / 해골기사 몸 관통 대응 / 정상 크기·모션 유지",
-        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.9/Ghost-GhostValheimSuite-1.0.9.zip"
-    },
-    {
-        "version":  "1.0.8",
-        "date":  "2026-10-23",
-        "file":  "downloads/Ghost-GhostValheimSuite-1.0.8.zip",
-        "bytes":  59800336,
-        "sha256":  "7a95cab4bdf835e9cdc41932cfaa2c0d52124e14e75e8168382206673e4ab216",
-        "appIntegration":  true,
-        "dependencies":  [
-                             "denikson-BepInExPack_Valheim-5.4.2351",
-                             "ValheimModding-JsonDotNET-13.0.4",
-                             "shudnal-ConfigurationManager-1.1.25"
-                         ],
-        "notes":  "Original 거대화 수정 / 월드·렌더러 단위 보정 / 원작 비율·모션·망토 유지",
-        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.8/Ghost-GhostValheimSuite-1.0.8.zip"
-    },
-    {
-        "version":  "1.0.7",
-        "date":  "2026-10-23",
-        "file":  "downloads/Ghost-GhostValheimSuite-1.0.7.zip",
-        "bytes":  59798986,
-        "sha256":  "876bcfc2c27458429ee1d66b586616aacf7dd9a66931ff84959cfb89abf0bab4",
-        "appIntegration":  true,
-        "dependencies":  [
-                             "denikson-BepInExPack_Valheim-5.4.2351",
-                             "ValheimModding-JsonDotNET-13.0.4",
-                             "shudnal-ConfigurationManager-1.1.25"
-                         ],
-        "notes":  "Original 모션 정지 대응 / 원작 비율·개별 크기 배율 / 독립 망토·천 물리 / 홈페이지 구성 정리",
-        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.7/Ghost-GhostValheimSuite-1.0.7.zip"
-    },
-    {
-        "version":  "1.0.6",
-        "date":  "2026-10-23",
-        "file":  "downloads/Ghost-GhostValheimSuite-1.0.6.zip",
-        "bytes":  59730154,
-        "sha256":  "af7307cca1c7f96c7de1ed611631628bd61e3cb1cf9d54b8a50896df65b55c21",
-        "appIntegration":  true,
-        "dependencies":  [
-                             "denikson-BepInExPack_Valheim-5.4.2351",
-                             "ValheimModding-JsonDotNET-13.0.4",
-                             "shudnal-ConfigurationManager-1.1.25"
-                         ],
-        "notes":  "외형 등록 초기화 오류 수정 / 둠 원작 얼굴·헤어 머리 외형 / 광전사·해골기사 상의 망토·흔들림 / 홈페이지 회전 6초",
-        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.6/Ghost-GhostValheimSuite-1.0.6.zip"
-    },
-    {
-        "version":  "1.0.5",
-        "date":  "2026-10-23",
-        "file":  "downloads/Ghost-GhostValheimSuite-1.0.5.zip",
-        "bytes":  59194139,
-        "sha256":  "29a5e7bf6db57bed09c4aaff05d5eefb9641f48e24e7188bd428c3ad9cef1fd0",
-        "appIntegration":  true,
-        "dependencies":  [
-                             "denikson-BepInExPack_Valheim-5.4.2351",
-                             "ValheimModding-JsonDotNET-13.0.4",
-                             "shudnal-ConfigurationManager-1.1.25"
-                         ],
-        "notes":  "광전사·해골기사 외형 추가 / 둠 포함 Valheim·Original 체형 선택 / 원작 얼굴·헤어 미포함 / 게임 내 확인용",
-        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.5/Ghost-GhostValheimSuite-1.0.5.zip"
-    },
-    {
-        "version":  "1.0.4",
-        "date":  "2026-10-23",
-        "file":  "downloads/Ghost-GhostValheimSuite-1.0.4.zip",
-        "bytes":  4317584,
-        "sha256":  "e140d9be338f83189ae3fd203d29ac905c22d4c2f7362cb12bf4d55580bdf7a7",
-        "appIntegration":  true,
-        "dependencies":  [
-                             "denikson-BepInExPack_Valheim-5.4.2351",
-                             "ValheimModding-JsonDotNET-13.0.4",
-                             "shudnal-ConfigurationManager-1.1.25"
-                         ],
-        "notes":  "둠 경갑 재질 검색 오류 수정 · 게임에 로딩된 장비/캐릭터 재질을 복제해 텍스처 적용. 실제 착용 모습은 업데이트 후 확인해 주세요.",
-        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.4/Ghost-GhostValheimSuite-1.0.4.zip"
-    },
-    {
-        "version":  "1.0.3",
-        "date":  "2026-10-23",
-        "file":  "downloads/Ghost-GhostValheimSuite-1.0.3.zip",
-        "bytes":  4309256,
-        "sha256":  "ee5766091411f5aa26cde5cd5c8bca0ca82a0b7184c8ad1f6bbe71ab99368ff4",
-        "appIntegration":  true,
-        "dependencies":  [
-                             "denikson-BepInExPack_Valheim-5.4.2351",
-                             "ValheimModding-JsonDotNET-13.0.4",
-                             "shudnal-ConfigurationManager-1.1.25"
-                         ],
-        "notes":  "둠 경갑 Spine 간격 오류 수정 · 골반/어깨 기준의 몸통 변환 및 보조 관절 호환 보강. 실제 착용 모습은 업데이트 후 확인해 주세요.",
-        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.3/Ghost-GhostValheimSuite-1.0.3.zip"
-    },
-    {
-        "version":  "1.0.2",
-        "date":  "2026-10-23",
-        "file":  "downloads/Ghost-GhostValheimSuite-1.0.2.zip",
-        "bytes":  4306908,
-        "sha256":  "5068277765a66bca2d8d1c54dd13a435276eab0c642497cef67c45c8cee93d21",
-        "appIntegration":  true,
-        "dependencies":  [
-                             "denikson-BepInExPack_Valheim-5.4.2351",
-                             "ValheimModding-JsonDotNET-13.0.4",
-                             "shudnal-ConfigurationManager-1.1.25"
-                         ],
-        "notes":  "둠 경갑 외형이 표시되지 않던 모델 단위 변환 오류 수정 · 외형 해금과 기존 선택 유지. 실제 착용 모습은 업데이트 후 확인해 주세요.",
-        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.2/Ghost-GhostValheimSuite-1.0.2.zip"
-    },
-    {
-        "version":  "1.0.1",
-        "date":  "2026-10-23",
-        "file":  "downloads/Ghost-GhostValheimSuite-1.0.1.zip",
-        "bytes":  4304826,
-        "sha256":  "0e97e35174816de720157c499ddb7eee87d12c751df74327288057ae46b9fc49",
-        "appIntegration":  true,
-        "dependencies":  [
-                             "denikson-BepInExPack_Valheim-5.4.2351",
-                             "ValheimModding-JsonDotNET-13.0.4",
-                             "shudnal-ConfigurationManager-1.1.25"
-                         ],
-        "notes":  "리니지2 둠 경갑 남성 외형 추가 · 접속 시 자동 해금 · 기존 외형 메뉴에서 선택. 실제 착용은 첫 확인이 필요한 테스트 배포.",
-        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.1/Ghost-GhostValheimSuite-1.0.1.zip"
-    },
-    {
-        "version":  "1.0.0",
-        "date":  "2026-10-22",
-        "file":  "downloads/Ghost-GhostValheimSuite-1.0.0.zip",
-        "bytes":  2859190,
-        "sha256":  "8c4f1f4602d8a83e303f3bb8f1a916adc058f9050d691943ec46f4e4f7a044d3",
-        "appIntegration":  true,
-        "dependencies":  [
-                             "denikson-BepInExPack_Valheim-5.4.2351",
-                             "ValheimModding-JsonDotNET-13.0.4",
-                             "shudnal-ConfigurationManager-1.1.25"
-                         ],
-        "notes":  "장비 선택 교환, 숙련도 경험치 2배, 발효·벨트 설정과 수정 모드 통합.",
-        "downloadUrl":  "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.0/Ghost-GhostValheimSuite-1.0.0.zip"
-    }
+  {
+    "version": "1.0.40",
+    "date": "2026-10-30",
+    "file": "downloads/Ghost-GhostValheimSuite-1.0.40.zip",
+    "bytes": 398775554,
+    "sha256": "0c4d2677828c48e9ce38acd528f8cfa09188e83858e1d88f7f4568cb7020dd54",
+    "appIntegration": true,
+    "dependencies": [
+      "denikson-BepInExPack_Valheim-5.4.2351",
+      "ValheimModding-JsonDotNET-13.0.4",
+      "shudnal-ConfigurationManager-1.1.25",
+      "Ghost-GhostSmelterControl-1.0.0"
+    ],
+    "notes": "둠 창 수직·곡괭이 공격 방향·활 실제 당김 접점 수정",
+    "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.40/Ghost-GhostValheimSuite-1.0.40.zip"
+  },
+  {
+    "version": "1.0.39",
+    "date": "2026-10-29",
+    "file": "downloads/Ghost-GhostValheimSuite-1.0.39.zip",
+    "bytes": 398765563,
+    "sha256": "11a55d8ecb0105071f56ec980e93d5045f5f1374ed05979dc92795dcc2734b4a",
+    "appIntegration": true,
+    "dependencies": [
+      "denikson-BepInExPack_Valheim-5.4.2351",
+      "ValheimModding-JsonDotNET-13.0.4",
+      "shudnal-ConfigurationManager-1.1.25"
+    ],
+    "notes": "둠 무기 형상 기준 접점·활 조준 공중 회전 보완",
+    "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.39/Ghost-GhostValheimSuite-1.0.39.zip"
+  },
+  {
+    "version": "1.0.38",
+    "date": "2026-10-29",
+    "file": "downloads/Ghost-GhostValheimSuite-1.0.38.zip",
+    "bytes": 398747243,
+    "sha256": "716d4f74d62390c5afe1c641e09445beffe332ff4c1ed0b2bac9fb20ef3788d0",
+    "appIntegration": true,
+    "dependencies": [
+      "denikson-BepInExPack_Valheim-5.4.2351",
+      "ValheimModding-JsonDotNET-13.0.4",
+      "shudnal-ConfigurationManager-1.1.25"
+    ],
+    "notes": "둠 양손 무기 접점·활 상하 조준·방향별 이동 보완",
+    "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.38/Ghost-GhostValheimSuite-1.0.38.zip"
+  },
+  {
+    "version": "1.0.37",
+    "date": "2026-10-29",
+    "file": "downloads/Ghost-GhostValheimSuite-1.0.37.zip",
+    "bytes": 398735795,
+    "sha256": "a900f9990fed21c25e9ba4efca0515c50c2e95c1668edc1f4a1fc5e41a8cd848",
+    "appIntegration": true,
+    "dependencies": [
+      "denikson-BepInExPack_Valheim-5.4.2351",
+      "ValheimModding-JsonDotNET-13.0.4",
+      "shudnal-ConfigurationManager-1.1.25"
+    ],
+    "notes": "둠 창 손잡이·활 당김/유지·달리기 장신구 부착 수정",
+    "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.37/Ghost-GhostValheimSuite-1.0.37.zip"
+  },
+  {
+    "version": "1.0.36",
+    "date": "2026-10-29",
+    "file": "downloads/Ghost-GhostValheimSuite-1.0.36.zip",
+    "bytes": 398725811,
+    "sha256": "f89a37a36cb39b5fc82cc014aa1718e18b7c32c375b4b0595c3b46b328e62ddc",
+    "appIntegration": true,
+    "dependencies": [
+      "denikson-BepInExPack_Valheim-5.4.2351",
+      "ValheimModding-JsonDotNET-13.0.4",
+      "shudnal-ConfigurationManager-1.1.25"
+    ],
+    "notes": "둠 무기별 원본 자세·손잡이 정렬·수납 잔상 수정",
+    "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.36/Ghost-GhostValheimSuite-1.0.36.zip"
+  },
+  {
+    "version": "1.0.35",
+    "date": "2026-10-29",
+    "file": "downloads/Ghost-GhostValheimSuite-1.0.35.zip",
+    "bytes": 398714119,
+    "sha256": "3b98f23f9737846369b87449a8b2ff9668ae6253f0728a1de736775c4eff3a2c",
+    "appIntegration": true,
+    "dependencies": [
+      "denikson-BepInExPack_Valheim-5.4.2351",
+      "ValheimModding-JsonDotNET-13.0.4",
+      "shudnal-ConfigurationManager-1.1.25"
+    ],
+    "notes": "둠 경갑 남자 다크엘프 원본82뼈·체형·대기/걷기/달리기",
+    "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.35/Ghost-GhostValheimSuite-1.0.35.zip"
+  },
+  {
+    "version": "1.0.34",
+    "date": "2026-10-29",
+    "file": "downloads/Ghost-GhostValheimSuite-1.0.34.zip",
+    "bytes": 381480009,
+    "sha256": "500a95ab75904d073ba8fd2f9b2a728898a7bdbf3b5ad59b852e9465a5914dbb",
+    "appIntegration": true,
+    "dependencies": [
+      "denikson-BepInExPack_Valheim-5.4.2351",
+      "ValheimModding-JsonDotNET-13.0.4",
+      "shudnal-ConfigurationManager-1.1.25"
+    ],
+    "notes": "둠·해골기사·군주 탐식자의 공통 광전사 체형과 자세 기준",
+    "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.34/Ghost-GhostValheimSuite-1.0.34.zip"
+  },
+  {
+    "version": "1.0.33",
+    "date": "2026-10-29",
+    "file": "downloads/Ghost-GhostValheimSuite-1.0.33.zip",
+    "bytes": 381464847,
+    "sha256": "b673a96ec4e90425e270e6c3cabc2aac506135ca71c5097fc580c8e60dd7a8cd",
+    "appIntegration": true,
+    "dependencies": [
+      "denikson-BepInExPack_Valheim-5.4.2351",
+      "ValheimModding-JsonDotNET-13.0.4",
+      "shudnal-ConfigurationManager-1.1.25"
+    ],
+    "notes": "티리엘 반투명한 빛·색감·흩어지는 날개 끝·부드러운 어깨/팔 흐름",
+    "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.33/Ghost-GhostValheimSuite-1.0.33.zip"
+  },
+  {
+    "version": "1.0.32",
+    "date": "2026-10-29",
+    "file": "downloads/Ghost-GhostValheimSuite-1.0.32.zip",
+    "bytes": 381457177,
+    "sha256": "29b1335560c740b83a09ecd5401e684990f65c3f6c3f646fed3dc34a28141a8d",
+    "appIntegration": true,
+    "dependencies": [
+      "denikson-BepInExPack_Valheim-5.4.2351",
+      "ValheimModding-JsonDotNET-13.0.4",
+      "shudnal-ConfigurationManager-1.1.25"
+    ],
+    "notes": "티리엘 날개 크기 90%·투명도와 빛 겹침 완화 적용 후보",
+    "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.32/Ghost-GhostValheimSuite-1.0.32.zip"
+  },
+  {
+    "version": "1.0.31",
+    "date": "2026-10-28",
+    "file": "downloads/Ghost-GhostValheimSuite-1.0.31.zip",
+    "bytes": 381448748,
+    "sha256": "31b7d9694bd4ee58b935a7abfb8131437336bfc713d2dfe3c1d16222a62294ed",
+    "appIntegration": true,
+    "dependencies": [
+      "denikson-BepInExPack_Valheim-5.4.2351",
+      "ValheimModding-JsonDotNET-13.0.4",
+      "shudnal-ConfigurationManager-1.1.25"
+    ],
+    "notes": "티리엘 날개 접힘·앞쏠림 수정 후보 — 누락 원본 blend/3점 연결/회전 운반 복원",
+    "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.31/Ghost-GhostValheimSuite-1.0.31.zip"
+  },
+  {
+    "version": "1.0.30",
+    "date": "2026-10-28",
+    "file": "downloads/Ghost-GhostValheimSuite-1.0.30.zip",
+    "bytes": 381437736,
+    "sha256": "d4afb1086ff02674a54d0677c86c04da8622271434b6da73bf25b559e778e171",
+    "appIntegration": true,
+    "dependencies": [
+      "denikson-BepInExPack_Valheim-5.4.2351",
+      "ValheimModding-JsonDotNET-13.0.4",
+      "shudnal-ConfigurationManager-1.1.25"
+    ],
+    "notes": "티리엘 플레이어 원본 날개 · 원본 비율과 cloth 연결에 따른 이동·바람 반응 (게임 검증 전)",
+    "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.30/Ghost-GhostValheimSuite-1.0.30.zip"
+  },
+  {
+    "version": "1.0.29",
+    "date": "2026-10-28",
+    "file": "downloads/Ghost-GhostValheimSuite-1.0.29.zip",
+    "bytes": 378493795,
+    "sha256": "af2e6a76977f3288f07cff0a5cfbcc55f89d3bf27a4412a7adab5c850fa62e7c",
+    "appIntegration": true,
+    "dependencies": [
+      "denikson-BepInExPack_Valheim-5.4.2351",
+      "ValheimModding-JsonDotNET-13.0.4",
+      "shudnal-ConfigurationManager-1.1.25"
+    ],
+    "notes": "티리엘 원본 S15 날개 애니메이션 · 원본 텍스처 기반 갑옷 빛 (게임 검증 전)",
+    "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.29/Ghost-GhostValheimSuite-1.0.29.zip"
+  },
+  {
+    "version": "1.0.28",
+    "date": "2026-10-28",
+    "file": "downloads/Ghost-GhostValheimSuite-1.0.28.zip",
+    "bytes": 377416357,
+    "sha256": "ccb90769075fe11efd72ea8c6874f83ac7d9f8db626908f547a5e6f6e6a7670f",
+    "appIntegration": true,
+    "dependencies": [
+      "denikson-BepInExPack_Valheim-5.4.2351",
+      "ValheimModding-JsonDotNET-13.0.4",
+      "shudnal-ConfigurationManager-1.1.25"
+    ],
+    "notes": "티리엘 목 피부 관통 수정 · 갑옷 빛 가시성 · 넓고 흐르는 별도 날개",
+    "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.28/Ghost-GhostValheimSuite-1.0.28.zip"
+  },
+  {
+    "version": "1.0.27",
+    "date": "2026-10-27",
+    "file": "downloads/Ghost-GhostValheimSuite-1.0.27.zip",
+    "bytes": 377409124,
+    "sha256": "1e1145b034db09a6c5a52e4d15f73569a3fcbfddc29d45aef2eff94588c2612f",
+    "appIntegration": true,
+    "dependencies": [
+      "denikson-BepInExPack_Valheim-5.4.2351",
+      "ValheimModding-JsonDotNET-13.0.4",
+      "shudnal-ConfigurationManager-1.1.25"
+    ],
+    "notes": "티리엘 옷 효과 확대 오류 수정 · 은은한 갑옷 빛 · 굽이치는 별도 날개",
+    "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.27/Ghost-GhostValheimSuite-1.0.27.zip"
+  },
+  {
+    "version": "1.0.26",
+    "date": "2026-10-27",
+    "file": "downloads/Ghost-GhostValheimSuite-1.0.26.zip",
+    "bytes": 378521111,
+    "sha256": "22a7267db2431bf1304f2e09c93246ce4838f6cf5297ad9e1d0154105d8b8c3f",
+    "appIntegration": true,
+    "dependencies": [
+      "denikson-BepInExPack_Valheim-5.4.2351",
+      "ValheimModding-JsonDotNET-13.0.4",
+      "shudnal-ConfigurationManager-1.1.25"
+    ],
+    "notes": "티리엘 빛의 날개 망토 / 부드러운 어깨·팔 불길 / 기존 외형·인벤토리 방어 유지",
+    "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.26/Ghost-GhostValheimSuite-1.0.26.zip"
+  },
+  {
+    "version": "1.0.25",
+    "date": "2026-10-27",
+    "file": "downloads/Ghost-GhostValheimSuite-1.0.25.zip",
+    "bytes": 377358796,
+    "sha256": "bb242685ebb0dffd1de9cf63cf26827f8238178018790da770d468ad798735d6",
+    "appIntegration": true,
+    "dependencies": [
+      "denikson-BepInExPack_Valheim-5.4.2351",
+      "ValheimModding-JsonDotNET-13.0.4",
+      "shudnal-ConfigurationManager-1.1.25"
+    ],
+    "notes": "티리엘 빛 흐름 / 홈페이지5종회전 / 인벤토리 방어 유지",
+    "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.25/Ghost-GhostValheimSuite-1.0.25.zip"
+  },
+  {
+    "version": "1.0.23",
+    "date": "2026-10-27",
+    "file": "downloads/Ghost-GhostValheimSuite-1.0.23.zip",
+    "bytes": 301078831,
+    "sha256": "05b0fd43f985a60067e7aebb8bcdef22d189ec03e9e15346f5b9e4f0377e4907",
+    "appIntegration": true,
+    "dependencies": [
+      "denikson-BepInExPack_Valheim-5.4.2351",
+      "ValheimModding-JsonDotNET-13.0.4",
+      "shudnal-ConfigurationManager-1.1.25"
+    ],
+    "notes": "인벤토리 재귀 방지 추가 / 목·눈·4종 부분착용 수정 유지",
+    "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.23/Ghost-GhostValheimSuite-1.0.23.zip"
+  },
+  {
+    "version": "1.0.21",
+    "date": "2026-10-27",
+    "file": "downloads/Ghost-GhostValheimSuite-1.0.21.zip",
+    "bytes": 247099956,
+    "sha256": "704eaa4b648c03b98dfdca225a252e15e5a5cd3eec9f1a136a90b18b8752faa9",
+    "appIntegration": true,
+    "dependencies": [
+      "denikson-BepInExPack_Valheim-5.4.2351",
+      "ValheimModding-JsonDotNET-13.0.4",
+      "shudnal-ConfigurationManager-1.1.25"
+    ],
+    "notes": "원작 체형 비율·가면 피부 돌출 수정 테스트 / 4종 Original 체형, 두 체형의 얼굴 가림 보정",
+    "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.21/Ghost-GhostValheimSuite-1.0.21.zip"
+  },
+  {
+    "version": "1.0.20",
+    "date": "2026-10-27",
+    "file": "downloads/Ghost-GhostValheimSuite-1.0.20.zip",
+    "bytes": 247086247,
+    "sha256": "ced600e7bf6423a9889f9f084a323d5589ceb8d13e6a33922ea06e3082d12032",
+    "appIntegration": true,
+    "dependencies": [
+      "denikson-BepInExPack_Valheim-5.4.2351",
+      "ValheimModding-JsonDotNET-13.0.4",
+      "shudnal-ConfigurationManager-1.1.25"
+    ],
+    "notes": "원작 외형 4종 전환 테스트 / 원작 목·머리·피부·눈·수염 연결, 기존 모드·개인 설정 유지",
+    "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.20/Ghost-GhostValheimSuite-1.0.20.zip"
+  },
+  {
+    "version": "1.0.19",
+    "date": "2026-10-26",
+    "file": "downloads/Ghost-GhostValheimSuite-1.0.19.zip",
+    "bytes": 86090023,
+    "sha256": "4ab43d15188b59e7b5ff6152129ca08bede2d5ed4e4244ae3d62f47172045902",
+    "appIntegration": true,
+    "dependencies": [
+      "denikson-BepInExPack_Valheim-5.4.2351",
+      "ValheimModding-JsonDotNET-13.0.4",
+      "shudnal-ConfigurationManager-1.1.25"
+    ],
+    "notes": "목·투구 연결과 목 피부 보정 / 군주 탐식자 포함·기존 의상·망토·설정 유지",
+    "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.19/Ghost-GhostValheimSuite-1.0.19.zip"
+  },
+  {
+    "version": "1.0.18",
+    "date": "2026-10-26",
+    "file": "downloads/Ghost-GhostValheimSuite-1.0.18.zip",
+    "bytes": 86052222,
+    "sha256": "55a88bf791f90576ddbba07a471317a21938b339181d409aec27138b4f5992d6",
+    "appIntegration": true,
+    "dependencies": [
+      "denikson-BepInExPack_Valheim-5.4.2351",
+      "ValheimModding-JsonDotNET-13.0.4",
+      "shudnal-ConfigurationManager-1.1.25"
+    ],
+    "notes": "군주 탐식자 외형 추가 / 기존 의상·망토·게임 설정 유지",
+    "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.18/Ghost-GhostValheimSuite-1.0.18.zip"
+  },
+  {
+    "version": "1.0.17",
+    "date": "2026-10-25",
+    "file": "downloads/Ghost-GhostValheimSuite-1.0.17.zip",
+    "bytes": 59854837,
+    "sha256": "1bfb87c849951587ed3aa551b54e47f3acff2aab24b11c65ae7e3e9f1632414c",
+    "appIntegration": true,
+    "dependencies": [
+      "denikson-BepInExPack_Valheim-5.4.2351",
+      "ValheimModding-JsonDotNET-13.0.4",
+      "shudnal-ConfigurationManager-1.1.25"
+    ],
+    "notes": "지도 순간이동 아이템·전투 제한 제거 / 미탐험 지역 금지·최소 100m 유지",
+    "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.17/Ghost-GhostValheimSuite-1.0.17.zip"
+  },
+  {
+    "version": "1.0.16",
+    "date": "2026-10-24",
+    "file": "downloads/Ghost-GhostValheimSuite-1.0.16.zip",
+    "bytes": 59830928,
+    "sha256": "6cc75bc331b546995d53cc777aa39c598f911495c4653c280016effbcb720c91",
+    "appIntegration": true,
+    "dependencies": [
+      "denikson-BepInExPack_Valheim-5.4.2351",
+      "ValheimModding-JsonDotNET-13.0.4",
+      "shudnal-ConfigurationManager-1.1.25"
+    ],
+    "notes": "자동 줍기 항상 켜짐·V 전환/키설정 제거 / 친구 설정 동기화 호환 오류 수정",
+    "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.16/Ghost-GhostValheimSuite-1.0.16.zip"
+  },
+  {
+    "version": "1.0.15",
+    "date": "2026-10-24",
+    "file": "downloads/Ghost-GhostValheimSuite-1.0.15.zip",
+    "bytes": 59825345,
+    "sha256": "84b6eefb5b32a994f904ca929ef7023d60e3ffa6617c8865fea549687143278f",
+    "appIntegration": true,
+    "dependencies": [
+      "denikson-BepInExPack_Valheim-5.4.2351",
+      "ValheimModding-JsonDotNET-13.0.4",
+      "shudnal-ConfigurationManager-1.1.25"
+    ],
+    "notes": "강공 화살1발당 피해1.5배·9발 / 준비2.5배 / 확산20% 확대 / 런처1.0.5 버전 표시 수정",
+    "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.15/Ghost-GhostValheimSuite-1.0.15.zip"
+  },
+  {
+    "version": "1.0.13",
+    "date": "2026-10-24",
+    "file": "downloads/Ghost-GhostValheimSuite-1.0.13.zip",
+    "bytes": 59824155,
+    "sha256": "45cf13a3fff55015aff79cc7b187a65f0621cf276b1e3ce69c80e01c7ac22915",
+    "appIntegration": true,
+    "dependencies": [
+      "denikson-BepInExPack_Valheim-5.4.2351",
+      "ValheimModding-JsonDotNET-13.0.4",
+      "shudnal-ConfigurationManager-1.1.25"
+    ],
+    "notes": "활 설정 완전 고정 / 일반 사격 기본 이펙트 / 강공 이펙트1.5배 / 강공 확산각 절반 / 9발9개 소모",
+    "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.13/Ghost-GhostValheimSuite-1.0.13.zip"
+  },
+  {
+    "version": "1.0.12",
+    "date": "2026-10-24",
+    "file": "downloads/Ghost-GhostValheimSuite-1.0.12.zip",
+    "bytes": 59824806,
+    "sha256": "2c02fbdb5327a1b7a570980a14549d140b880faf54cbf28f545a0ba50b48a655",
+    "appIntegration": true,
+    "dependencies": [
+      "denikson-BepInExPack_Valheim-5.4.2351",
+      "ValheimModding-JsonDotNET-13.0.4",
+      "shudnal-ConfigurationManager-1.1.25"
+    ],
+    "notes": "활 강공격 9발 정식 추가 / 준비 시간 3배 / 이펙트 50% 강화 / 일반 활 당김 속도 2배 고정",
+    "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.12/Ghost-GhostValheimSuite-1.0.12.zip"
+  },
+  {
+    "version": "1.0.11",
+    "date": "2026-10-24",
+    "file": "downloads/Ghost-GhostValheimSuite-1.0.11.zip",
+    "bytes": 59812312,
+    "sha256": "4cb9b1eda9b9936cee59e364457b1a1623bc71da9389a8acb815c9fc3b8b4e67",
+    "appIntegration": true,
+    "dependencies": [
+      "denikson-BepInExPack_Valheim-5.4.2351",
+      "ValheimModding-JsonDotNET-13.0.4",
+      "shudnal-ConfigurationManager-1.1.25"
+    ],
+    "notes": "활 시위 당기는 속도 2배 / 숙련도 효과 유지 / Wardrobe 0.5.4 보존",
+    "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.11/Ghost-GhostValheimSuite-1.0.11.zip"
+  },
+  {
+    "version": "1.0.10",
+    "date": "2026-10-24",
+    "file": "downloads/Ghost-GhostValheimSuite-1.0.10.zip",
+    "bytes": 59802777,
+    "sha256": "40bbb3075ebe92b68e465a6acec4bdfb56159de1e562109222a73db8f00e3332",
+    "appIntegration": true,
+    "dependencies": [
+      "denikson-BepInExPack_Valheim-5.4.2351",
+      "ValheimModding-JsonDotNET-13.0.4",
+      "shudnal-ConfigurationManager-1.1.25"
+    ],
+    "notes": "해골기사 망토 뼈대 연결 복원 / 광전사 망토·크기·모션 유지",
+    "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.10/Ghost-GhostValheimSuite-1.0.10.zip"
+  },
+  {
+    "version": "1.0.9",
+    "date": "2026-10-24",
+    "file": "downloads/Ghost-GhostValheimSuite-1.0.9.zip",
+    "bytes": 59802420,
+    "sha256": "cb92cfeafe9f9dce963cf280871f1d4aae0918a92d71bf857d33de420e634803",
+    "appIntegration": true,
+    "dependencies": [
+      "denikson-BepInExPack_Valheim-5.4.2351",
+      "ValheimModding-JsonDotNET-13.0.4",
+      "shudnal-ConfigurationManager-1.1.25"
+    ],
+    "notes": "망토 움직임 거리·충돌체 단위 수정 / 해골기사 몸 관통 대응 / 정상 크기·모션 유지",
+    "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.9/Ghost-GhostValheimSuite-1.0.9.zip"
+  },
+  {
+    "version": "1.0.8",
+    "date": "2026-10-23",
+    "file": "downloads/Ghost-GhostValheimSuite-1.0.8.zip",
+    "bytes": 59800336,
+    "sha256": "7a95cab4bdf835e9cdc41932cfaa2c0d52124e14e75e8168382206673e4ab216",
+    "appIntegration": true,
+    "dependencies": [
+      "denikson-BepInExPack_Valheim-5.4.2351",
+      "ValheimModding-JsonDotNET-13.0.4",
+      "shudnal-ConfigurationManager-1.1.25"
+    ],
+    "notes": "Original 거대화 수정 / 월드·렌더러 단위 보정 / 원작 비율·모션·망토 유지",
+    "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.8/Ghost-GhostValheimSuite-1.0.8.zip"
+  },
+  {
+    "version": "1.0.7",
+    "date": "2026-10-23",
+    "file": "downloads/Ghost-GhostValheimSuite-1.0.7.zip",
+    "bytes": 59798986,
+    "sha256": "876bcfc2c27458429ee1d66b586616aacf7dd9a66931ff84959cfb89abf0bab4",
+    "appIntegration": true,
+    "dependencies": [
+      "denikson-BepInExPack_Valheim-5.4.2351",
+      "ValheimModding-JsonDotNET-13.0.4",
+      "shudnal-ConfigurationManager-1.1.25"
+    ],
+    "notes": "Original 모션 정지 대응 / 원작 비율·개별 크기 배율 / 독립 망토·천 물리 / 홈페이지 구성 정리",
+    "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.7/Ghost-GhostValheimSuite-1.0.7.zip"
+  },
+  {
+    "version": "1.0.6",
+    "date": "2026-10-23",
+    "file": "downloads/Ghost-GhostValheimSuite-1.0.6.zip",
+    "bytes": 59730154,
+    "sha256": "af7307cca1c7f96c7de1ed611631628bd61e3cb1cf9d54b8a50896df65b55c21",
+    "appIntegration": true,
+    "dependencies": [
+      "denikson-BepInExPack_Valheim-5.4.2351",
+      "ValheimModding-JsonDotNET-13.0.4",
+      "shudnal-ConfigurationManager-1.1.25"
+    ],
+    "notes": "외형 등록 초기화 오류 수정 / 둠 원작 얼굴·헤어 머리 외형 / 광전사·해골기사 상의 망토·흔들림 / 홈페이지 회전 6초",
+    "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.6/Ghost-GhostValheimSuite-1.0.6.zip"
+  },
+  {
+    "version": "1.0.5",
+    "date": "2026-10-23",
+    "file": "downloads/Ghost-GhostValheimSuite-1.0.5.zip",
+    "bytes": 59194139,
+    "sha256": "29a5e7bf6db57bed09c4aaff05d5eefb9641f48e24e7188bd428c3ad9cef1fd0",
+    "appIntegration": true,
+    "dependencies": [
+      "denikson-BepInExPack_Valheim-5.4.2351",
+      "ValheimModding-JsonDotNET-13.0.4",
+      "shudnal-ConfigurationManager-1.1.25"
+    ],
+    "notes": "광전사·해골기사 외형 추가 / 둠 포함 Valheim·Original 체형 선택 / 원작 얼굴·헤어 미포함 / 게임 내 확인용",
+    "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.5/Ghost-GhostValheimSuite-1.0.5.zip"
+  },
+  {
+    "version": "1.0.4",
+    "date": "2026-10-23",
+    "file": "downloads/Ghost-GhostValheimSuite-1.0.4.zip",
+    "bytes": 4317584,
+    "sha256": "e140d9be338f83189ae3fd203d29ac905c22d4c2f7362cb12bf4d55580bdf7a7",
+    "appIntegration": true,
+    "dependencies": [
+      "denikson-BepInExPack_Valheim-5.4.2351",
+      "ValheimModding-JsonDotNET-13.0.4",
+      "shudnal-ConfigurationManager-1.1.25"
+    ],
+    "notes": "둠 경갑 재질 검색 오류 수정 · 게임에 로딩된 장비/캐릭터 재질을 복제해 텍스처 적용. 실제 착용 모습은 업데이트 후 확인해 주세요.",
+    "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.4/Ghost-GhostValheimSuite-1.0.4.zip"
+  },
+  {
+    "version": "1.0.3",
+    "date": "2026-10-23",
+    "file": "downloads/Ghost-GhostValheimSuite-1.0.3.zip",
+    "bytes": 4309256,
+    "sha256": "ee5766091411f5aa26cde5cd5c8bca0ca82a0b7184c8ad1f6bbe71ab99368ff4",
+    "appIntegration": true,
+    "dependencies": [
+      "denikson-BepInExPack_Valheim-5.4.2351",
+      "ValheimModding-JsonDotNET-13.0.4",
+      "shudnal-ConfigurationManager-1.1.25"
+    ],
+    "notes": "둠 경갑 Spine 간격 오류 수정 · 골반/어깨 기준의 몸통 변환 및 보조 관절 호환 보강. 실제 착용 모습은 업데이트 후 확인해 주세요.",
+    "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.3/Ghost-GhostValheimSuite-1.0.3.zip"
+  },
+  {
+    "version": "1.0.2",
+    "date": "2026-10-23",
+    "file": "downloads/Ghost-GhostValheimSuite-1.0.2.zip",
+    "bytes": 4306908,
+    "sha256": "5068277765a66bca2d8d1c54dd13a435276eab0c642497cef67c45c8cee93d21",
+    "appIntegration": true,
+    "dependencies": [
+      "denikson-BepInExPack_Valheim-5.4.2351",
+      "ValheimModding-JsonDotNET-13.0.4",
+      "shudnal-ConfigurationManager-1.1.25"
+    ],
+    "notes": "둠 경갑 외형이 표시되지 않던 모델 단위 변환 오류 수정 · 외형 해금과 기존 선택 유지. 실제 착용 모습은 업데이트 후 확인해 주세요.",
+    "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.2/Ghost-GhostValheimSuite-1.0.2.zip"
+  },
+  {
+    "version": "1.0.1",
+    "date": "2026-10-23",
+    "file": "downloads/Ghost-GhostValheimSuite-1.0.1.zip",
+    "bytes": 4304826,
+    "sha256": "0e97e35174816de720157c499ddb7eee87d12c751df74327288057ae46b9fc49",
+    "appIntegration": true,
+    "dependencies": [
+      "denikson-BepInExPack_Valheim-5.4.2351",
+      "ValheimModding-JsonDotNET-13.0.4",
+      "shudnal-ConfigurationManager-1.1.25"
+    ],
+    "notes": "리니지2 둠 경갑 남성 외형 추가 · 접속 시 자동 해금 · 기존 외형 메뉴에서 선택. 실제 착용은 첫 확인이 필요한 테스트 배포.",
+    "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.1/Ghost-GhostValheimSuite-1.0.1.zip"
+  },
+  {
+    "version": "1.0.0",
+    "date": "2026-10-22",
+    "file": "downloads/Ghost-GhostValheimSuite-1.0.0.zip",
+    "bytes": 2859190,
+    "sha256": "8c4f1f4602d8a83e303f3bb8f1a916adc058f9050d691943ec46f4e4f7a044d3",
+    "appIntegration": true,
+    "dependencies": [
+      "denikson-BepInExPack_Valheim-5.4.2351",
+      "ValheimModding-JsonDotNET-13.0.4",
+      "shudnal-ConfigurationManager-1.1.25"
+    ],
+    "notes": "장비 선택 교환, 숙련도 경험치 2배, 발효·벨트 설정과 수정 모드 통합.",
+    "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.0/Ghost-GhostValheimSuite-1.0.0.zip"
+  }
 ]
