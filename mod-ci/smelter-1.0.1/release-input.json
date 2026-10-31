@@ -1,0 +1,34 @@
+{
+  "schema": 1,
+  "assets": [
+    {
+      "name": "Ghost-GhostSmelterControl-1.0.1.zip",
+      "base64_file": "module.zip.b64",
+      "bytes": 144128,
+      "sha256": "06589d791f1b084c2e580af98524dd15fd14e66bd56688c4a2787084a96e0833"
+    },
+    {
+      "name": "Ghost-SmelterControl-1.0.1-Source.zip",
+      "base64_file": "source.zip.b64",
+      "bytes": 20152,
+      "sha256": "65954c042b892cfdef9a941a5652aa2be24ba7d6fbf5f6aaed6059e768f80230"
+    }
+  ],
+  "dll_sha256": "9f227eff58646614cd243793b6a1f0cdfc2a575f7f3455213b52232255d7c049",
+  "tests": {
+    "passed": 32,
+    "failed": 0
+  },
+  "release": {
+    "version": "1.0.1",
+    "date": "2026-10-31",
+    "file": "downloads/Ghost-GhostSmelterControl-1.0.1.zip",
+    "bytes": 144128,
+    "sha256": "06589d791f1b084c2e580af98524dd15fd14e66bd56688c4a2787084a96e0833",
+    "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/smelter-1.0.1/Ghost-GhostSmelterControl-1.0.1.zip",
+    "dependencies": [
+      "denikson-BepInExPack_Valheim-5.4.2333"
+    ],
+    "notes": "풍차 F1 설정 추가 · Windmill Seconds/Barley · 기준 1초·보리 100개 · 기존 바람 영향과 제련 설정 유지"
+  }
+}

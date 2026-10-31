@@ -1,0 +1,30 @@
+name: Publish independent Ghost Smelter Control
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'mod-ci/**'
+      - 'mod-src/**'
+      - '.github/workflows/publish-smelter-control.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  pages: write
+concurrency:
+  group: ghost-smelter-release
+  cancel-in-progress: false
+jobs:
+  publish-module:
+    if: github.repository == 'sukgicalm-lang/ghost-valheim-vault'
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate and publish only the independent production-control module
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: ./mod-ci/publish-smelter.ps1

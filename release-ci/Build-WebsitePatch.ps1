@@ -1,5 +1,7 @@
 function Build-GhostSmelterPatch([string]$IndexHtml, $PriorClient, $PriorRelease, $PriorCatalog, $Bundle) {
-    $release = $Bundle.smelter
+    # Launcher releases retain the newest already-published independent module.
+    $candidates = @($Bundle.smelter) + @($PriorRelease) + @($PriorCatalog)
+    $release = @($candidates | Where-Object { $null -ne $_ } | Sort-Object { [version]$_.version } -Descending)[0]
     $client = $Bundle.client
     if ($PriorClient -and [version]$PriorClient.version -gt [version]$client.version) {
         throw '더 높은 런처가 이미 게시돼 있습니다. 이 파일로 내리지 않았습니다.'
@@ -28,9 +30,9 @@ function Build-GhostSmelterPatch([string]$IndexHtml, $PriorClient, $PriorRelease
     $section = @"
 <!-- GHOST-SMELTER-BEGIN -->
 <article id="ghost-smelter" class="experience-card">
-<span class="experience-label">02 / 제련 · 생산</span><svg class="experience-icon" aria-hidden="true"><use href="#growth"/></svg>
+<span class="experience-label">02 / 제련 · 제분</span><svg class="experience-icon" aria-hidden="true"><use href="#growth"/></svg>
 <h3>기다림은 짧게.<br>모험은 더 길게.</h3>
-<p>제련소·용광로·숯가마의 기본 생산 시간 1초.<br>원료·연료 한도는 100개, 세부 값은 F1에서.</p>
+<p>제련소·용광로·숯가마·풍차의 시간과 투입 한도를 F1에서.<br>기본 1초·100개이며 풍차의 바람 영향은 유지합니다.</p>
 <button class="text-link" type="button" data-module="GhostSmelterControl">제련 기능 자세히 <span aria-hidden="true">↗</span></button>
 <span class="experience-meta">기본 구성 포함 · Ghost 제련 제어 v$($release.version)</span>
 </article>

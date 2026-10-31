@@ -13,8 +13,34 @@ concurrency:
   group: ghost-smelter-release
   cancel-in-progress: false
 jobs:
+  plan:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      publish: ${{ steps.version.outputs.publish }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: version
+        name: Build only a new immutable launcher version
+        shell: python
+        run: |
+          import json, os
+          from pathlib import Path
+          patch = json.loads(Path('release-ci/launcher-patch.json').read_text())
+          package = json.loads(next(row['content'] for row in patch if row['path'] == 'package.json'))
+          live = json.loads(Path('docs/client-release.json').read_text())
+          source_version = tuple(map(int, package['version'].split('.')))
+          live_version = tuple(map(int, live['version'].split('.')))
+          if source_version < live_version:
+              raise RuntimeError('Launcher source is older than the published runtime')
+          publish = source_version > live_version
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as out:
+              out.write('publish=' + str(publish).lower() + '\n')
+          print('New launcher build required:', publish)
   publish:
-    if: github.repository == 'sukgicalm-lang/ghost-valheim-vault'
+    needs: plan
+    if: needs.plan.outputs.publish == 'true' && github.repository == 'sukgicalm-lang/ghost-valheim-vault'
     runs-on: windows-latest
     timeout-minutes: 35
     steps:

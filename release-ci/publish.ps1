@@ -26,6 +26,7 @@ $previous = $null; $catalog = @()
 if (Test-Path (Join-Path $docs 'smelter-release.json')) { $previous = Get-Content (Join-Path $docs 'smelter-release.json') -Raw | ConvertFrom-Json }
 if (Test-Path (Join-Path $docs 'smelter-releases.json')) { $catalog = Get-Content (Join-Path $docs 'smelter-releases.json') -Raw | ConvertFrom-Json }
 $patch = Build-GhostSmelterPatch $index $client $previous $catalog $bundle
+$expectedSmelter = ConvertFrom-Json -InputObject $patch['smelter-release.json']
 # Publish the matching guide and history only after the verified runtime assets exist.
 $guide = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'install-1.0.12.html'))
 $patch['install.html'] = $guide
@@ -61,10 +62,10 @@ for ($i = 0; $i -lt 24; $i++) {
         $feed = Invoke-RestMethod ('https://sukgicalm-lang.github.io/ghost-valheim-vault/smelter-release.json?verify=' + [guid]::NewGuid().ToString('N')) -TimeoutSec 20
         $liveClient = Invoke-RestMethod ('https://sukgicalm-lang.github.io/ghost-valheim-vault/client-release.json?verify=' + [guid]::NewGuid().ToString('N')) -TimeoutSec 20
         $liveSetup = Invoke-RestMethod ('https://sukgicalm-lang.github.io/ghost-valheim-vault/setup-release.json?verify=' + [guid]::NewGuid().ToString('N')) -TimeoutSec 20
-        if ($liveSetup.packages.Count -eq 29 -and $feed.sha256 -eq $bundle.smelter.sha256 -and $feed.version -eq '1.0.0' -and $liveClient.sha256 -eq $bundle.client.sha256 -and $liveClient.version -eq '1.0.12') { $verified = $true; break }
+        if ($liveSetup.packages.Count -eq 29 -and $feed.sha256 -eq $expectedSmelter.sha256 -and $feed.version -eq $expectedSmelter.version -and $liveClient.sha256 -eq $bundle.client.sha256 -and $liveClient.version -eq '1.0.12') { $verified = $true; break }
     } catch { }
     Start-Sleep -Seconds 10
 }
 if (-not $verified) { throw 'Release assets are uploaded, but public Pages metadata is not yet verified' }
-Write-Host 'Public Ghost smelter 1.0.0 / launcher 1.0.12 release verified.'
+Write-Host ('Public Ghost smelter ' + $expectedSmelter.version + ' / launcher 1.0.12 release verified.')
 
