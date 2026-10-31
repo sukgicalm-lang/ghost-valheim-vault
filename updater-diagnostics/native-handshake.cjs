@@ -18,7 +18,7 @@ async function main(){
  const trace=raw.replace("$ErrorActionPreference = 'Stop'","$ErrorActionPreference = 'Stop'\nWrite-Output ('BOUND ' + ($PSBoundParameters | ConvertTo-Json -Compress))");
  await fsp.writeFile(helper,'\ufeff'+trace,{encoding:'utf8',mode:0o600});
  const args=['-NoProfile','-NonInteractive','-ExecutionPolicy','Bypass','-File',helper,'-ParentProcessId',String(parent.pid),'-ArchivePath',archive,'-ExpectedHash',hash,'-Version','1.0.10','-CurrentExePath',process.execPath,'-ReadyPath',ready];
- const child=cp.spawn(powershell,args,{detached:true,stdio:['ignore','pipe','pipe'],windowsHide:true,env:{...process.env,LOCALAPPDATA:path.join(root,'local')}});
+ const child=cp.spawn(powershell,args,{detached:false,stdio:['ignore','pipe','pipe'],windowsHide:true,env:{...process.env,LOCALAPPDATA:path.join(root,'local')}});
  let out='',err='',spawnError='';child.stdout.on('data',d=>out+=d);child.stderr.on('data',d=>err+=d);child.on('error',e=>spawnError=e.message);
  let ok=false;
  try{
