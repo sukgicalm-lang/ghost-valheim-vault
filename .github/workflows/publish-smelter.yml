@@ -30,6 +30,10 @@ jobs:
         run: |
           python release-ci/bootstrap.py
           if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          python release-ci/generate-launcher-patch.py
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          git diff --exit-code -- release-ci/launcher-patch.json
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
           python release-ci/verify-setup.py
           if ($LASTEXITCODE) { exit $LASTEXITCODE }
           npm install --global pnpm@11.8.0
@@ -55,7 +59,7 @@ jobs:
       - name: Verify shipped Windows self-update helper
         shell: pwsh
         run: ./release-ci/test-self-update.ps1
-      - name: Build Windows Ghost r2 1.0.9 and verify actual app archive
+      - name: Build Windows Ghost r2 1.0.10 and verify actual app archive
         shell: pwsh
         working-directory: _smelter_build/launcher
         run: |
