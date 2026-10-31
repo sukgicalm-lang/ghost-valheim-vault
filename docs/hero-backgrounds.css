@@ -46,7 +46,9 @@
 }
 @media (max-width: 760px) {
   .hero .wardrobe-showcase { align-self: flex-end; max-width: 365px; }
-  .hero[data-ghost-motion] .ghost-companion { left: 50%; top: 47%; }
+  /* Reserve a small space above the heading, away from every portrait face. */
+  .hero .hero-content { padding-top: 112px; }
+  .hero[data-ghost-motion] .ghost-companion { left: 50%; top: 48px; width: 60px; }
   .hero[data-ghost-motion=wander] .ghost-companion { animation-name: ghost-center-wander-mobile; }
 }
 @keyframes ghost-center-wander-compact {
@@ -54,6 +56,6 @@
   50% { left: 55%; top: 20%; transform: translate(-50%, -50%) rotate(4deg); }
 }
 @keyframes ghost-center-wander-mobile {
-  0%, 100% { left: 50%; top: 47%; transform: translate(-50%, -50%) rotate(-4deg); }
-  50% { left: 53%; top: 49%; transform: translate(-50%, -50%) rotate(4deg); }
+  0%, 100% { left: 50%; top: 48px; transform: translate(-50%, -50%) translateX(-7px) rotate(-4deg); }
+  50% { left: 50%; top: 48px; transform: translate(-50%, -50%) translateX(7px) rotate(4deg); }
 }
