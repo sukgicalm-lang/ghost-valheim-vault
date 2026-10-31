@@ -48,6 +48,9 @@ internal static class SetupCore {
   link.TargetPath=exe;link.WorkingDirectory=Path.GetDirectoryName(exe);link.Save();
   System.Runtime.InteropServices.Marshal.FinalReleaseComObject(link);System.Runtime.InteropServices.Marshal.FinalReleaseComObject(shell);
  }
+ internal static void Log(string file,string message){
+  try{using(var stream=new FileStream(file,FileMode.Append,FileAccess.Write,FileShare.ReadWrite|FileShare.Delete))using(var writer=new StreamWriter(stream))writer.WriteLine(DateTime.UtcNow.ToString("o")+" "+message);}catch{}
+ }
  internal static int ApplyUpdate(string[] args){
   string installBase=Path.Combine(Environment.GetEnvironmentVariable("LOCALAPPDATA"),"GhostR2"),record=Path.Combine(installBase,"self-update-result.json");
   int parentId=0;string version=args[5],current=args[6],log=args[9];
@@ -56,16 +59,16 @@ internal static class SetupCore {
    long length;if(!long.TryParse(args[4],out length))throw new InvalidDataException("Invalid update size");
    var r=new Release{version=version,sha256=args[3],bytes=length,downloadUrl=Releases+"client-"+version+"/GhostR2-Windows-"+version+".zip"};Validate(r);
    if(new FileInfo(args[2]).Length!=r.bytes||Hash(args[2])!=r.sha256)throw new InvalidDataException("Update SHA-256 mismatch");
-   Directory.CreateDirectory(installBase);File.WriteAllText(args[7],"ready");
+   Directory.CreateDirectory(installBase);Log(log,"ready pid="+Process.GetCurrentProcess().Id+" parent="+parentId+" base="+installBase);File.WriteAllText(args[7],"ready");
    Process parent=null;try{parent=Process.GetProcessById(parentId);}catch(ArgumentException){}
    if(parent!=null)using(parent){if(!parent.WaitForExit(60000))throw new TimeoutException("Launcher did not exit");}
-   string exe=Install(args[2],r,installBase);Links(exe);
+   Log(log,"parent exited; installing");string exe=Install(args[2],r,installBase);Log(log,"installed; setting links");Links(exe);Log(log,"links ready; starting "+exe);
    var start=new ProcessStartInfo(exe){WorkingDirectory=Path.GetDirectoryName(exe),UseShellExecute=true};
    if(System.Text.RegularExpressions.Regex.IsMatch(args[8],@"^ghostvault://v1/install/(Ghost-GhostValheimSuite|Ghost-GhostSmelterControl)/(latest|\d+\.\d+\.\d+)/?$"))start.Arguments=args[8];
    Process.Start(start);File.WriteAllText(record,new JavaScriptSerializer().Serialize(new{status="success",version=version,time=DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}));
    try{File.Delete(args[2]);}catch{}return 0;
   }catch(Exception e){
-   try{Directory.CreateDirectory(installBase);File.AppendAllText(log,e.ToString());File.WriteAllText(record,new JavaScriptSerializer().Serialize(new{status="failed",version=version,time=DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),message=e.Message,log=log}));}catch{}
+   Log(log,e.ToString());try{Directory.CreateDirectory(installBase);File.WriteAllText(record,new JavaScriptSerializer().Serialize(new{status="failed",version=version,time=DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),message=e.Message,log=log}));}catch{}
    bool alive=false;try{using(var parent=Process.GetProcessById(parentId))alive=!parent.HasExited;}catch{}
    if(!alive&&File.Exists(current))try{Links(current);Process.Start(new ProcessStartInfo(current){WorkingDirectory=Path.GetDirectoryName(current),UseShellExecute=true});}catch{}
    return 1;
