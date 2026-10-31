@@ -13,6 +13,10 @@ async function main(){
  if(packed.status!==0)throw new Error('Could not create fixture: '+packed.stderr);
  const hash=crypto.createHash('sha256').update(fs.readFileSync(archive)).digest('hex');
  const parent=cp.spawn(process.execPath,['-e','setInterval(()=>{},1000)'],{stdio:'ignore',windowsHide:true});
+ console.log('HELPER BYTES',Buffer.byteLength(raw),'PREFIX',JSON.stringify(raw.slice(0,100)));
+ const sanity=cp.spawnSync(powershell,['-NoProfile','-NonInteractive','-Command',"Write-Output ('SANITY '+$PSVersionTable.PSVersion); exit 0"],{encoding:'utf8',windowsHide:true});console.log('SANITY',sanity.status,sanity.stdout,sanity.stderr);
+ const trace=raw.replace("$ErrorActionPreference = 'Stop'","$ErrorActionPreference = 'Stop'\nWrite-Output ('BOUND ' + ($PSBoundParameters | ConvertTo-Json -Compress))");
+ await fsp.writeFile(helper,'\ufeff'+trace,{encoding:'utf8',mode:0o600});
  const args=['-NoProfile','-NonInteractive','-ExecutionPolicy','Bypass','-File',helper,'-ParentProcessId',String(parent.pid),'-ArchivePath',archive,'-ExpectedHash',hash,'-Version','1.0.10','-CurrentExePath',process.execPath,'-ReadyPath',ready];
  const child=cp.spawn(powershell,args,{detached:true,stdio:['ignore','pipe','pipe'],windowsHide:true,env:{...process.env,LOCALAPPDATA:path.join(root,'local')}});
  let out='',err='',spawnError='';child.stdout.on('data',d=>out+=d);child.stderr.on('data',d=>err+=d);child.on('error',e=>spawnError=e.message);
@@ -25,7 +29,16 @@ async function main(){
   }
   const record=path.join(root,'local','GhostR2','self-update-result.json');
   console.log(JSON.stringify({ready:ok,exitCode:child.exitCode,spawnError,stdout:out,stderr:err,record:fs.existsSync(record)?fs.readFileSync(record,'utf8'):null},null,2));
-  if(!ok)throw new Error('Native Windows PowerShell handshake failed before ready');
+  if(!ok){
+   const probe=path.join(root,'probe.ps1');await fsp.writeFile(probe,'\ufeffparam([switch]$FunctionsOnly,[int]$ParentProcessId,[string]$Version,[string]$ReadyPath)\nWrite-Output ($PSBoundParameters | ConvertTo-Json -Compress); [IO.File]::WriteAllText($ReadyPath,\"probe\")',{encoding:'utf8'});
+   for(const mode of ['file-version','file-other','command']){
+    const probeReady=path.join(root,mode+'.txt');
+    const extra=mode==='file-other'?['-ReadyPath',probeReady]:['-Version','1.0.10','-ReadyPath',probeReady];
+    const a=mode==='command'?['-NoProfile','-NonInteractive','-ExecutionPolicy','Bypass','-Command',"& $env:GHOST_PROBE -Version '1.0.10' -ReadyPath $env:GHOST_PROBE_READY"]:['-NoProfile','-NonInteractive','-ExecutionPolicy','Bypass','-File',probe,...extra];
+    const p=cp.spawnSync(powershell,a,{encoding:'utf8',windowsHide:true,env:{...process.env,GHOST_PROBE:probe,GHOST_PROBE_READY:probeReady}});console.log('PROBE',mode,JSON.stringify({status:p.status,stdout:p.stdout,stderr:p.stderr,ready:fs.existsSync(probeReady)}));
+   }
+   throw new Error('Native Windows PowerShell handshake failed before ready');
+  }
  }finally{
   child.kill();parent.kill();await new Promise(r=>setTimeout(r,1000));await fsp.rm(root,{recursive:true,force:true});
  }
