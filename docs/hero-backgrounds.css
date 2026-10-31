@@ -2,3 +2,58 @@
 .hero-art {
   background-image: var(--ghost-hero-background, url('assets/hero-scene-b1-v1.webp'));
 }
+
+/* Give the foreground wardrobe its own space at the far right. */
+@media (min-width: 761px) {
+  .hero .wardrobe-showcase {
+    position: absolute;
+    right: calc(26px - (100vw - 100%) / 2);
+    top: 50%;
+    width: clamp(300px, 27vw, 390px);
+    margin: 0;
+    transform: translateY(-50%);
+    z-index: 3;
+    isolation: isolate;
+  }
+  .hero .wardrobe-showcase::before {
+    content: '';
+    position: absolute;
+    inset: -30px -26px -15px;
+    z-index: -1;
+    background: radial-gradient(ellipse at 60% 43%, #071015ed 0%, #071015c2 45%, #07101500 73%);
+    pointer-events: none;
+  }
+  .hero .wardrobe-stage { height: 440px; }
+  .hero .wardrobe-portrait { width: clamp(250px, 22vw, 310px); }
+  .hero .wardrobe-portrait[data-character=tyrael] { width: clamp(320px, 28vw, 390px); }
+  .hero .wardrobe-portrait[data-character=tyrael] img { height: 440px; }
+  .hero .wardrobe-portrait[data-slot=left] { transform: translate(-50%, -12px) translateX(-62px) scale(.78); }
+  .hero .wardrobe-portrait[data-slot=right] { transform: translate(-50%, -12px) translateX(62px) scale(.78); }
+  .hero .wardrobe-portrait[data-slot=back-left] { transform: translate(calc(-50% - 42px), -42px) scale(.57); }
+  .hero .wardrobe-portrait[data-slot=back-right] { transform: translate(calc(-50% + 42px), -42px) scale(.57); }
+}
+.hero[data-ghost-motion] .ghost-companion { left: 52%; top: 35%; }
+.hero[data-ghost-motion=wander] .ghost-companion { animation-name: ghost-center-wander; }
+@keyframes ghost-center-wander {
+  0%, 100% { left: 52%; top: 35%; transform: translate(-50%, -50%) rotate(-4deg); }
+  28% { left: 49%; top: 31%; transform: translate(-50%, -50%) rotate(4deg); }
+  58% { left: 55%; top: 37%; transform: translate(-50%, -50%) rotate(-3deg); }
+  80% { left: 52%; top: 40%; transform: translate(-50%, -50%) rotate(4deg); }
+}
+@media (min-width: 761px) and (max-width: 1100px) {
+  .hero[data-ghost-motion] .ghost-companion { top: 17%; }
+  .hero[data-ghost-motion=wander] .ghost-companion { animation-name: ghost-center-wander-compact; }
+}
+@media (max-width: 760px) {
+  .hero .wardrobe-showcase { align-self: flex-end; max-width: 365px; }
+  .hero[data-ghost-motion] .ghost-companion { left: 50%; top: 47%; }
+  .hero[data-ghost-motion=wander] .ghost-companion { animation-name: ghost-center-wander-mobile; }
+}
+@keyframes ghost-center-wander-compact {
+  0%, 100% { left: 52%; top: 17%; transform: translate(-50%, -50%) rotate(-4deg); }
+  50% { left: 55%; top: 20%; transform: translate(-50%, -50%) rotate(4deg); }
+}
+@keyframes ghost-center-wander-mobile {
+  0%, 100% { left: 50%; top: 47%; transform: translate(-50%, -50%) rotate(-4deg); }
+  50% { left: 53%; top: 49%; transform: translate(-50%, -50%) rotate(4deg); }
+}
