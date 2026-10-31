@@ -29,7 +29,7 @@ async function main(){
  const log=()=>fs.existsSync(path.join(temp,'helper.log'))?fs.readFileSync(path.join(temp,'helper.log'),'utf8'):'';
  if(exit!==0)throw Error('Controller failed '+stderr+' '+log());
  const record=path.join(temp,'GhostR2/self-update-result.json');
- for(let i=0;i<750&&(!fs.existsSync(proof)||!fs.existsSync(record));i++)await delay(100);
+ for(let i=0;i<750&&(!fs.existsSync(proof)||!fs.existsSync(record));i++){if(fs.existsSync(record)&&JSON.parse(fs.readFileSync(record,'utf8').replace(/^\ufeff/,'')).status==='failed')break;await delay(100);}
  console.log('Native log:',log());
  const result=fs.existsSync(record)?JSON.parse(fs.readFileSync(record,'utf8').replace(/^\ufeff/,'')):{};
  if(result.status!=='success'||!fs.existsSync(proof)||!fs.readFileSync(proof,'utf8').includes(path.join('GhostR2','1.0.11','GhostR2.exe'))||fs.readFileSync(path.join(temp,'GhostR2/keep.cfg'),'utf8')!=='preserved')throw Error('Native restart failed '+JSON.stringify(result)+' '+log());

@@ -44,7 +44,10 @@ internal static class SetupCore {
  internal static void Links(string exe){
   using(var p=Registry.CurrentUser.CreateSubKey(@"Software\Classes\ghostvault")){p.SetValue("","URL:Ghost Vault install link");p.SetValue("URL Protocol","");using(var c=p.CreateSubKey(@"shell\open\command"))c.SetValue("","\""+exe+"\" \"%1\"");}
   dynamic shell=Activator.CreateInstance(Type.GetTypeFromProgID("WScript.Shell"));
-  dynamic link=shell.CreateShortcut(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory),"Ghost r2modman.lnk"));
+  string desktop=Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory,Environment.SpecialFolderOption.Create);
+  if(string.IsNullOrEmpty(desktop))desktop=Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),"Desktop");
+  Directory.CreateDirectory(desktop);
+  dynamic link=shell.CreateShortcut(Path.Combine(desktop,"Ghost r2modman.lnk"));
   link.TargetPath=exe;link.WorkingDirectory=Path.GetDirectoryName(exe);link.Save();
   System.Runtime.InteropServices.Marshal.FinalReleaseComObject(link);System.Runtime.InteropServices.Marshal.FinalReleaseComObject(shell);
  }
