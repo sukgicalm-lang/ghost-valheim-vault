@@ -1,6 +1,6 @@
 $ErrorActionPreference = 'Stop'
 $compiler = Join-Path $env:WINDIR 'Microsoft.NET\Framework64\v4.0.30319\csc.exe'
-$output = Join-Path $PSScriptRoot '../_smelter_build/assets/GhostR2-Setup-1.0.11.exe'
+$output = Join-Path $PSScriptRoot '../_smelter_build/assets/GhostR2-Setup-1.0.12.exe'
 & $compiler /nologo /target:winexe /optimize+ /platform:anycpu /reference:System.Windows.Forms.dll /reference:System.Drawing.dll /reference:System.Web.Extensions.dll /reference:System.IO.Compression.dll /reference:System.IO.Compression.FileSystem.dll /reference:Microsoft.CSharp.dll "/out:$output" (Join-Path $PSScriptRoot 'NativeGhostSetup.cs')
 if ($LASTEXITCODE) { throw 'Could not build native installer' }
 $test = Start-Process -FilePath $output -ArgumentList '--self-test' -Wait -PassThru

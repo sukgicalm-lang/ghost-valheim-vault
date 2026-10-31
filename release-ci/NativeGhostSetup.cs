@@ -95,7 +95,7 @@ internal static class SetupCore {
   try{
    string source=Path.Combine(root,"source"),zip=Path.Combine(root,"runtime.zip"),target=Path.Combine(root,"install");
    Directory.CreateDirectory(Path.Combine(source,"resources"));File.WriteAllText(Path.Combine(source,"GhostR2.exe"),"test");File.WriteAllText(Path.Combine(source,"resources","app.asar"),"test");ZipFile.CreateFromDirectory(source,zip);
-   var r=new Release{version="1.0.11",downloadUrl=Releases+"client-1.0.11/GhostR2-Windows-1.0.11.zip",bytes=new FileInfo(zip).Length,sha256=Hash(zip)};
+   var r=new Release{version="1.0.12",downloadUrl=Releases+"client-1.0.12/GhostR2-Windows-1.0.12.zip",bytes=new FileInfo(zip).Length,sha256=Hash(zip)};
    string exe=Install(zip,r,target);if(!File.Exists(exe))throw new Exception("Installation missing");
    File.WriteAllText(Path.Combine(target,"keep.cfg"),"preserved");Install(zip,r,target);
    if(File.ReadAllText(Path.Combine(target,"keep.cfg"))!="preserved"||Directory.GetDirectories(target,"*.previous-*").Length!=1)throw new Exception("Replacement failed");
@@ -122,7 +122,7 @@ internal sealed class SetupWindow:Form{
   try{
    Directory.CreateDirectory(temp);status.Text="최신 런처를 확인하고 있습니다.";ServicePointManager.SecurityProtocol=SecurityProtocolType.Tls12;Release r;
    using(var client=new DownloadClient()){
-    client.Headers[HttpRequestHeader.UserAgent]="GhostR2-Setup/1.0.11";string json=await client.DownloadStringTaskAsync(new Uri(SetupCore.Feed+"?setup="+Guid.NewGuid().ToString("N")));r=new JavaScriptSerializer().Deserialize<Release>(json);SetupCore.Validate(r);
+    client.Headers[HttpRequestHeader.UserAgent]="GhostR2-Setup/1.0.12";string json=await client.DownloadStringTaskAsync(new Uri(SetupCore.Feed+"?setup="+Guid.NewGuid().ToString("N")));r=new JavaScriptSerializer().Deserialize<Release>(json);SetupCore.Validate(r);
     status.Text="Ghost r2 "+r.version+" 다운로드 중";progress.Style=ProgressBarStyle.Continuous;
     client.DownloadProgressChanged+=(s,e)=>{progress.Value=Math.Max(0,Math.Min(100,e.ProgressPercentage));detail.Text="다운로드 "+(e.BytesReceived/1048576)+" MB / "+(r.bytes/1048576)+" MB · 설치 후 필수 모드를 자동 준비합니다.";};
     await client.DownloadFileTaskAsync(new Uri(r.downloadUrl),Path.Combine(temp,"runtime.zip"));

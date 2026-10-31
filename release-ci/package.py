@@ -28,7 +28,7 @@ def main():
     app = LAUNCHER / 'dist/electron/Packaged/win-unpacked'
     if not (app / 'GhostR2.exe').is_file() or not (app / 'resources/app.asar').is_file():
         raise ValueError('Missing built Windows runtime')
-    pack(OUT / 'GhostR2-Windows-1.0.11.zip', [(p, p.relative_to(app).as_posix())
+    pack(OUT / 'GhostR2-Windows-1.0.12.zip', [(p, p.relative_to(app).as_posix())
         for p in app.rglob('*') if p.is_file() and not any(x.startswith('.') for x in p.relative_to(app).parts)])
     entries = []
     for directory, folders, files in os.walk(LAUNCHER):
@@ -36,23 +36,23 @@ def main():
         for name in files:
             p = Path(directory) / name
             entries.append((p, p.relative_to(LAUNCHER).as_posix()))
-    pack(OUT / 'GhostR2-Source-1.0.11.zip', entries)
-    runtime = OUT / 'GhostR2-Windows-1.0.11.zip'
+    pack(OUT / 'GhostR2-Source-1.0.12.zip', entries)
+    runtime = OUT / 'GhostR2-Windows-1.0.12.zip'
     installer = (ROOT / 'Install-GhostR2.template.ps1').read_text(encoding='utf-8-sig')
     if installer.count('__RUNTIME_SHA256__') != 1:
         raise ValueError('Bad installer template')
     (OUT / 'Install-GhostR2.ps1').write_text(installer.replace('__RUNTIME_SHA256__', sha(runtime)), encoding='utf-8-sig', newline='\r\n')
     (OUT / 'INSTALL_GHOST_R2.cmd').write_bytes(b'@echo off\r\npowershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0Install-GhostR2.ps1"\r\n')
-    pack(OUT / 'GhostR2-Install-1.0.11.zip', [(OUT / n, n) for n in ('Install-GhostR2.ps1', 'INSTALL_GHOST_R2.cmd')])
+    pack(OUT / 'GhostR2-Install-1.0.12.zip', [(OUT / n, n) for n in ('Install-GhostR2.ps1', 'INSTALL_GHOST_R2.cmd')])
     names = [
         ('Ghost-GhostSmelterControl-1.0.0.zip', 'smelter-1.0.0'),
         ('Ghost-SmelterControl-1.0.0-Source.zip', 'smelter-1.0.0'),
-        ('GhostR2-Windows-1.0.11.zip', 'client-1.0.11'),
-        ('GhostR2-Source-1.0.11.zip', 'client-1.0.11'),
-        ('GhostR2-Install-1.0.11.zip', 'client-1.0.11'),
-        ('Install-GhostR2.ps1', 'client-1.0.11'),
-        ('INSTALL_GHOST_R2.cmd', 'client-1.0.11'),
-        ('GhostR2-Setup-1.0.11.exe', 'client-1.0.11'),
+        ('GhostR2-Windows-1.0.12.zip', 'client-1.0.12'),
+        ('GhostR2-Source-1.0.12.zip', 'client-1.0.12'),
+        ('GhostR2-Install-1.0.12.zip', 'client-1.0.12'),
+        ('Install-GhostR2.ps1', 'client-1.0.12'),
+        ('INSTALL_GHOST_R2.cmd', 'client-1.0.12'),
+        ('GhostR2-Setup-1.0.12.exe', 'client-1.0.12'),
     ]
     assets = [{'name': n, 'tag': tag, 'bytes': (OUT / n).stat().st_size, 'sha256': sha(OUT / n)} for n, tag in names]
     plugin = assets[0]
@@ -61,9 +61,9 @@ def main():
         'bytes': plugin['bytes'], 'sha256': plugin['sha256'], 'downloadUrl': BASE + plugin['tag'] + '/' + plugin['name'],
         'dependencies': ['denikson-BepInExPack_Valheim-5.4.2333'],
         'notes': 'Ghost 두 번째 독립 모드 · 제련소/용광로/숯가마 1초 · 원료/연료 100개 · F1 설정'}
-    client = {'version': '1.0.11', 'date': '2026-10-31', 'file': 'installers/' + app_asset['name'],
+    client = {'version': '1.0.12', 'date': '2026-10-31', 'file': 'installers/' + app_asset['name'],
         'bytes': app_asset['bytes'], 'sha256': app_asset['sha256'], 'downloadUrl': BASE + app_asset['tag'] + '/' + app_asset['name']}
-    client.update({'installerUrl': BASE + 'client-1.0.11/GhostR2-Setup-1.0.11.exe', 'installerBytes': assets[-1]['bytes'], 'installerSha256': assets[-1]['sha256']})
+    client.update({'installerUrl': BASE + 'client-1.0.12/GhostR2-Setup-1.0.12.exe', 'installerBytes': assets[-1]['bytes'], 'installerSha256': assets[-1]['sha256']})
     (OUT / 'Release-Bundle.json').write_text(json.dumps({'schema': 1, 'assets': assets, 'smelter': smelter, 'client': client}, ensure_ascii=False, indent=2), encoding='utf-8')
     print('Packaged eight immutable assets; metadata uses the actual CI-built Windows bytes.')
 

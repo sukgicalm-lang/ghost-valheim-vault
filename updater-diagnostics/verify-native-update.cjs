@@ -7,9 +7,9 @@ function load(file){const m={exports:{}};new Function('exports','require','modul
 const ps=path.join(process.env.SystemRoot,'System32/WindowsPowerShell/v1.0/powershell.exe');
 async function controller(config){
  const c=JSON.parse(fs.readFileSync(config,'utf8')),helper=path.join(c.temp,'GhostR2Updater.exe'),ready=path.join(c.temp,'ready.txt'),log=path.join(c.temp,'helper.log');
- fs.copyFileSync(path.resolve(root,'../assets/GhostR2-Setup-1.0.11.exe'),helper);
+ fs.copyFileSync(path.resolve(root,'../assets/GhostR2-Setup-1.0.12.exe'),helper);
  const fd=fs.openSync(log,'a');
- const child=cp.spawn(helper,['--apply-update',String(process.pid),c.zip,c.hash,String(fs.statSync(c.zip).size),'1.0.11',c.current,ready,'',log],{...load('src-electron/GhostUpdateProcess.ts').ghostHelperSpawnOptions(fd),env:{...process.env,LOCALAPPDATA:c.temp,GHOST_RESTART_PROOF:c.proof}});fs.closeSync(fd);
+ const child=cp.spawn(helper,['--apply-update',String(process.pid),c.zip,c.hash,String(fs.statSync(c.zip).size),'1.0.12',c.current,ready,'',log],{...load('src-electron/GhostUpdateProcess.ts').ghostHelperSpawnOptions(fd),env:{...process.env,LOCALAPPDATA:c.temp,GHOST_RESTART_PROOF:c.proof}});fs.closeSync(fd);
  let failure;child.on('error',e=>failure=e);
  for(let i=0;i<300;i++){if(failure)throw failure;if(fs.existsSync(ready)){child.unref();console.log('Shipped native helper ready; parent exiting');return;}if(child.exitCode!==null)throw Error('Helper exited '+child.exitCode);await delay(100);}
  child.kill();throw Error('Native ready timeout');
@@ -32,7 +32,7 @@ async function main(){
  for(let i=0;i<750&&(!fs.existsSync(proof)||!fs.existsSync(record));i++){if(fs.existsSync(record)&&JSON.parse(fs.readFileSync(record,'utf8').replace(/^\ufeff/,'')).status==='failed')break;await delay(100);}
  console.log('Native log:',log());
  const result=fs.existsSync(record)?JSON.parse(fs.readFileSync(record,'utf8').replace(/^\ufeff/,'')):{};
- if(result.status!=='success'||!fs.existsSync(proof)||!fs.readFileSync(proof,'utf8').includes(path.join('GhostR2','1.0.11','GhostR2.exe'))||fs.readFileSync(path.join(temp,'GhostR2/keep.cfg'),'utf8')!=='preserved')throw Error('Native restart failed '+JSON.stringify(result)+' '+log());
+ if(result.status!=='success'||!fs.existsSync(proof)||!fs.readFileSync(proof,'utf8').includes(path.join('GhostR2','1.0.12','GhostR2.exe'))||fs.readFileSync(path.join(temp,'GhostR2/keep.cfg'),'utf8')!=='preserved')throw Error('Native restart failed '+JSON.stringify(result)+' '+log());
  console.log('PASS: shipped native helper ready -> actual parent exit -> verified replacement -> new EXE restart; Unicode/spaces/config retained.');
  const cleanup=path.join(temp,'cleanup.ps1');fs.writeFileSync(cleanup,'Remove-Item HKCU:\\Software\\Classes\\ghostvault -Recurse -Force -ErrorAction SilentlyContinue\nRemove-Item (Join-Path ([Environment]::GetFolderPath("Desktop")) "Ghost r2modman.lnk") -Force -ErrorAction SilentlyContinue');cp.execFileSync(ps,['-NoProfile','-ExecutionPolicy','Bypass','-File',cleanup]);fs.rmSync(temp,{recursive:true,force:true});
 }
