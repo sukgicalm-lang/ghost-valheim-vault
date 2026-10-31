@@ -1,0 +1,144 @@
+{
+  "date": "2026-10-31",
+  "setup_revision": 2,
+  "removed_package": "Voidey-WoWArmors-1.1.2",
+  "removed_package_sha256": "f39eb8b743e2b34d657d36b4962b2fa1338b416b5d49b77648c50d53148810bc",
+  "reason": "Standalone WoW gear pack, not required by the Ghost appearances or the current required-mod dependency graph.",
+  "required_packages_before": 29,
+  "required_packages_after": 28,
+  "existing_install_policy": "Do not force-delete saved mod gear. Users can uninstall the optional package; repair will not reinstall or enable it.",
+  "launcher_version_unchanged": "1.0.12",
+  "suite_version_unchanged": "1.0.40",
+  "smelter_version_unchanged": "1.0.3",
+  "checks": {
+    "launcher_setup_loader_cases_passed": 10,
+    "declared_setup_dependants": [],
+    "binary_scan": [
+      {
+        "file": "AzuAntiArthriticCrafting.dll",
+        "refs": [],
+        "deps": [
+          "org.bepinex.plugins.jewelcrafting|2",
+          "randyknapp.mods.auga|2"
+        ],
+        "mentions": [],
+        "nativeTemplates": []
+      },
+      {
+        "file": "AzuAreaRepair.dll",
+        "refs": [],
+        "deps": [],
+        "mentions": [],
+        "nativeTemplates": []
+      },
+      {
+        "file": "AzuExtendedPlayerInventory.dll",
+        "refs": [],
+        "deps": [
+          "vapok.mods.adventurebackpacks|2",
+          "ishid4.mods.betterarchery|2"
+        ],
+        "mentions": [],
+        "nativeTemplates": []
+      },
+      {
+        "file": "MistBeGone.dll",
+        "refs": [],
+        "deps": [],
+        "mentions": [],
+        "nativeTemplates": []
+      },
+      {
+        "file": "TrueInstantLootDrop.dll",
+        "refs": [],
+        "deps": [],
+        "mentions": [],
+        "nativeTemplates": []
+      },
+      {
+        "file": "GhostBowDraw.dll",
+        "refs": [],
+        "deps": [],
+        "mentions": [],
+        "nativeTemplates": []
+      },
+      {
+        "file": "GhostBowSkill.dll",
+        "refs": [],
+        "deps": [
+          "ghost.valheim.bowdraw|2"
+        ],
+        "mentions": [],
+        "nativeTemplates": []
+      },
+      {
+        "file": "GhostDoomLight.dll",
+        "refs": [],
+        "deps": [
+          "Azumatt.AzuExtendedPlayerInventory|2"
+        ],
+        "mentions": [],
+        "nativeTemplates": [
+          "ArmorLeatherChest",
+          "ArmorLeatherLegs",
+          "HelmetLeather",
+          "CapeDeerHide"
+        ]
+      },
+      {
+        "file": "GhostValheimTweaks.dll",
+        "refs": [],
+        "deps": [],
+        "mentions": [],
+        "nativeTemplates": []
+      },
+      {
+        "file": "Landoria.MapTeleport.dll",
+        "refs": [],
+        "deps": [],
+        "mentions": [],
+        "nativeTemplates": []
+      },
+      {
+        "file": "Farming.dll",
+        "refs": [],
+        "deps": [],
+        "mentions": [],
+        "nativeTemplates": []
+      },
+      {
+        "file": "Mining.dll",
+        "refs": [],
+        "deps": [],
+        "mentions": [],
+        "nativeTemplates": []
+      },
+      {
+        "file": "TargetPortal.dll",
+        "refs": [],
+        "deps": [
+          "org.bepinex.plugins.groups|2",
+          "org.bepinex.plugins.guilds|2"
+        ],
+        "mentions": [],
+        "nativeTemplates": []
+      },
+      {
+        "file": "AutoRepair.dll",
+        "refs": [],
+        "deps": [],
+        "mentions": [],
+        "nativeTemplates": []
+      },
+      {
+        "file": "GhostSmelterControl.dll",
+        "refs": [],
+        "deps": [
+          "_shudnal.ConfigurationManager|2"
+        ],
+        "mentions": [],
+        "nativeTemplates": []
+      }
+    ]
+  }
+}

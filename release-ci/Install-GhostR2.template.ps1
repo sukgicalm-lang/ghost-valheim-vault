@@ -57,7 +57,7 @@ try {
     $shortcut = $shell.CreateShortcut((Join-Path $desktop 'Ghost r2modman.lnk'))
     $shortcut.TargetPath = $exe; $shortcut.WorkingDirectory = $installPath; $shortcut.Save()
     Write-Host '설치 완료. 바탕화면에 Ghost r2modman 바로가기를 만들었습니다.' -ForegroundColor Green
-    Write-Host '런처를 열면 필수 모드 29개를 자동으로 준비합니다. 준비 완료 후 Start modded를 누르세요. 이후 런처 새 버전은 자동으로 적용됩니다.'
+    Write-Host '런처를 열면 필수 모드 구성을 자동으로 준비합니다. 준비 완료 후 Start modded를 누르세요. 이후 런처 새 버전은 자동으로 적용됩니다.'
     Write-Host '일반 r2modman의 설치와 ror2mm 연결은 변경하지 않았습니다.'
     if (-not $NoLaunch) { Start-Process -FilePath $exe -WorkingDirectory $installPath }
 }

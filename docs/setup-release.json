@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "revision": 1,
+  "revision": 2,
   "date": "2026-10-31",
   "packages": [
     {
@@ -264,16 +264,6 @@
         "denikson-BepInExPack_Valheim-5.4.2105"
       ],
       "description": "Adds various configurable tweaks to health and stamina loss and regeneration. By Aedenthorn."
-    },
-    {
-      "name": "Voidey-WoWArmors",
-      "version": "1.1.2",
-      "bytes": 8128090,
-      "sha256": "f39eb8b743e2b34d657d36b4962b2fa1338b416b5d49b77648c50d53148810bc",
-      "dependencies": [
-        "denikson-BepInExPack_Valheim-5.4.2202"
-      ],
-      "description": "Adds several iconic armors from World of Warcraft to Valheim. Armor yourself with Bloodfang, Dreadwyrm, Dreadnaught, Nemesis, and Judgment tier sets."
     },
     {
       "name": "Ghost-GhostValheimSuite",

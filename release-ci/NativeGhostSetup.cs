@@ -113,7 +113,7 @@ internal sealed class SetupWindow:Form{
   BackColor=Color.FromArgb(15,27,23);ForeColor=Color.FromArgb(235,230,210);Font=new Font("Malgun Gothic",10);
   var brand=new Label{Text="GHOST R2",Left=28,Top=24,Width=480,Height=28,ForeColor=Color.FromArgb(206,174,91),Font=new Font("Segoe UI",12,FontStyle.Bold)};
   status.SetBounds(28,67,500,55);status.Font=new Font("Malgun Gothic",14,FontStyle.Bold);progress.SetBounds(28,133,500,14);progress.Style=ProgressBarStyle.Marquee;
-  detail.SetBounds(28,163,500,58);detail.Text="설치가 끝나면 런처가 열리고 필수 모드 29개를 자동으로 준비합니다.";
+  detail.SetBounds(28,163,500,58);detail.Text="설치가 끝나면 런처가 열리고 필수 모드 구성을 자동으로 준비합니다.";
   retry.SetBounds(398,233,130,32);retry.Text="다시 시도";retry.Visible=false;retry.Click+=async(s,e)=>await Run();Controls.AddRange(new Control[]{brand,status,progress,detail,retry});
   Shown+=async(s,e)=>await Run();FormClosing+=(s,e)=>{if(busy)e.Cancel=true;};
  }

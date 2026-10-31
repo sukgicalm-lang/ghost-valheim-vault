@@ -27,6 +27,7 @@ if (Test-Path (Join-Path $docs 'smelter-release.json')) { $previous = Get-Conten
 if (Test-Path (Join-Path $docs 'smelter-releases.json')) { $catalog = Get-Content (Join-Path $docs 'smelter-releases.json') -Raw | ConvertFrom-Json }
 $patch = Build-GhostSmelterPatch $index $client $previous $catalog $bundle
 $expectedSmelter = ConvertFrom-Json -InputObject $patch['smelter-release.json']
+$expectedSetup = Get-Content (Join-Path $docs 'setup-release.json') -Raw -Encoding utf8 | ConvertFrom-Json
 # Publish the matching guide and history only after the verified runtime assets exist.
 $guide = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'install-1.0.12.html'))
 $patch['install.html'] = $guide
@@ -36,7 +37,7 @@ $history = Get-Content (Join-Path $docs 'update-history.json') -Raw -Encoding ut
 $history.siteUpdates = @($entry) + @($history.siteUpdates | Where-Object { $_.id -ne $entry.id })
 $historyJson = ConvertTo-Json -InputObject $history -Depth 50 -Compress
 $patch['update-history.json'] = $historyJson
-$patchedIndex = [regex]::Replace($patch['index.html'], '웹사이트 v1\.5\.\d+', '웹사이트 v1.5.6').Replace('전체 모드 · 상세 사용법','Ghost 핵심 기능 · 상세 사용법')
+$patchedIndex = $patch['index.html'].Replace('전체 모드 · 상세 사용법','Ghost 핵심 기능 · 상세 사용법')
 $pattern = '(?s)(<script id="ghost-update-history-data" type="application/json">).*?(</script>)'
 if ([regex]::Matches($patchedIndex,$pattern).Count -ne 1) { throw 'Could not find the website history fallback' }
 $patch['index.html'] = [regex]::Replace($patchedIndex,$pattern,[Text.RegularExpressions.MatchEvaluator]{param($m) $m.Groups[1].Value + $historyJson + $m.Groups[2].Value})
@@ -62,7 +63,7 @@ for ($i = 0; $i -lt 24; $i++) {
         $feed = Invoke-RestMethod ('https://sukgicalm-lang.github.io/ghost-valheim-vault/smelter-release.json?verify=' + [guid]::NewGuid().ToString('N')) -TimeoutSec 20
         $liveClient = Invoke-RestMethod ('https://sukgicalm-lang.github.io/ghost-valheim-vault/client-release.json?verify=' + [guid]::NewGuid().ToString('N')) -TimeoutSec 20
         $liveSetup = Invoke-RestMethod ('https://sukgicalm-lang.github.io/ghost-valheim-vault/setup-release.json?verify=' + [guid]::NewGuid().ToString('N')) -TimeoutSec 20
-        if ($liveSetup.packages.Count -eq 29 -and $feed.sha256 -eq $expectedSmelter.sha256 -and $feed.version -eq $expectedSmelter.version -and $liveClient.sha256 -eq $bundle.client.sha256 -and $liveClient.version -eq '1.0.12') { $verified = $true; break }
+        if ($liveSetup.revision -eq $expectedSetup.revision -and $liveSetup.packages.Count -eq $expectedSetup.packages.Count -and $feed.sha256 -eq $expectedSmelter.sha256 -and $feed.version -eq $expectedSmelter.version -and $liveClient.sha256 -eq $bundle.client.sha256 -and $liveClient.version -eq '1.0.12') { $verified = $true; break }
     } catch { }
     Start-Sleep -Seconds 10
 }

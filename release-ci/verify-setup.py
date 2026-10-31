@@ -11,8 +11,19 @@ ROOT=Path(__file__).resolve().parent.parent
 WORK=ROOT/'_smelter_build'
 setup=json.loads((ROOT/'docs/setup-release.json').read_text(encoding='utf-8'))
 bundle=json.loads((WORK/'launcher/src/ghost/GhostSetupBundle.json').read_text(encoding='utf-8'))
-if setup!=bundle['setup'] or len(setup['packages'])!=29:
-    raise ValueError('Required setup differs from the bundled release baseline')
+baseline=bundle['setup']
+if setup['schema']!=1 or not 2<=len(setup['packages'])<=100 or setup['revision']<baseline['revision']:
+    raise ValueError('Invalid or rolled-back required setup')
+if setup['revision']==baseline['revision'] and setup!=baseline:
+    raise ValueError('Same setup revision has different contents')
+# The public feed may advance independently of an immutable launcher binary.
+# Verify current payloads and the bundled offline fallback without republishing it.
+payloads={}
+for p in baseline['packages']+setup['packages']:
+    key=(p['name'],p['version'])
+    if key in payloads and payloads[key]!=p:
+        raise ValueError('Same package version has conflicting verification metadata')
+    payloads[key]=p
 cache=Path(sys.argv[1]) if len(sys.argv)>1 else WORK/'setup-zips'
 cache.mkdir(exist_ok=True,parents=True)
 def verify(p):
@@ -34,5 +45,6 @@ def verify(p):
             raise ValueError('Official manifest differs from pinned setup: '+name)
     safe_extract(target,WORK/'setup-fixtures'/name)
 with concurrent.futures.ThreadPoolExecutor(max_workers=6) as pool:
-    list(pool.map(verify,setup['packages']))
-print('Verified all 27 official CDN payloads, embedded manifests and hashes; extracted real installer fixtures.')
+    list(pool.map(verify,payloads.values()))
+count=sum(not p['name'].startswith('Ghost-') for p in payloads.values())
+print(f'Verified {count} unique official payloads across current and bundled setups; {len(setup["packages"])} current required packages.')

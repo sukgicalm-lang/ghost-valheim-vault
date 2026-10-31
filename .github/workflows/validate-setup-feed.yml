@@ -1,0 +1,24 @@
+name: Validate dynamic required mod setup
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/setup-release.json'
+      - 'docs/install.html'
+      - 'release-ci/test-setup-feed.cjs'
+      - '.github/workflows/validate-setup-feed.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install pinned TypeScript test compiler
+        run: npm install --prefix "$RUNNER_TEMP/ghost-setup-test" --no-audit --no-fund typescript@5.9.3
+      - name: Test actual existing launcher loader with the public setup
+        run: GHOST_TYPESCRIPT="$RUNNER_TEMP/ghost-setup-test/node_modules/typescript/lib/typescript.js" node release-ci/test-setup-feed.cjs
