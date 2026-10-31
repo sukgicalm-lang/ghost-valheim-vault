@@ -17,10 +17,11 @@ function Build-GhostSmelterPatch([string]$IndexHtml, $PriorClient, $PriorRelease
     }
     $catalog = @($release) + @($history | Where-Object { $_.version -ne $release.version } | Sort-Object { [version]$_.version } -Descending)
     $seen = @{}; $catalog = @($catalog | Where-Object { if ($seen.ContainsKey($_.version)) { $false } else { $seen[$_.version] = $true; $true } })
-    $install = 'https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/client-' + $client.version + '/GhostR2-Install-' + $client.version + '.zip'
+    $install = $client.installerUrl
+    if ($install -cne ('https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/client-' + $client.version + '/GhostR2-Setup-' + $client.version + '.exe')) { throw 'Invalid native installer URL' }
     $html = $IndexHtml
     # Change only launcher download links and the explicitly delimited addon section.
-    $html = [regex]::Replace($html, 'https://github\.com/sukgicalm-lang/ghost-valheim-vault/releases/download/client-\d+\.\d+\.\d+/GhostR2-Install-\d+\.\d+\.\d+\.zip', $install)
+    $html = [regex]::Replace($html, 'https://github\.com/sukgicalm-lang/ghost-valheim-vault/releases/download/client-\d+\.\d+\.\d+/(?:GhostR2-Install-\d+\.\d+\.\d+\.zip|GhostR2-Setup-\d+\.\d+\.\d+\.exe)', $install)
     $source = 'https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/client-' + $client.version + '/GhostR2-Source-' + $client.version + '.zip'
     $html = [regex]::Replace($html, 'https://github\.com/sukgicalm-lang/ghost-valheim-vault/releases/download/client-\d+\.\d+\.\d+/GhostR2-Source-\d+\.\d+\.\d+\.zip', $source)
     $html = [regex]::Replace($html, 'https://github\.com/sukgicalm-lang/ghost-valheim-vault/releases/download/smelter-\d+\.\d+\.\d+/Ghost-GhostSmelterControl-\d+\.\d+\.\d+\.zip', [Text.RegularExpressions.MatchEvaluator]{ param($m) $release.downloadUrl })

@@ -16,7 +16,7 @@ with zipfile.ZipFile(ROOT.parent/'_smelter_build/source-1.0.5.zip') as z:
         data=p.read_bytes();prior=original.get(name)
         if prior==data:continue
         rows.append({'path':name,'old_sha256':hashlib.sha256(prior).hexdigest() if prior is not None else None,'content':data.decode('utf-8')})
-    required={'src/pages/Manager.vue','src/store/modules/DownloadModule.ts','src/ghost/GhostRequiredSetup.ts','src/components/GhostRequiredSetupNotice.vue'}
+    required={'src/pages/Manager.vue','src/store/modules/DownloadModule.ts','src/ghost/GhostRequiredSetup.ts','src/components/GhostRequiredSetupNotice.vue','src-electron/GhostUpdateProcess.ts'}
     if not required.issubset({r['path'] for r in rows}):raise ValueError('Automatic setup integration files missing from source patch')
     (ROOT/'launcher-patch.json').write_text(json.dumps(rows,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
     print('Included all',len(rows),'changed managed source files, including automatic manager and download wiring.')
