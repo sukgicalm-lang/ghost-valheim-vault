@@ -112,11 +112,11 @@ public class GameBinaryTests
             Assert.Single(type.Methods, m => m.Name == (string)a.ConstructorArguments[1].Value);
             Assert.Contains(type.Name, new[] { "Smelter", "ZNetScene" });
         }
-        Assert.Equal(new System.Version(1, 0, 2, 0), plugin.Name.Version);
+        Assert.Equal(new System.Version(1, 0, 3, 0), plugin.Name.Version);
         var attr = plugin.MainModule.GetType("SmelterControl.Plugin").CustomAttributes
             .Single(a => a.AttributeType.Name == "BepInPlugin");
         Assert.Equal("ghost.valheim.smeltercontrol", attr.ConstructorArguments[0].Value);
-        Assert.Equal("1.0.2", attr.ConstructorArguments[2].Value);
+        Assert.Equal("1.0.3", attr.ConstructorArguments[2].Value);
         var incompatible = plugin.MainModule.GetType("SmelterControl.Plugin").CustomAttributes
             .Single(a => a.AttributeType.Name == "BepInIncompatibility");
         Assert.Equal("com.frizzqol.smeltercontrol", incompatible.ConstructorArguments[0].Value);

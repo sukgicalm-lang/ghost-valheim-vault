@@ -17,7 +17,7 @@ namespace SmelterControl
     {
         public const string PluginGuid = "ghost.valheim.smeltercontrol";
         public const string PluginName = "Ghost Smelter Control";
-        public const string PluginVersion = "1.0.2";
+        public const string PluginVersion = "1.0.3";
 
         internal static Plugin Instance { get; private set; }
 
@@ -123,7 +123,7 @@ namespace SmelterControl
 
         private IEnumerator ApplyAfterSceneAwake(ZNetScene scene)
         {
-            // ZNetScene in 1.0.20 has Awake but NO Start method. Do not patch Start.
+            // ZNetScene in 1.0.30 has Awake but NO Start method. Do not patch Start.
             // Two bounded retries allow other mods to finish registering prefabs.
             yield return null;
             ApplySceneSafely(scene, false);

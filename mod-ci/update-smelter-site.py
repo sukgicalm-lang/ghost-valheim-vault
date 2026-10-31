@@ -2,7 +2,7 @@ import hashlib,json,re
 from pathlib import Path
 root=Path(__file__).resolve().parent.parent
 docs=root/'docs'
-data=json.loads((root/'mod-ci/smelter-1.0.2/release-input.json').read_text(encoding='utf-8'))
+data=json.loads((root/'mod-ci/smelter-1.0.3/release-input.json').read_text(encoding='utf-8'))
 release=data['release']
 protected=['release.json','releases.json','client-release.json','setup-release.json']
 before={n:hashlib.sha256((docs/n).read_bytes()).hexdigest() for n in protected}
@@ -45,7 +45,7 @@ guide=(docs/'install.html').read_text(encoding='utf-8')
 guide=re.sub(r'https://github\.com/sukgicalm-lang/ghost-valheim-vault/releases/download/smelter-\d+\.\d+\.\d+/Ghost-GhostSmelterControl-\d+\.\d+\.\d+\.zip',release['downloadUrl'],guide)
 guide,count=re.subn(r'(<summary>제련 속도와 투입량은 어디에서 바꾸나요\?</summary>)<p>.*?</p>',r'\1<p>월드에 들어간 뒤 F1 → Ghost 제련·제분 설정에서 시설을 선택하세요. 원래 속도·2배·5배·10배 버튼이나 직접 입력한 배수로 생산 속도를 정합니다. 최대 보관량은 안에 넣어 둘 수 있는 개수이며 기본 100개입니다. 풍차는 바람과 가림의 영향을 계속 받습니다. Ghost 외형·생활·성장 설정도 한글 설명과 단위로 표시합니다.</p>',guide);assert count==1
 history=json.loads((docs/'update-history.json').read_text(encoding='utf-8'))
-entry={'id':'module:GhostSmelterControl:1.0.2','kind':'module','component':'GhostSmelterControl','version':'1.0.2','date':'2026-10-31','title':'Ghost F1 설정을 한글 이름·버튼·설명으로 정리','changes':['생산 속도를 원래 속도·2배·5배·10배로 선택하고 현재 배수를 표시합니다. 최대 보관량은 개수로 설명합니다.','Ghost 외형·생활·성장과 지도 순간이동의 설정 40개를 한글로 정리했습니다. 발효는 분, 경험치·외형 크기는 배수, 날개 빛 농도는 퍼센트입니다.','설명을 각 항목 아래에도 표시합니다. 현재 미사용인 이전 설정과 조절 항목 없는 고정 활 기능도 명확히 안내합니다.','기존 개인 설정과 게임 동작을 유지합니다. 풍차의 바람 영향도 그대로입니다.'],'notes':['게임을 종료하고 Ghost 런처를 다시 열면 자동으로 준비합니다. 런처 재설치나 통합팩 재다운로드는 필요하지 않습니다.']}
+entry={'id':'module:GhostSmelterControl:1.0.3','kind':'module','component':'GhostSmelterControl','version':'1.0.3','date':'2026-10-31','title':'Ghost F1 설정을 한글 이름·버튼·설명으로 정리','changes':['한글 설정의 선택 버튼과 직접 입력 기능이 실제 F1 구조에서도 연결되도록 보완했습니다.','생산 속도를 원래 속도·2배·5배·10배로 선택하고 현재 배수를 표시합니다. 최대 보관량은 개수로 설명합니다.','Ghost 외형·생활·성장과 지도 순간이동의 설정 40개를 한글로 정리했습니다. 발효는 분, 경험치·외형 크기는 배수, 날개 빛 농도는 퍼센트입니다.','설명을 각 항목 아래에도 표시합니다. 현재 미사용인 이전 설정과 조절 항목 없는 고정 활 기능도 명확히 안내합니다.','기존 개인 설정과 게임 동작을 유지합니다. 풍차의 바람 영향도 그대로입니다.'],'notes':['게임을 종료하고 Ghost 런처를 다시 열면 자동으로 준비합니다. 런처 재설치나 통합팩 재다운로드는 필요하지 않습니다.']}
 history['siteUpdates']=[entry]+[e for e in history['siteUpdates'] if e.get('id')!=entry['id']]
 encoded=json.dumps(history,ensure_ascii=False,separators=(',',':'))
 index,count=re.subn(r'(?s)(<script id="ghost-update-history-data" type="application/json">).*?(</script>)',lambda m:m[1]+encoded+m[2],index);assert count==1

@@ -7,7 +7,7 @@ using SmelterControl;
 using UnityEngine;
 using Xunit;
 
-public class Display
+public class DisplayBase
 {
     public BepInPlugin PluginInfo { get; private set; }
     public string Category { get; private set; }
@@ -17,6 +17,7 @@ public class Display
     public bool? ReadOnly { get; set; }
     public Action<ConfigEntryBase> CustomDrawer { get; private set; }
 }
+public class Display : DisplayBase { }
 public enum Shape { Valheim, Original }
 public enum Keys { LeftAlt, LeftCtrl, LeftShift }
 public class MenuTests

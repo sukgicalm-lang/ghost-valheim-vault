@@ -24,6 +24,8 @@ namespace SmelterControl
             if (entryType == null) return;
             var constructor = entryType.GetConstructor(new[] { typeof(ConfigEntryBase), typeof(BaseUnityPlugin) });
             if (constructor == null) throw new MissingMethodException("F1 setting entry constructor");
+            foreach (string name in new[] { "PluginInfo", "Category", "DispName", "Description", "HideDefaultButton", "CustomDrawer" })
+                if (FindProperty(entryType, name)?.GetSetMethod(true) == null) throw new MissingMemberException("F1 display property: " + name);
             if (!MenuGui.Initialize()) throw new MissingMethodException("Unity IMGUI layout API");
             _managerType = AccessTools.TypeByName("ConfigurationManager.ConfigurationManager");
             harmony.Patch(constructor, postfix: new HarmonyMethod(typeof(KoreanMenu), nameof(Localize)));
@@ -73,9 +75,20 @@ namespace SmelterControl
         }
 
         private static void Put(Type type, object target, string name, object value)
-        { type.GetProperty(name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).SetValue(target, value, null); }
+        { FindProperty(type, name).SetValue(target, value, null); }
         private static bool CanWrite(object display)
-        { return !Equals(display.GetType().GetProperty("ReadOnly", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)?.GetValue(display, null), true); }
+        { return !Equals(FindProperty(display.GetType(), "ReadOnly")?.GetValue(display, null), true); }
+        private static PropertyInfo FindProperty(Type type, string name)
+        {
+            // An inherited public property can hide its private setter when reflected
+            // from the derived type. Resolve it on the actual declaring type instead.
+            for (Type owner = type; owner != null; owner = owner.BaseType)
+            {
+                var property = owner.GetProperty(name, BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                if (property != null) return property;
+            }
+            return null;
+        }
 
         private static void Draw(object display, ConfigEntryBase entry, KoreanSetting text)
         {
