@@ -1,0 +1,210 @@
+{
+  "passed": 51,
+  "failed": 0,
+  "results": [
+    {
+      "name": "ApplierTests.Registry_fallbacks_instances_settings_and_exclusions",
+      "passed": true
+    },
+    {
+      "name": "ApplierTests.Existing_inactive_windmill_reloads_settings_without_changing_fuel_or_other_stations",
+      "passed": true
+    },
+    {
+      "name": "ApplierTests.Missing_reports_wait_for_final_registration_pass_and_require_component",
+      "passed": true
+    },
+    {
+      "name": "GameBinaryTests.Supplied_game_binary_is_1_0_20",
+      "passed": true
+    },
+    {
+      "name": "GameBinaryTests.Smelter_fields_and_rpc_signatures_match_game",
+      "passed": true
+    },
+    {
+      "name": "GameBinaryTests.Scene_has_two_prefab_lists_hash_lookup_and_no_Start",
+      "passed": true
+    },
+    {
+      "name": "GameBinaryTests.Real_windmill_uses_root_smelter_and_native_wind_multiplier_is_preserved",
+      "passed": true
+    },
+    {
+      "name": "GameBinaryTests.Shipped_dll_writes_only_three_smelter_fields_and_patches_only_existing_methods",
+      "passed": true
+    },
+    {
+      "name": "GameBinaryTests.F1_config_keys_preserved_and_compiled_defaults_are_one_second_and_100",
+      "passed": true
+    },
+    {
+      "name": "KoreanTextTests.Every_bound_setting_in_the_actual_owned_plugins_has_Korean_presentation",
+      "passed": true
+    },
+    {
+      "name": "KoreanTextTests.Third_party_and_unknown_keys_are_not_localized",
+      "passed": true
+    },
+    {
+      "name": "KoreanTextTests.Speed_uses_captured_baseline_instead_of_assuming_ten_seconds[0]",
+      "passed": true
+    },
+    {
+      "name": "KoreanTextTests.Speed_uses_captured_baseline_instead_of_assuming_ten_seconds[1]",
+      "passed": true
+    },
+    {
+      "name": "KoreanTextTests.Speed_uses_captured_baseline_instead_of_assuming_ten_seconds[2]",
+      "passed": true
+    },
+    {
+      "name": "KoreanTextTests.Speed_uses_captured_baseline_instead_of_assuming_ten_seconds[3]",
+      "passed": true
+    },
+    {
+      "name": "KoreanTextTests.Speed_uses_captured_baseline_instead_of_assuming_ten_seconds[4]",
+      "passed": true
+    },
+    {
+      "name": "KoreanTextTests.Speed_uses_captured_baseline_instead_of_assuming_ten_seconds[5]",
+      "passed": true
+    },
+    {
+      "name": "KoreanTextTests.Missing_baseline_invalid_values_and_restore_are_explained_safely",
+      "passed": true
+    },
+    {
+      "name": "KoreanTextTests.Installed_manager_constructor_and_display_setters_match_the_optional_hook",
+      "passed": true
+    },
+    {
+      "name": "SmelterRulesTests.Zero_or_negative_keeps_the_game_value",
+      "passed": true
+    },
+    {
+      "name": "SmelterRulesTests.Positive_numbers_replace_the_game_value",
+      "passed": true
+    },
+    {
+      "name": "SmelterRulesTests.Only_four_prefabs_are_controlled[0]",
+      "passed": true
+    },
+    {
+      "name": "SmelterRulesTests.Only_four_prefabs_are_controlled[1]",
+      "passed": true
+    },
+    {
+      "name": "SmelterRulesTests.Only_four_prefabs_are_controlled[2]",
+      "passed": true
+    },
+    {
+      "name": "SmelterRulesTests.Only_four_prefabs_are_controlled[3]",
+      "passed": true
+    },
+    {
+      "name": "SmelterRulesTests.Only_four_prefabs_are_controlled[4]",
+      "passed": true
+    },
+    {
+      "name": "SmelterRulesTests.Only_four_prefabs_are_controlled[5]",
+      "passed": true
+    },
+    {
+      "name": "SmelterRulesTests.Only_four_prefabs_are_controlled[6]",
+      "passed": true
+    },
+    {
+      "name": "SmelterRulesTests.Only_four_prefabs_are_controlled[7]",
+      "passed": true
+    },
+    {
+      "name": "SmelterRulesTests.Only_four_prefabs_are_controlled[8]",
+      "passed": true
+    },
+    {
+      "name": "SmelterRulesTests.Only_four_prefabs_are_controlled[9]",
+      "passed": true
+    },
+    {
+      "name": "SmelterRulesTests.Only_four_prefabs_are_controlled[10]",
+      "passed": true
+    },
+    {
+      "name": "SmelterRulesTests.Only_four_prefabs_are_controlled[11]",
+      "passed": true
+    },
+    {
+      "name": "SmelterRulesTests.Fuel_is_written_only_for_smelter_and_blast_furnace_with_a_fuel_item",
+      "passed": true
+    },
+    {
+      "name": "SmelterRulesTests.Ore_is_full_when_the_queue_reaches_the_cap",
+      "passed": true
+    },
+    {
+      "name": "SmelterRulesTests.Fuel_is_full_when_it_passes_max_minus_one",
+      "passed": true
+    },
+    {
+      "name": "SmelterRulesTests.Clone_suffix_is_removed_from_the_object_name[0]",
+      "passed": true
+    },
+    {
+      "name": "SmelterRulesTests.Clone_suffix_is_removed_from_the_object_name[1]",
+      "passed": true
+    },
+    {
+      "name": "SmelterRulesTests.Clone_suffix_is_removed_from_the_object_name[2]",
+      "passed": true
+    },
+    {
+      "name": "SmelterRulesTests.Clone_suffix_is_removed_from_the_object_name[3]",
+      "passed": true
+    },
+    {
+      "name": "SmelterRulesTests.Clone_suffix_is_removed_from_the_object_name[4]",
+      "passed": true
+    },
+    {
+      "name": "SmelterRulesTests.Clone_suffix_is_removed_from_the_object_name[5]",
+      "passed": true
+    },
+    {
+      "name": "MenuTests.Opening_localized_menu_preserves_keys_values_and_original_metadata_and_groups_settings_once",
+      "passed": true
+    },
+    {
+      "name": "MenuTests.Speed_buttons_direct_entry_restore_and_mod_default_convert_without_changing_saved_schema",
+      "passed": true
+    },
+    {
+      "name": "MenuTests.Unknown_baseline_does_not_guess_a_multiplier_or_reset_existing_value",
+      "passed": true
+    },
+    {
+      "name": "MenuTests.Locked_settings_cannot_be_changed_even_when_manager_uses_colored_readonly_style",
+      "passed": true
+    },
+    {
+      "name": "MenuTests.Minutes_percent_ranges_and_untouched_precision_are_preserved",
+      "passed": true
+    },
+    {
+      "name": "MenuTests.Capacity_is_a_count_and_zero_explicitly_restores_game_capacity",
+      "passed": true
+    },
+    {
+      "name": "MenuTests.Boolean_and_enum_controls_show_Korean_choices_and_unused_legacy_fields_are_explained",
+      "passed": true
+    },
+    {
+      "name": "MenuTests.Third_party_display_is_completely_unchanged",
+      "passed": true
+    },
+    {
+      "name": "MenuTests.Fixed_bow_modules_have_Korean_names_without_adding_controls",
+      "passed": true
+    }
+  ]
+}

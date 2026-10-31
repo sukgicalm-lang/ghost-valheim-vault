@@ -32,7 +32,7 @@ function Build-GhostSmelterPatch([string]$IndexHtml, $PriorClient, $PriorRelease
 <article id="ghost-smelter" class="experience-card">
 <span class="experience-label">02 / 제련 · 제분</span><svg class="experience-icon" aria-hidden="true"><use href="#growth"/></svg>
 <h3>기다림은 짧게.<br>모험은 더 길게.</h3>
-<p>제련소·용광로·숯가마·풍차의 시간과 투입 한도를 F1에서.<br>기본 1초·100개이며 풍차의 바람 영향은 유지합니다.</p>
+<p>제련소·용광로·숯가마·풍차를 한글 F1 메뉴에서.<br>원래 속도·2배·5배·10배와 최대 보관량을 쉽게 선택하세요.</p>
 <button class="text-link" type="button" data-module="GhostSmelterControl">제련 기능 자세히 <span aria-hidden="true">↗</span></button>
 <span class="experience-meta">기본 구성 포함 · Ghost 제련 제어 v$($release.version)</span>
 </article>

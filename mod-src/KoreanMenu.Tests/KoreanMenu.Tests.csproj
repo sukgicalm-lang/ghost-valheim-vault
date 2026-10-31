@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <StartupObject>Program</StartupObject>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Include="xunit" Version="2.9.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
+    <ProjectReference Include="GuiDoubles/UnityEngine.IMGUIModule.csproj" />
+    <Compile Include="MenuTests.cs" />
+    <Compile Include="../SmelterControl.Tests/Program.cs" Link="Program.cs" />
+    <Compile Include="../SmelterControl/KoreanText.cs" Link="KoreanText.cs" />
+    <Compile Include="../SmelterControl/KoreanMenu.cs" Link="KoreanMenu.cs" />
+    <Compile Include="../SmelterControl/MenuGui.cs" Link="MenuGui.cs" />
+    <Reference Include="BepInEx"><HintPath>$(BEPINEX_PATH)/core/BepInEx.dll</HintPath></Reference>
+    <Reference Include="0Harmony"><HintPath>$(BEPINEX_PATH)/core/0Harmony.dll</HintPath></Reference>
+    <Reference Include="UnityEngine"><HintPath>$(VALHEIM_MANAGED)/UnityEngine.dll</HintPath></Reference>
+    <Reference Include="UnityEngine.CoreModule"><HintPath>$(VALHEIM_MANAGED)/UnityEngine.CoreModule.dll</HintPath></Reference>
+  </ItemGroup>
+</Project>

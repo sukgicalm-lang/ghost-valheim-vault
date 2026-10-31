@@ -147,6 +147,7 @@ namespace SmelterControl
 {
     internal class Plugin
     {
+        internal const string PluginGuid = "ghost.valheim.smeltercontrol";
         internal struct StationSettings { public float Seconds; public int Input, Fuel; }
         internal static Dictionary<string, StationSettings> Settings = new Dictionary<string, StationSettings>();
         internal static List<string> Messages = new List<string>();

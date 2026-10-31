@@ -12,11 +12,12 @@ namespace SmelterControl
 {
     [BepInPlugin(PluginGuid, PluginName, PluginVersion)]
     [BepInIncompatibility("com.frizzqol.smeltercontrol")]
+    [BepInDependency("_shudnal.ConfigurationManager", BepInDependency.DependencyFlags.SoftDependency)]
     public class Plugin : BaseUnityPlugin
     {
         public const string PluginGuid = "ghost.valheim.smeltercontrol";
         public const string PluginName = "Ghost Smelter Control";
-        public const string PluginVersion = "1.0.1";
+        public const string PluginVersion = "1.0.2";
 
         internal static Plugin Instance { get; private set; }
 
@@ -49,16 +50,16 @@ namespace SmelterControl
         private void Awake()
         {
             Instance = this;
-            SmelterSeconds = Config.Bind("Smelter", "Seconds", 1f, "Seconds per bar (default 1). 0 or below restores the captured prefab value.");
-            SmelterOre = Config.Bind("Smelter", "Ore", 100, "Maximum ore held (default 100). 0 or below restores the captured prefab value.");
-            SmelterFuel = Config.Bind("Smelter", "Fuel", 100, "Maximum coal held (default 100). 0 or below restores the captured prefab value.");
-            BlastSeconds = Config.Bind("BlastFurnace", "Seconds", 1f, "Seconds per bar (default 1). 0 or below restores the captured prefab value.");
-            BlastOre = Config.Bind("BlastFurnace", "Ore", 100, "Maximum ore held (default 100). 0 or below restores the captured prefab value.");
-            BlastFuel = Config.Bind("BlastFurnace", "Fuel", 100, "Maximum coal held (default 100). 0 or below restores the captured prefab value.");
-            KilnSeconds = Config.Bind("CharcoalKiln", "Seconds", 1f, "Seconds per coal (default 1). 0 or below restores the captured prefab value.");
-            KilnWood = Config.Bind("CharcoalKiln", "Wood", 100, "Maximum wood held (default 100). 0 or below restores the captured prefab value.");
-            WindmillSeconds = Config.Bind("Windmill", "Seconds", 1f, "Base seconds per barley flour at full wind power (default 1). Native wind strength and cover still affect actual processing time. 0 or below restores the captured prefab value.");
-            WindmillBarley = Config.Bind("Windmill", "Barley", 100, "Maximum barley held (default 100). This is storage capacity, not output yield or items per click. 0 or below restores the captured prefab value.");
+            SmelterSeconds = Config.Bind("Smelter", "Seconds", 1f, "처리 간격의 내부 저장값입니다. F1에서는 원래 속도·2배·5배·10배로 선택하세요. 기존 값은 유지됩니다. 0 이하는 원래 속도입니다.");
+            SmelterOre = Config.Bind("Smelter", "Ore", 100, "광석 최대 보관량(개). 기본 100개. 생산량이나 클릭 한 번의 투입량이 아닙니다. 0 이하는 원래 한도입니다.");
+            SmelterFuel = Config.Bind("Smelter", "Fuel", 100, "석탄 최대 보관량(개). 기본 100개. 생산물 하나당 연료 소모량은 유지합니다. 0 이하는 원래 한도입니다.");
+            BlastSeconds = Config.Bind("BlastFurnace", "Seconds", 1f, "처리 간격의 내부 저장값입니다. F1에서는 원래 속도·2배·5배·10배로 선택하세요. 기존 값은 유지됩니다. 0 이하는 원래 속도입니다.");
+            BlastOre = Config.Bind("BlastFurnace", "Ore", 100, "광석 최대 보관량(개). 기본 100개. 생산량이나 클릭 한 번의 투입량이 아닙니다. 0 이하는 원래 한도입니다.");
+            BlastFuel = Config.Bind("BlastFurnace", "Fuel", 100, "석탄 최대 보관량(개). 기본 100개. 생산물 하나당 연료 소모량은 유지합니다. 0 이하는 원래 한도입니다.");
+            KilnSeconds = Config.Bind("CharcoalKiln", "Seconds", 1f, "숯 생산 간격의 내부 저장값입니다. F1에서는 원래 속도·2배·5배·10배로 선택하세요. 0 이하는 원래 속도입니다.");
+            KilnWood = Config.Bind("CharcoalKiln", "Wood", 100, "나무 최대 보관량(개). 기본 100개. 생산량이나 클릭 한 번의 투입량이 아닙니다. 0 이하는 원래 한도입니다.");
+            WindmillSeconds = Config.Bind("Windmill", "Seconds", 1f, "풍차 처리 간격의 내부 저장값입니다. F1에서는 원래 속도·2배·5배·10배로 선택하세요. 같은 바람 조건의 기준 배수이며 바람과 가림의 영향은 유지합니다. 0 이하는 원래 속도입니다.");
+            WindmillBarley = Config.Bind("Windmill", "Barley", 100, "보리 최대 보관량(개). 기본 100개. 가루 생산량이나 클릭 한 번의 투입량이 아닙니다. 0 이하는 원래 한도입니다.");
             Config.SettingChanged += (_, __) => QueueApply();
             WatchConfigFile();
 
@@ -73,6 +74,14 @@ namespace SmelterControl
                 Logger.LogError("Harmony patch failed: " + ex.ToString());
                 _harmony.UnpatchSelf();
             }
+            try { KoreanMenu.Install(_harmony); }
+            catch (Exception ex) { LogOnce("Korean F1 menu integration failed: " + ex.Message); }
+        }
+
+        private void Start()
+        {
+            try { KoreanMenu.Refresh(); }
+            catch (Exception ex) { LogOnce("Korean F1 menu refresh failed: " + ex.Message); }
         }
 
         private void QueueApply()

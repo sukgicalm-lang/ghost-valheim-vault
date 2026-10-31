@@ -1,0 +1,34 @@
+{
+  "schema": 1,
+  "assets": [
+    {
+      "name": "Ghost-GhostSmelterControl-1.0.2.zip",
+      "base64_file": "module.zip.b64",
+      "bytes": 155053,
+      "sha256": "6fb3a4d58cd4358520bef5167497b8dbfe7f892008ea33ccec65ebb2eef6eba9"
+    },
+    {
+      "name": "Ghost-SmelterControl-1.0.2-Source.zip",
+      "base64_file": "source.zip.b64",
+      "bytes": 36811,
+      "sha256": "2927712b45b31eed7077c3d972d7fdc7b533698555e7de0c8919d94db0aed122"
+    }
+  ],
+  "dll_sha256": "4e1e37f46cbdb903dc28852d29c11b97a9bfa8fe1f982739950f2e77f45f082a",
+  "tests": {
+    "passed": 51,
+    "failed": 0
+  },
+  "release": {
+    "version": "1.0.2",
+    "date": "2026-10-31",
+    "file": "downloads/Ghost-GhostSmelterControl-1.0.2.zip",
+    "bytes": 155053,
+    "sha256": "6fb3a4d58cd4358520bef5167497b8dbfe7f892008ea33ccec65ebb2eef6eba9",
+    "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/smelter-1.0.2/Ghost-GhostSmelterControl-1.0.2.zip",
+    "dependencies": [
+      "denikson-BepInExPack_Valheim-5.4.2333"
+    ],
+    "notes": "Ghost F1 설정 40개 한글화 · 원래 속도·2배·5배·10배 · 발효는 분 · 날개 농도는 % · 기존 설정 유지"
+  }
+}

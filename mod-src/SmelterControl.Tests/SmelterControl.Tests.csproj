@@ -12,6 +12,7 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SmelterControl\KoreanText.cs" Link="KoreanText.cs" />
     <Compile Include="..\SmelterControl\SmelterRules.cs" Link="SmelterRules.cs" />
     <Compile Include="..\SmelterControl\SmelterApplier.cs" Link="SmelterApplier.cs" />
     <Reference Include="Mono.Cecil">

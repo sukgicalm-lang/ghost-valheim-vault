@@ -14,6 +14,13 @@ namespace SmelterControl
 
         private static readonly Dictionary<string, VanillaStats> Vanilla = new Dictionary<string, VanillaStats>();
 
+        // UI reads the same captured baseline as the existing gameplay applier.
+        internal static bool TryBaselineSeconds(string prefab, out float seconds)
+        {
+            seconds = Vanilla.TryGetValue(prefab, out VanillaStats stats) ? stats.Seconds : 0f;
+            return KoreanText.Positive(seconds);
+        }
+
         internal static void Apply(Smelter smelter)
         {
             if (smelter == null)
