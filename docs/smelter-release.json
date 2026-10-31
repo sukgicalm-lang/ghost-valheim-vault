@@ -1,10 +1,10 @@
 {
-  "version": "1.0.2",
+  "version": "1.0.3",
   "date": "2026-10-31",
-  "file": "downloads/Ghost-GhostSmelterControl-1.0.2.zip",
-  "bytes": 155053,
-  "sha256": "6fb3a4d58cd4358520bef5167497b8dbfe7f892008ea33ccec65ebb2eef6eba9",
-  "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/smelter-1.0.2/Ghost-GhostSmelterControl-1.0.2.zip",
+  "file": "downloads/Ghost-GhostSmelterControl-1.0.3.zip",
+  "bytes": 155364,
+  "sha256": "1b03bce75cb70cd15c98c149bcc3a4d2f77ae096411e704d007e40b968d0f32a",
+  "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/smelter-1.0.3/Ghost-GhostSmelterControl-1.0.3.zip",
   "dependencies": [
     "denikson-BepInExPack_Valheim-5.4.2333"
   ],
