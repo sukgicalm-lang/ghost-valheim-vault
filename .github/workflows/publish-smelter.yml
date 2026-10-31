@@ -59,14 +59,14 @@ jobs:
       - name: Verify shipped Windows self-update helper
         shell: pwsh
         run: ./release-ci/test-self-update.ps1
-      - name: Verify real parent exit and restart on Windows PowerShell 5.1
+      - name: Build and verify single-file native installer
+        shell: powershell
+        run: ./release-ci/build-native-setup.ps1
+      - name: Verify real native parent exit and restart
         shell: powershell
         run: |
           node updater-diagnostics/verify-native-update.cjs
           if ($LASTEXITCODE) { exit $LASTEXITCODE }
-      - name: Build and verify single-file native installer
-        shell: powershell
-        run: ./release-ci/build-native-setup.ps1
       - name: Build Windows Ghost r2 1.0.11 and verify actual app archive
         shell: pwsh
         working-directory: _smelter_build/launcher
@@ -74,6 +74,7 @@ jobs:
           $env:SKIP_PACKING = 'true'
           pnpm exec quasar build --mode electron -T win32
           if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          Copy-Item ../assets/GhostR2-Setup-1.0.11.exe dist/electron/Packaged/win-unpacked/resources/GhostR2Updater.exe
           node scripts/check-ghost-release.cjs . dist/electron/Packaged/win-unpacked/resources/app.asar
           if ($LASTEXITCODE) { exit $LASTEXITCODE }
       - name: Package final assets and publish to existing repository

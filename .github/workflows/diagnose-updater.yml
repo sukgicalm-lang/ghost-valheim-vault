@@ -27,7 +27,10 @@ jobs:
           if ($LASTEXITCODE) { exit $LASTEXITCODE }
           npm install --prefix updater-diagnostics typescript@5.9.3
           if ($LASTEXITCODE) { exit $LASTEXITCODE }
-      - name: Run exact shipped helper with Windows PowerShell 5.1
+      - name: Compile native installer and updater
+        shell: powershell
+        run: ./release-ci/build-native-setup.ps1
+      - name: Run shipped native helper through real parent exit
         shell: powershell
         run: |
           $PSVersionTable.PSVersion

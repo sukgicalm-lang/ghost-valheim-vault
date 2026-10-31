@@ -48,6 +48,29 @@ internal static class SetupCore {
   link.TargetPath=exe;link.WorkingDirectory=Path.GetDirectoryName(exe);link.Save();
   System.Runtime.InteropServices.Marshal.FinalReleaseComObject(link);System.Runtime.InteropServices.Marshal.FinalReleaseComObject(shell);
  }
+ internal static int ApplyUpdate(string[] args){
+  string installBase=Path.Combine(Environment.GetEnvironmentVariable("LOCALAPPDATA"),"GhostR2"),record=Path.Combine(installBase,"self-update-result.json");
+  int parentId=0;string version=args[5],current=args[6],log=args[9];
+  try{
+   if(!int.TryParse(args[1],out parentId)||parentId<=0||!File.Exists(current))throw new InvalidDataException("Invalid update parent");
+   long length;if(!long.TryParse(args[4],out length))throw new InvalidDataException("Invalid update size");
+   var r=new Release{version=version,sha256=args[3],bytes=length,downloadUrl=Releases+"client-"+version+"/GhostR2-Windows-"+version+".zip"};Validate(r);
+   if(new FileInfo(args[2]).Length!=r.bytes||Hash(args[2])!=r.sha256)throw new InvalidDataException("Update SHA-256 mismatch");
+   Directory.CreateDirectory(installBase);File.WriteAllText(args[7],"ready");
+   Process parent=null;try{parent=Process.GetProcessById(parentId);}catch(ArgumentException){}
+   if(parent!=null)using(parent){if(!parent.WaitForExit(60000))throw new TimeoutException("Launcher did not exit");}
+   string exe=Install(args[2],r,installBase);Links(exe);
+   var start=new ProcessStartInfo(exe){WorkingDirectory=Path.GetDirectoryName(exe),UseShellExecute=true};
+   if(System.Text.RegularExpressions.Regex.IsMatch(args[8],@"^ghostvault://v1/install/(Ghost-GhostValheimSuite|Ghost-GhostSmelterControl)/(latest|\d+\.\d+\.\d+)/?$"))start.Arguments=args[8];
+   Process.Start(start);File.WriteAllText(record,new JavaScriptSerializer().Serialize(new{status="success",version=version,time=DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}));
+   try{File.Delete(args[2]);}catch{}return 0;
+  }catch(Exception e){
+   try{Directory.CreateDirectory(installBase);File.AppendAllText(log,e.ToString());File.WriteAllText(record,new JavaScriptSerializer().Serialize(new{status="failed",version=version,time=DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),message=e.Message,log=log}));}catch{}
+   bool alive=false;try{using(var parent=Process.GetProcessById(parentId))alive=!parent.HasExited;}catch{}
+   if(!alive&&File.Exists(current))try{Links(current);Process.Start(new ProcessStartInfo(current){WorkingDirectory=Path.GetDirectoryName(current),UseShellExecute=true});}catch{}
+   return 1;
+  }
+ }
  internal static int SelfTest(){
   string root=Path.Combine(Path.GetTempPath(),"Ghost 설치 검사 "+Guid.NewGuid().ToString("N"));Directory.CreateDirectory(root);
   try{
@@ -101,5 +124,5 @@ internal sealed class SetupWindow:Form{
  }
 }
 internal static class Program{
- [STAThread]static int Main(string[] args){if(args.Length==1&&args[0]=="--self-test")return SetupCore.SelfTest();bool created;using(var mutex=new Mutex(true,"Local\\GhostR2Setup",out created)){if(!created)return 0;Application.EnableVisualStyles();Application.SetCompatibleTextRenderingDefault(false);Application.Run(new SetupWindow());return 0;}}
+ [STAThread]static int Main(string[] args){if(args.Length==10&&args[0]=="--apply-update")return SetupCore.ApplyUpdate(args);if(args.Length==1&&args[0]=="--self-test")return SetupCore.SelfTest();bool created;using(var mutex=new Mutex(true,"Local\\GhostR2Setup",out created)){if(!created)return 0;Application.EnableVisualStyles();Application.SetCompatibleTextRenderingDefault(false);Application.Run(new SetupWindow());return 0;}}
 }
