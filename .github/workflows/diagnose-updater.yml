@@ -1,0 +1,25 @@
+name: Diagnose native Windows launcher updater
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/diagnose-updater.yml'
+      - 'updater-diagnostics/**'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  native-handshake:
+    runs-on: windows-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Run exact shipped helper with Windows PowerShell 5.1
+        shell: powershell
+        run: |
+          $PSVersionTable.PSVersion
+          node updater-diagnostics/native-handshake.cjs
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
