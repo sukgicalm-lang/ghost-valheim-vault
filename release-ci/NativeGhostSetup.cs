@@ -11,6 +11,20 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Web.Script.Serialization;
 using Microsoft.Win32;
+[System.Runtime.InteropServices.ComImport, System.Runtime.InteropServices.Guid("00021401-0000-0000-C000-000000000046")]
+internal class ShellLink { }
+[System.Runtime.InteropServices.ComImport, System.Runtime.InteropServices.Guid("000214F9-0000-0000-C000-000000000046"), System.Runtime.InteropServices.InterfaceType(System.Runtime.InteropServices.ComInterfaceType.InterfaceIsIUnknown)]
+internal interface IShellLinkW {
+ void GetPath(System.Text.StringBuilder file,int count,IntPtr data,uint flags);
+ void GetIDList(out IntPtr list);void SetIDList(IntPtr list);
+ void GetDescription(System.Text.StringBuilder text,int count);void SetDescription([System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.LPWStr)]string text);
+ void GetWorkingDirectory(System.Text.StringBuilder text,int count);void SetWorkingDirectory([System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.LPWStr)]string text);
+ void GetArguments(System.Text.StringBuilder text,int count);void SetArguments([System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.LPWStr)]string text);
+ void GetHotkey(out short key);void SetHotkey(short key);void GetShowCmd(out int cmd);void SetShowCmd(int cmd);
+ void GetIconLocation(System.Text.StringBuilder file,int count,out int index);void SetIconLocation([System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.LPWStr)]string file,int index);
+ void SetRelativePath([System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.LPWStr)]string file,uint reserved);void Resolve(IntPtr window,uint flags);
+ void SetPath([System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.LPWStr)]string file);
+}
 internal sealed class Release {
  public string version { get; set; }
  public string downloadUrl { get; set; }
@@ -43,13 +57,12 @@ internal static class SetupCore {
  }
  internal static void Links(string exe){
   using(var p=Registry.CurrentUser.CreateSubKey(@"Software\Classes\ghostvault")){p.SetValue("","URL:Ghost Vault install link");p.SetValue("URL Protocol","");using(var c=p.CreateSubKey(@"shell\open\command"))c.SetValue("","\""+exe+"\" \"%1\"");}
-  dynamic shell=Activator.CreateInstance(Type.GetTypeFromProgID("WScript.Shell"));
   string desktop=Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory,Environment.SpecialFolderOption.Create);
   if(string.IsNullOrEmpty(desktop))desktop=Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),"Desktop");
   Directory.CreateDirectory(desktop);
-  dynamic link=shell.CreateShortcut(Path.Combine(desktop,"Ghost r2modman.lnk"));
-  link.TargetPath=exe;link.WorkingDirectory=Path.GetDirectoryName(exe);link.Save();
-  System.Runtime.InteropServices.Marshal.FinalReleaseComObject(link);System.Runtime.InteropServices.Marshal.FinalReleaseComObject(shell);
+  var link=(IShellLinkW)new ShellLink();
+  try{link.SetPath(exe);link.SetWorkingDirectory(Path.GetDirectoryName(exe));link.SetDescription("Ghost r2modman");((System.Runtime.InteropServices.ComTypes.IPersistFile)link).Save(Path.Combine(desktop,"Ghost r2modman.lnk"),true);}
+  finally{System.Runtime.InteropServices.Marshal.FinalReleaseComObject(link);}
  }
  internal static void Log(string file,string message){
   try{using(var stream=new FileStream(file,FileMode.Append,FileAccess.Write,FileShare.ReadWrite|FileShare.Delete))using(var writer=new StreamWriter(stream))writer.WriteLine(DateTime.UtcNow.ToString("o")+" "+message);}catch{}
