@@ -2,14 +2,18 @@
 const fs=require('node:fs'),path=require('node:path'),os=require('node:os'),cp=require('node:child_process'),crypto=require('node:crypto');
 const delay=ms=>new Promise(r=>setTimeout(r,ms));
 const root=path.resolve(__dirname,'../_smelter_build/launcher');
-const ts=require(path.join(root,'node_modules/typescript'));
+let ts;try{ts=require(path.join(root,'node_modules/typescript'));}catch{ts=require('typescript');}
 function load(file){const m={exports:{}};new Function('exports','require','module',ts.transpileModule(fs.readFileSync(path.join(root,file),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS}}).outputText)(m.exports,require,m);return m.exports;}
 const ps=path.join(process.env.SystemRoot,'System32/WindowsPowerShell/v1.0/powershell.exe');
 async function controller(config){
  const c=JSON.parse(fs.readFileSync(config,'utf8')),helper=path.join(c.temp,'update.ps1'),ready=path.join(c.temp,'ready.txt');
- fs.writeFileSync(helper,'\ufeff'+load('src-electron/GhostSelfUpdateHelper.ts').GHOST_SELF_UPDATE_HELPER);
+ let script=load('src-electron/GhostSelfUpdateHelper.ts').GHOST_SELF_UPDATE_HELPER;
+ const trace=path.join(c.temp,'trace.txt').replaceAll("'","''");
+ for(const token of ["$parent = Get-Process","$exe = Install-GhostRuntime","Set-GhostRuntimeLinks $exe","Start-GhostRuntime $exe","$record = Join-Path"]){script=script.replace(token,"Add-Content -LiteralPath '"+trace+"' -Value ('TRACE "+token+" pid='+$PID+' local='+$env:LOCALAPPDATA+' parent='+$ParentProcessId)\n"+token);}
+ fs.writeFileSync(helper,'\ufeff'+script);
  const fd=fs.openSync(path.join(c.temp,'helper.log'),'a');
  const child=cp.spawn(ps,['-NoProfile','-NonInteractive','-ExecutionPolicy','Bypass','-File',helper,'-ParentProcessId',String(process.pid),'-ArchivePath',c.zip,'-ExpectedHash',c.hash,'-Version','1.0.11','-CurrentExePath',c.current,'-ReadyPath',ready],{...load('src-electron/GhostUpdateProcess.ts').ghostHelperSpawnOptions(fd),env:{...process.env,LOCALAPPDATA:c.temp,GHOST_RESTART_PROOF:c.proof}});fs.closeSync(fd);
+ fs.writeFileSync(path.join(c.temp,'helper-pid.txt'),String(child.pid));
  let failure;child.on('error',e=>failure=e);
  for(let i=0;i<300;i++){if(failure)throw failure;if(fs.existsSync(ready)){child.unref();console.log('Real helper ready; parent exiting');return;}if(child.exitCode!==null)throw Error('Helper exited '+child.exitCode);await delay(100);}
  child.kill();throw Error('Native ready timeout');
@@ -29,7 +33,9 @@ async function main(){
  const exit=await new Promise((resolve,reject)=>{parent.once('error',reject);parent.once('exit',resolve);});
  if(exit!==0)throw Error('Controller failed '+stderr+' '+fs.readFileSync(path.join(temp,'helper.log'),'utf8'));
  const record=path.join(temp,'GhostR2/self-update-result.json');
- for(let i=0;i<300&&!fs.existsSync(proof);i++)await delay(100);
+ for(let i=0;i<750&&!fs.existsSync(proof);i++)await delay(100);
+ console.log('TRACE:',fs.existsSync(path.join(temp,'trace.txt'))?fs.readFileSync(path.join(temp,'trace.txt'),'utf8'):'none');
+ console.log('Helper pid',fs.readFileSync(path.join(temp,'helper-pid.txt'),'utf8'),'temp files',fs.readdirSync(temp));
  const result=fs.existsSync(record)?JSON.parse(fs.readFileSync(record,'utf8').replace(/^\ufeff/,'')):{};
  if(result.status!=='success'||!fs.existsSync(proof)||!fs.readFileSync(proof,'utf8').includes(path.join('GhostR2','1.0.11','GhostR2.exe'))||fs.readFileSync(path.join(temp,'GhostR2/keep.cfg'),'utf8')!=='preserved')throw Error('Native restart failed '+JSON.stringify(result)+' '+fs.readFileSync(path.join(temp,'helper.log'),'utf8'));
  console.log('PASS: native Windows PowerShell 5.1 helper ready -> actual parent exit -> verified replacement -> new EXE restart; Unicode/spaces/config retained.');

@@ -17,9 +17,19 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Prepare exact current source and diagnostic compiler
+        shell: powershell
+        run: |
+          python release-ci/bootstrap.py
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          npm install --prefix updater-diagnostics typescript@5.9.3
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
       - name: Run exact shipped helper with Windows PowerShell 5.1
         shell: powershell
         run: |
           $PSVersionTable.PSVersion
-          node updater-diagnostics/native-handshake.cjs
+          node updater-diagnostics/verify-native-update.cjs
           if ($LASTEXITCODE) { exit $LASTEXITCODE }
