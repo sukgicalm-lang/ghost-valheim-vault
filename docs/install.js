@@ -74,7 +74,10 @@
     if (clientResult.status === 'fulfilled') {
       const c = clientResult.value;
       if (c.downloadUrl === `${releases}client-${c.version}/GhostR2-Windows-${c.version}.zip`) {
-        document.querySelectorAll('.client-download').forEach(a => a.href = `${releases}client-${c.version}/GhostR2-Install-${c.version}.zip`);
+        const installer = `${releases}client-${c.version}/GhostR2-Setup-${c.version}.exe`;
+        if (c.installerUrl === installer && Number.isSafeInteger(c.installerBytes) && c.installerBytes > 0 && /^[a-f0-9]{64}$/.test(c.installerSha256)) {
+          document.querySelectorAll('.client-download').forEach(a => a.href = installer);
+        }
         document.querySelectorAll('.client-source').forEach(a => a.href = `${releases}client-${c.version}/GhostR2-Source-${c.version}.zip`);
         document.querySelectorAll('[data-client-version]').forEach(el => el.textContent = c.version);
       }
