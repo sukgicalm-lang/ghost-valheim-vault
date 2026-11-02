@@ -5,6 +5,7 @@ on:
     paths:
       - 'release-ci/**'
       - '.github/workflows/publish-smelter.yml'
+      - 'updater-diagnostics/**'
   workflow_dispatch:
 permissions:
   contents: write
@@ -92,6 +93,8 @@ jobs:
         shell: powershell
         run: |
           node updater-diagnostics/verify-native-update.cjs
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          node updater-diagnostics/verify-native-update.cjs --published-parent
           if ($LASTEXITCODE) { exit $LASTEXITCODE }
       - name: Build Windows Ghost r2 1.0.13 and verify actual app archive
         shell: pwsh
