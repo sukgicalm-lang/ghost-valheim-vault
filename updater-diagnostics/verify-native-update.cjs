@@ -9,7 +9,7 @@ async function controller(config){
  const c=JSON.parse(fs.readFileSync(config,'utf8')),helper=path.join(c.temp,'GhostR2Updater.exe'),ready=path.join(c.temp,'ready.txt'),log=path.join(c.temp,'helper.log');
  fs.copyFileSync(c.helperSource,helper);
  const fd=fs.openSync(log,'a');
- const child=cp.spawn(helper,['--apply-update',String(process.pid),c.zip,c.hash,String(fs.statSync(c.zip).size),'1.0.12',c.current,ready,'',log],{...load('src-electron/GhostUpdateProcess.ts').ghostHelperSpawnOptions(fd),env:{...process.env,LOCALAPPDATA:c.temp,GHOST_RESTART_PROOF:c.proof}});fs.closeSync(fd);
+ const child=cp.spawn(helper,['--apply-update',String(process.pid),c.zip,c.hash,String(fs.statSync(c.zip).size),c.version,c.current,ready,'',log],{...load('src-electron/GhostUpdateProcess.ts').ghostHelperSpawnOptions(fd),env:{...process.env,LOCALAPPDATA:c.temp,GHOST_RESTART_PROOF:c.proof}});fs.closeSync(fd);
  let failure;child.on('error',e=>failure=e);
  for(let i=0;i<300;i++){if(failure)throw failure;if(fs.existsSync(ready)){child.unref();console.log('Shipped native helper ready; parent exiting');return;}if(child.exitCode!==null)throw Error('Helper exited '+child.exitCode);await delay(100);}
  child.kill();throw Error('Native ready timeout');
@@ -22,16 +22,17 @@ async function main(){
  const compiler=path.join(process.env.WINDIR,'Microsoft.NET/Framework64/v4.0.30319/csc.exe');
  cp.execFileSync(compiler,['/nologo','/target:winexe','/out:'+path.join(fixture,'GhostR2.exe'),source]);fs.writeFileSync(path.join(fixture,'resources/app.asar'),'native-lifecycle-fixture');
  const zip=path.join(temp,'runtime.zip'),zipScript=path.join(temp,'zip.ps1');fs.writeFileSync(zipScript,'\ufeffAdd-Type -AssemblyName System.IO.Compression.FileSystem\n[IO.Compression.ZipFile]::CreateFromDirectory($args[0],$args[1])');cp.execFileSync(ps,['-NoProfile','-ExecutionPolicy','Bypass','-File',zipScript,fixture,zip]);
- let helperSource=path.resolve(root,'../assets/GhostR2-Setup-1.0.12.exe');
+ const version=JSON.parse(fs.readFileSync(path.join(root,'package.json'),'utf8')).version;
+ let helperSource=path.resolve(root,'../assets/GhostR2-Setup-'+version+'.exe');
  if(process.argv.includes('--published-parent')){
-  const url='https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/client-1.0.11/GhostR2-Setup-1.0.11.exe';
-  const response=await fetch(url);if(!response.ok)throw Error('Published 1.0.11 helper unavailable');
+  const url='https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/client-1.0.12/GhostR2-Setup-1.0.12.exe';
+  const response=await fetch(url);if(!response.ok)throw Error('Published 1.0.12 helper unavailable');
   const bytes=Buffer.from(await response.arrayBuffer());
-  if(bytes.length!==26624||crypto.createHash('sha256').update(bytes).digest('hex')!=='f7d883dc584f5b5071094011a1c1a689f91a288c4661743b90c445a3bffa4218')throw Error('Published helper hash mismatch');
-  helperSource=path.join(temp,'published-1.0.11.exe');fs.writeFileSync(helperSource,bytes);console.log('Testing exact public 1.0.11 updater applying version 1.0.12');
+  if(bytes.length!==26624||crypto.createHash('sha256').update(bytes).digest('hex')!=='aff7a89ca8d73ba0a47d229b1a10f56bbd60c12e48244b4f3746fcf9c193f684')throw Error('Published helper hash mismatch');
+  helperSource=path.join(temp,'published-1.0.12.exe');fs.writeFileSync(helperSource,bytes);console.log('Testing exact public 1.0.12 updater applying version '+version);
  }
  const proof=path.join(temp,'restarted.txt');fs.mkdirSync(path.join(temp,'GhostR2'),{recursive:true});fs.writeFileSync(path.join(temp,'GhostR2/keep.cfg'),'preserved');
- const config=path.join(temp,'config.json');fs.writeFileSync(config,JSON.stringify({temp,helperSource,zip,hash:crypto.createHash('sha256').update(fs.readFileSync(zip)).digest('hex'),current:path.join(fixture,'GhostR2.exe'),proof}));
+ const config=path.join(temp,'config.json');fs.writeFileSync(config,JSON.stringify({version,temp,helperSource,zip,hash:crypto.createHash('sha256').update(fs.readFileSync(zip)).digest('hex'),current:path.join(fixture,'GhostR2.exe'),proof}));
  let stderr='';const parent=cp.spawn(process.execPath,[__filename,'--controller',config],{stdio:['ignore','pipe','pipe']});parent.stdout.on('data',d=>process.stdout.write(d));parent.stderr.on('data',d=>stderr+=d);
  const exit=await new Promise((resolve,reject)=>{parent.once('error',reject);parent.once('exit',resolve);});
  const log=()=>fs.existsSync(path.join(temp,'helper.log'))?fs.readFileSync(path.join(temp,'helper.log'),'utf8'):'';
@@ -40,7 +41,7 @@ async function main(){
  for(let i=0;i<750&&(!fs.existsSync(proof)||!fs.existsSync(record));i++){if(fs.existsSync(record)&&JSON.parse(fs.readFileSync(record,'utf8').replace(/^\ufeff/,'')).status==='failed')break;await delay(100);}
  console.log('Native log:',log());
  const result=fs.existsSync(record)?JSON.parse(fs.readFileSync(record,'utf8').replace(/^\ufeff/,'')):{};
- if(result.status!=='success'||!fs.existsSync(proof)||!fs.readFileSync(proof,'utf8').includes(path.join('GhostR2','1.0.12','GhostR2.exe'))||fs.readFileSync(path.join(temp,'GhostR2/keep.cfg'),'utf8')!=='preserved')throw Error('Native restart failed '+JSON.stringify(result)+' '+log());
+ if(result.status!=='success'||!fs.existsSync(proof)||!fs.readFileSync(proof,'utf8').includes(path.join('GhostR2',version,'GhostR2.exe'))||fs.readFileSync(path.join(temp,'GhostR2/keep.cfg'),'utf8')!=='preserved')throw Error('Native restart failed '+JSON.stringify(result)+' '+log());
  console.log('PASS: shipped native helper ready -> actual parent exit -> verified replacement -> new EXE restart; Unicode/spaces/config retained.');
  const cleanup=path.join(temp,'cleanup.ps1');fs.writeFileSync(cleanup,'Remove-Item HKCU:\\Software\\Classes\\ghostvault -Recurse -Force -ErrorAction SilentlyContinue\nRemove-Item (Join-Path ([Environment]::GetFolderPath("Desktop")) "Ghost r2modman.lnk") -Force -ErrorAction SilentlyContinue');cp.execFileSync(ps,['-NoProfile','-ExecutionPolicy','Bypass','-File',cleanup]);fs.rmSync(temp,{recursive:true,force:true});
 }
