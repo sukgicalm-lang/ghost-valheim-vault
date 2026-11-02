@@ -29,9 +29,13 @@ $patch = Build-GhostSmelterPatch $index $client $previous $catalog $bundle
 $expectedSmelter = ConvertFrom-Json -InputObject $patch['smelter-release.json']
 $expectedSetup = Get-Content (Join-Path $docs 'setup-release.json') -Raw -Encoding utf8 | ConvertFrom-Json
 # Publish the matching guide and history only after the verified runtime assets exist.
-$guide = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'install-1.0.12.html'))
+# Retain the latest guide, including current setup counts and mobile fixes.
+$guide = [IO.File]::ReadAllText((Join-Path $docs 'install.html'))
+$guide = [regex]::Replace($guide, 'https://github\.com/sukgicalm-lang/ghost-valheim-vault/releases/download/client-\d+\.\d+\.\d+/GhostR2-Setup-\d+\.\d+\.\d+\.exe', $bundle.client.installerUrl)
+$guide = [regex]::Replace($guide, 'https://github\.com/sukgicalm-lang/ghost-valheim-vault/releases/download/client-\d+\.\d+\.\d+/GhostR2-Source-\d+\.\d+\.\d+\.zip', ('https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/client-' + $bundle.client.version + '/GhostR2-Source-' + $bundle.client.version + '.zip'))
+$guide = [regex]::Replace($guide, 'GhostR2-Setup-\d+\.\d+\.\d+\.exe', ('GhostR2-Setup-' + $bundle.client.version + '.exe'))
+$guide = [regex]::Replace($guide, '(<b data-client-version>)\d+\.\d+\.\d+(</b>)', ('${1}' + $bundle.client.version + '${2}'))
 $patch['install.html'] = $guide
-$patch['install.js'] = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'install-1.0.12.js'))
 $entry = Get-Content (Join-Path $PSScriptRoot 'site-history-entry.json') -Raw -Encoding utf8 | ConvertFrom-Json
 $history = Get-Content (Join-Path $docs 'update-history.json') -Raw -Encoding utf8 | ConvertFrom-Json
 $history.siteUpdates = @($entry) + @($history.siteUpdates | Where-Object { $_.id -ne $entry.id })
@@ -51,7 +55,7 @@ git -C $root config user.email '41898282+github-actions[bot]@users.noreply.githu
 git -C $root add -- docs/index.html docs/client-release.json docs/smelter-release.json docs/smelter-releases.json docs/install.html docs/install.js docs/update-history.json
 git -C $root diff --cached --quiet
 if ($LASTEXITCODE -ne 0) {
-    git -C $root commit -m 'Publish launcher 1.0.12 scroll and window responsiveness fixes'
+    git -C $root commit -m 'Publish launcher 1.0.13 automatic Ghost duplicate migration'
     if ($LASTEXITCODE) { throw 'Could not commit website release metadata' }
     git -C $root push origin HEAD:main
     if ($LASTEXITCODE) { throw 'Concurrent website update; stopped without force-pushing' }
@@ -63,10 +67,10 @@ for ($i = 0; $i -lt 24; $i++) {
         $feed = Invoke-RestMethod ('https://sukgicalm-lang.github.io/ghost-valheim-vault/smelter-release.json?verify=' + [guid]::NewGuid().ToString('N')) -TimeoutSec 20
         $liveClient = Invoke-RestMethod ('https://sukgicalm-lang.github.io/ghost-valheim-vault/client-release.json?verify=' + [guid]::NewGuid().ToString('N')) -TimeoutSec 20
         $liveSetup = Invoke-RestMethod ('https://sukgicalm-lang.github.io/ghost-valheim-vault/setup-release.json?verify=' + [guid]::NewGuid().ToString('N')) -TimeoutSec 20
-        if ($liveSetup.revision -eq $expectedSetup.revision -and $liveSetup.packages.Count -eq $expectedSetup.packages.Count -and $feed.sha256 -eq $expectedSmelter.sha256 -and $feed.version -eq $expectedSmelter.version -and $liveClient.sha256 -eq $bundle.client.sha256 -and $liveClient.version -eq '1.0.12') { $verified = $true; break }
+        if ($liveSetup.revision -eq $expectedSetup.revision -and $liveSetup.packages.Count -eq $expectedSetup.packages.Count -and $feed.sha256 -eq $expectedSmelter.sha256 -and $feed.version -eq $expectedSmelter.version -and $liveClient.sha256 -eq $bundle.client.sha256 -and $liveClient.version -eq $bundle.client.version) { $verified = $true; break }
     } catch { }
     Start-Sleep -Seconds 10
 }
 if (-not $verified) { throw 'Release assets are uploaded, but public Pages metadata is not yet verified' }
-Write-Host ('Public Ghost smelter ' + $expectedSmelter.version + ' / launcher 1.0.12 release verified.')
+Write-Host ('Public Ghost smelter ' + $expectedSmelter.version + ' / launcher ' + $bundle.client.version + ' release verified.')
 

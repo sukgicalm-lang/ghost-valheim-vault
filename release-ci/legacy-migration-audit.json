@@ -1,0 +1,32 @@
+{
+  "schema": 1,
+  "launcher": "1.0.13",
+  "replacement_suite": "1.0.40",
+  "replacement_suite_sha256": "0c4d2677828c48e9ce38acd528f8cfa09188e83858e1d88f7f4568cb7020dd54",
+  "legacy_distribution_archives": [
+    {
+      "artifact": "Ghost-Bow-Skill-Test-0.1.0.zip",
+      "sha256": "134e07329f7c0fa2e5a154455c5a0ba49741230099e9fdff077af93703422b31"
+    },
+    {
+      "artifact": "Ghost-Bow-Skill-Test-0.1.1.zip",
+      "sha256": "e54b6d145c18a92fbdb196fb426a5e80e63359569beb01a14847469cdc8d307e"
+    },
+    {
+      "artifact": "Ghost-Bow-Skill-Test-0.1.2.zip",
+      "sha256": "4bcad485904f9af46d18748e49a535c59467769658f0a6f7644ee7bc36a2657d"
+    },
+    {
+      "artifact": "Ghost-Bow-Speed-1.0.0.zip",
+      "sha256": "3e96a29c2d5a84a0786a5b99eb99cb511750f3cf91b9ff825abb34b43ca06b17"
+    }
+  ],
+  "scope": "Exact known Ghost standalone DLLs only; configuration, profile records, other mods and unknown builds are preserved.",
+  "recovery": "Per-file verified copies and migration.json are written to profile/GhostBackups/legacy-plugins-* before removing any duplicate DLL from BepInEx/plugins.",
+  "local_validation": {
+    "typecheck": "passed",
+    "vitest_files": 16,
+    "vitest_tests": 134
+  },
+  "gameplay_validation": "Requires user game session; automated verification does not claim live gameplay testing."
+}
