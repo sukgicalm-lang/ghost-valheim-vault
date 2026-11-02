@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "launcher": "1.0.13",
+  "launcher": "1.0.14",
   "replacement_suite": "1.0.40",
   "replacement_suite_sha256": "0c4d2677828c48e9ce38acd528f8cfa09188e83858e1d88f7f4568cb7020dd54",
   "legacy_distribution_archives": [
@@ -25,8 +25,11 @@
   "recovery": "Per-file verified copies and migration.json are written to profile/GhostBackups/legacy-plugins-* before removing any duplicate DLL from BepInEx/plugins.",
   "local_validation": {
     "typecheck": "passed",
-    "vitest_files": 16,
-    "vitest_tests": 134
+    "vitest_files": 17,
+    "vitest_tests": 135
   },
-  "gameplay_validation": "Requires user game session; automated verification does not claim live gameplay testing."
+  "gameplay_validation": "Requires user game session; automated verification does not claim live gameplay testing.",
+  "regression": "Production IPC readFile returns UTF-8 text. The actual production adapter regression fails on 1.0.13; base64 transport preserves binary bytes and allows exact hash matching in 1.0.14.",
+  "regression_before_fix": "Production-adapter test failed: expected one migrated file, got zero.",
+  "regression_after_fix": "Same production-adapter test passed and verified byte-identical backup."
 }

@@ -36,7 +36,7 @@ jobs:
           $PSVersionTable.PSVersion
           node updater-diagnostics/verify-native-update.cjs
           if ($LASTEXITCODE) { exit $LASTEXITCODE }
-      - name: Verify exact published 1.0.12 updater can replace and restart as current launcher
+      - name: Verify exact published 1.0.13 updater can replace and restart as current launcher
         shell: powershell
         run: |
           node updater-diagnostics/verify-native-update.cjs --published-parent

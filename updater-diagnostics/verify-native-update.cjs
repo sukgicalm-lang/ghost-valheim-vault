@@ -25,11 +25,11 @@ async function main(){
  const version=JSON.parse(fs.readFileSync(path.join(root,'package.json'),'utf8')).version;
  let helperSource=path.resolve(root,'../assets/GhostR2-Setup-'+version+'.exe');
  if(process.argv.includes('--published-parent')){
-  const url='https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/client-1.0.12/GhostR2-Setup-1.0.12.exe';
-  const response=await fetch(url);if(!response.ok)throw Error('Published 1.0.12 helper unavailable');
+  const url='https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/client-1.0.13/GhostR2-Setup-1.0.13.exe';
+  const response=await fetch(url);if(!response.ok)throw Error('Published 1.0.13 helper unavailable');
   const bytes=Buffer.from(await response.arrayBuffer());
-  if(bytes.length!==26624||crypto.createHash('sha256').update(bytes).digest('hex')!=='aff7a89ca8d73ba0a47d229b1a10f56bbd60c12e48244b4f3746fcf9c193f684')throw Error('Published helper hash mismatch');
-  helperSource=path.join(temp,'published-1.0.12.exe');fs.writeFileSync(helperSource,bytes);console.log('Testing exact public 1.0.12 updater applying version '+version);
+  if(bytes.length!==26624||crypto.createHash('sha256').update(bytes).digest('hex')!=='c99f59c221f590fa536a2eea8f093652b825ee4d96a70cd2d863dd86d62af4df')throw Error('Published helper hash mismatch');
+  helperSource=path.join(temp,'published-1.0.13.exe');fs.writeFileSync(helperSource,bytes);console.log('Testing exact public 1.0.13 updater applying version '+version);
  }
  const proof=path.join(temp,'restarted.txt');fs.mkdirSync(path.join(temp,'GhostR2'),{recursive:true});fs.writeFileSync(path.join(temp,'GhostR2/keep.cfg'),'preserved');
  const config=path.join(temp,'config.json');fs.writeFileSync(config,JSON.stringify({version,temp,helperSource,zip,hash:crypto.createHash('sha256').update(fs.readFileSync(zip)).digest('hex'),current:path.join(fixture,'GhostR2.exe'),proof}));
