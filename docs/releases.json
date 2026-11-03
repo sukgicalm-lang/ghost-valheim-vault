@@ -1,5 +1,21 @@
 [
   {
+    "version": "1.0.43",
+    "date": "2026-11-03",
+    "file": "downloads/Ghost-GhostValheimSuite-1.0.43.zip",
+    "bytes": 398818650,
+    "sha256": "47a98210012af3d7c28a802fa38340e2b28145a4045a94b457af3193d10cc057",
+    "appIntegration": true,
+    "dependencies": [
+      "denikson-BepInExPack_Valheim-5.4.2351",
+      "ValheimModding-JsonDotNET-13.0.4",
+      "shudnal-ConfigurationManager-1.1.25",
+      "Ghost-GhostSmelterControl-1.0.3"
+    ],
+    "notes": "해골 비전투 추적·대기 거리 확대 · 가까워지면 바깥쪽으로 물러나기",
+    "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.43/Ghost-GhostValheimSuite-1.0.43.zip"
+  },
+  {
     "version": "1.0.42",
     "date": "2026-11-03",
     "file": "downloads/Ghost-GhostValheimSuite-1.0.42.zip",

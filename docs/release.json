@@ -1,9 +1,9 @@
 {
-  "version": "1.0.42",
+  "version": "1.0.43",
   "date": "2026-11-03",
-  "file": "downloads/Ghost-GhostValheimSuite-1.0.42.zip",
-  "bytes": 398811516,
-  "sha256": "4916e69fcd76f247bd98c8ae745f20df1b9c7c6234dfdeedc315c7dab2a53b96",
+  "file": "downloads/Ghost-GhostValheimSuite-1.0.43.zip",
+  "bytes": 398818650,
+  "sha256": "47a98210012af3d7c28a802fa38340e2b28145a4045a94b457af3193d10cc057",
   "appIntegration": true,
   "dependencies": [
     "denikson-BepInExPack_Valheim-5.4.2351",
@@ -11,6 +11,6 @@
     "shudnal-ConfigurationManager-1.1.25",
     "Ghost-GhostSmelterControl-1.0.3"
   ],
-  "notes": "해골 방어막 이펙트 복구·실시간 잔량 표시 · 도착 시 1m 이상 간격",
-  "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.42/Ghost-GhostValheimSuite-1.0.42.zip"
+  "notes": "해골 비전투 추적·대기 거리 확대 · 가까워지면 바깥쪽으로 물러나기",
+  "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.43/Ghost-GhostValheimSuite-1.0.43.zip"
 }
