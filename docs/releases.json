@@ -1,5 +1,21 @@
 [
   {
+    "version": "1.0.44",
+    "date": "2026-11-03",
+    "file": "downloads/Ghost-GhostValheimSuite-1.0.44.zip",
+    "bytes": 398833723,
+    "sha256": "28a5b61240c156a9995c0866ca54d5dfa772f8312486f974762e3c6698314eac",
+    "appIntegration": true,
+    "dependencies": [
+      "denikson-BepInExPack_Valheim-5.4.2351",
+      "ValheimModding-JsonDotNET-13.0.4",
+      "shudnal-ConfigurationManager-1.1.25",
+      "Ghost-GhostSmelterControl-1.0.3"
+    ],
+    "notes": "해골 자동 복귀 100m·10초 기준 · 고속 추적 · 검은 로딩 화면 충돌·반복 작업 수정 · 내 방어막 막대",
+    "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.44/Ghost-GhostValheimSuite-1.0.44.zip"
+  },
+  {
     "version": "1.0.43",
     "date": "2026-11-03",
     "file": "downloads/Ghost-GhostValheimSuite-1.0.43.zip",
