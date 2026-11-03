@@ -8,13 +8,13 @@ using System.Runtime.CompilerServices;
 using BepInEx;
 using HarmonyLib;
 using UnityEngine;
-[assembly: AssemblyVersion("1.0.1.0")]
-[assembly: AssemblyFileVersion("1.0.1.0")]
+[assembly: AssemblyVersion("1.0.2.0")]
+[assembly: AssemblyFileVersion("1.0.2.0")]
 namespace GhostSummonTravel {
- [BepInPlugin(Guid,"Ghost 해골 동행·방어막 표시","1.0.1")]
+ [BepInPlugin(Guid,"Ghost 해골 동행·방어막 표시","1.0.2")]
  public sealed class Plugin:BaseUnityPlugin {
   public const string Guid="ghost.valheim.summontravel";Harmony harmony;
-  void Awake(){Travel.ValidateApi();ShieldPresentation.ValidateApi();harmony=new Harmony(Guid);try{harmony.PatchAll(typeof(Plugin).Assembly);}catch{harmony.UnpatchSelf();throw;}Logger.LogInfo("해골 동행 1.0.1: 방어막 이펙트 복구·체력바 옆 남은 방어막 표시");}
+  void Awake(){Travel.ValidateApi();ShieldPresentation.ValidateApi();IdleSpacing.ValidateApi();harmony=new Harmony(Guid);try{harmony.PatchAll(typeof(Plugin).Assembly);}catch{harmony.UnpatchSelf();throw;}Logger.LogInfo("해골 동행 1.0.2: 비전투 추적·대기 간격과 너무 가까울 때 뒤로 물러나기");}
   void Update(){Travel.Tick();}void OnDestroy(){Travel.Clear();if(harmony!=null)harmony.UnpatchSelf();}
  }
  internal static class Travel {
@@ -95,25 +95,29 @@ namespace GhostSummonTravel {
    foreach(var c in Character.GetAllCharacters()){
     if(!Follows(c,p)||Held(c))continue;var id=c.GetZDOID();active.Add(id);float gap=Vector3.Distance(c.transform.position,p.transform.position);Progress state;
     if(!Followers.TryGetValue(id,out state)){Followers[id]=new Progress{Best=gap,LastProgress=Now,LastRecall=-99};continue;}
-    float heightGap=Mathf.Abs(c.transform.position.y-p.transform.position.y);
-    if((gap<5&&heightGap<1.5f)||gap<state.Best-0.75f){state.Best=gap;state.LastProgress=Now;}
+    float heightGap=Mathf.Abs(c.transform.position.y-p.transform.position.y);bool crowded=IdleSpacing.Crowded(c,p);
+    if((!crowded&&gap<5&&heightGap<1.5f)||(!crowded&&gap<state.Best-0.75f)){state.Best=gap;state.LastProgress=Now;}
     // When the player moves farther away, measure progress from the new gap.
     if(gap>state.Best+3){state.Best=gap;}
-    if(Now-state.LastRecall<8||!ShouldRecall(gap,heightGap,Now-state.LastProgress))continue;
-    Vector3 pos;if(!FindLanding(p,c,index++,out pos))continue;
+    if(Now-state.LastRecall<8||!(ShouldRecall(gap,heightGap,Now-state.LastProgress)||(crowded&&Now-state.LastProgress>=4)))continue;
+    Vector3 pos;if(!FindLanding(p,c,index++,out pos,crowded?2.9f:1f))continue;
     string token=System.Guid.NewGuid().ToString("N");Begin(c,ZDOMan.GetSessionID(),p.GetZDOID(),token);c.GetComponent<ZNetView>().InvokeRPC(ZNetView.Everybody,BeginRpc,p.GetZDOID(),token);SendFinish(c,p,token,pos);
     state.LastRecall=Now;state.LastProgress=Now;state.Best=0;
    }
    foreach(var id in Followers.Keys.Where(id=>!active.Contains(id)&&!Moving.ContainsKey(id)).ToArray())Followers.Remove(id);
   }
-  internal static bool FindLanding(Player p,Character c,int index,out Vector3 result){
+  internal static bool FindLanding(Player p,Character c,int index,out Vector3 result,float bodyClearance=1f,bool retreat=false){
    result=Vector3.zero;if(!ZoneSystem.instance||!ZNetScene.instance||!ZNetScene.instance.IsAreaReady(p.transform.position))return false;
-   int mask=LayerMask.GetMask("Default","static_solid","Default_small","piece","terrain","vehicle");
+   int mask=LayerMask.GetMask("Default","static_solid","Default_small","piece","terrain","vehicle","character","character_net");
    float radius=Mathf.Max(0.3f,c.GetRadius());float height=Mathf.Max(radius*2+0.2f,c.GetHeight());
    // Rear half only. Radius leaves at least one metre between the two bodies.
-   float[] angles={180,150,210,120,240,90,270};float first=Mathf.Max(1.8f,p.GetRadius()+radius+1f);
+   float[] angles={180,150,210,120,240,90,270};float first=Mathf.Max(1.8f,p.GetRadius()+radius+Mathf.Max(1f,bodyClearance));
+   float[] escapeAngles={0,30,-30,60,-60,90,-90};float dx=c.transform.position.x-p.transform.position.x,dz=c.transform.position.z-p.transform.position.z;
+   if(Math.Abs(dx)+Math.Abs(dz)<0.01f){var back=p.transform.rotation*new Vector3(0,0,-1);dx=back.x;dz=back.z;}
    for(int i=0;i<35;i++){float a=angles[(i+index)%angles.Length]*Mathf.Deg2Rad;float d=first+(i/angles.Length)*0.8f;
-    var offset=p.transform.rotation*new Vector3(Mathf.Sin(a)*d,0,Mathf.Cos(a)*d);
+    Vector3 offset;
+    if(retreat){a=(float)Math.Atan2(dx,dz)+escapeAngles[i%escapeAngles.Length]*Mathf.Deg2Rad;offset=new Vector3(Mathf.Sin(a)*d,0,Mathf.Cos(a)*d);}
+    else offset=p.transform.rotation*new Vector3(Mathf.Sin(a)*d,0,Mathf.Cos(a)*d);
     var pos=p.transform.position+offset+Vector3.up*1.5f;float floor;
     if(!ZoneSystem.instance.FindFloor(pos,out floor)||Mathf.Abs(floor-p.transform.position.y)>1.5f)continue;pos.y=floor+0.15f;
     var bottom=pos+Vector3.up*(radius+0.1f);var top=pos+Vector3.up*Mathf.Max(radius+0.1f,height-radius);
@@ -122,7 +126,7 @@ namespace GhostSummonTravel {
    }return false;
   }
   internal static void Pin(List<ZDO> near){Tick();foreach(var t in Moving.Values)if(t.V&&t.V.IsValid()){if(!near.Contains(t.V.GetZDO()))near.Add(t.V.GetZDO());ShieldPresentation.PinEffects(t.C,near);}foreach(var c in Character.GetAllCharacters())if(IsSkeleton(c)&&c.GetComponent<ZNetView>().IsOwner()&&!near.Contains(c.GetComponent<ZNetView>().GetZDO()))SaveShields(c);}
-  internal static void Clear(){foreach(var t in Moving.Values)Release(t);Moving.Clear();Followers.Clear();local=null;nextCheck=0;Shields=new ConditionalWeakTable<Character,ShieldState>();ShieldPresentation.ClearHud();}
+  internal static void Clear(){foreach(var t in Moving.Values)Release(t);Moving.Clear();Followers.Clear();local=null;nextCheck=0;Shields=new ConditionalWeakTable<Character,ShieldState>();ShieldPresentation.ClearHud();IdleSpacing.Clear();}
   internal static void RestoreIfNewOwner(Character c){if(!IsSkeleton(c))return;var v=c.GetComponent<ZNetView>();var state=Shields.GetOrCreateValue(c);bool owner=v.IsOwner();if(owner&&!state.WasOwner)RestoreShields(c);state.WasOwner=owner;}
   internal static void SaveShields(Character c){
    if(!IsSkeleton(c)||!c.GetComponent<ZNetView>().IsOwner())return;var rows=new List<string>{Now.ToString("R",Inv)};

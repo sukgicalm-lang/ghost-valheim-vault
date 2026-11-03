@@ -1,0 +1,12 @@
+{
+  "base_sha256": "4916e69fcd76f247bd98c8ae745f20df1b9c7c6234dfdeedc315c7dab2a53b96",
+  "dll_sha256": "adf812c765a83f08f1ff525f7c44fc52f32d878f8f685c5c784c4e48607c70cd",
+  "source_hashes": {
+    "mod-src/SummonTravel/IdleSpacing.cs": "912ec261143c9413968cf87252eb021d1315308bda9b262a1040a22a14f95200",
+    "mod-src/SummonTravel/GhostSummonTravel.csproj": "698cddaeb2e303ae7b993181fb3b0c08b65cef8b0b9e26664033b3e1515416ff",
+    "mod-src/SummonTravel/ShieldPresentation.cs": "b3a25dd79b428e77d4f8c750d7135a71c106d1f938fc9ce34933afdd541203e8",
+    "mod-src/SummonTravel/README.md": "6eeb26954e9bdb423f495e98cd69915cc6cf801ae75e64f2ca2b62b7affd91ca",
+    "mod-src/SummonTravel/LICENSE": "7457f28aa6912e216c715875685f4e5d1dd4357a0b1c86afa35dfeaa6ab015d0",
+    "mod-src/SummonTravel/Plugin.cs": "9abc97d6fc62c07c0e8552ea5e0ea4aae84e16b1d350a3e20fd8b247b20cd263"
+  }
+}

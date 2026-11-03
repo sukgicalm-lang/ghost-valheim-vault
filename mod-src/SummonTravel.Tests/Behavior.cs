@@ -43,6 +43,25 @@ class Behavior{
   s.m_damage=137;ShieldPresentation.UpdateHud(hud);Check(label.text=="방어막 313 / 450"&&labels.Count==1,"damage refreshes same label without accumulating UI clones");
   c.Manager.Effects.Clear();ShieldPresentation.UpdateHud(hud);Check(label.text=="방어막 0","shield removal clears HUD immediately");
   UnityEngine.Object.Destroy(gui);ShieldPresentation.UpdateHud(hud);Check(labels.Count==0,"destroyed HUD releases its shield label cache");Travel.Clear();
+  Travel.Clear();p.transform.position=new Vector3(0,0,0);p.transform.rotation=Quaternion.identity;p.Grounded=true;p.Teleporting=false;c.transform.position=new Vector3(0,0,0.7f);c.Dead=false;v.Zdo.Owner=1;
+  var ai=c.GetComponent<MonsterAI>();ai.Target=p.gameObject;ai.Combat=false;IdleSpacing.ValidateApi();
+  Check(IdleSpacing.Crowded(c,p),"idle inner band detects bodies too close");
+  Check(!IdleSpacing.Handle(ai,p.gameObject,0.02f)&&ai.Moves==1,"close idle skeleton actively walks away instead of only stopping");
+  Check(ai.MoveGoal.z>c.transform.position.z,"close retreat stays on same side and never targets through player");
+  Check(Vector3.Distance(ai.MoveGoal,p.transform.position)>3.4f,"retreat goal gives generous room beyond one metre");
+  c.transform.position=new Vector3(0,0,3);int moved=ai.Moves,stopped=ai.Stopped;
+  Check(!IdleSpacing.Handle(ai,p.gameObject,0.02f)&&ai.Moves==moved&&ai.Stopped==stopped+1,"safe idle distance holds position without approaching player centre");
+  Check(!IdleSpacing.Crowded(c,p),"comfortable body gap is not treated as crowding");
+  c.transform.position=new Vector3(0,0,-20);Check(!IdleSpacing.Handle(ai,p.gameObject,0.02f)&&ai.Running,"far follower still catches up using native run and pathfinding");
+  Check(ai.MoveGoal.z<0&&Vector3.Distance(ai.MoveGoal,p.transform.position)>3.4f,"far idle follower aims at rear waiting area rather than player centre");
+  ai.Combat=true;moved=ai.Moves;Check(IdleSpacing.Handle(ai,p.gameObject,0.02f)&&ai.Moves==moved,"combat target keeps native AI untouched");ai.Combat=false;
+  v.Zdo.Owner=2;Check(IdleSpacing.Handle(ai,p.gameObject,0.02f),"nonowner never directs creature movement");v.Zdo.Owner=1;
+  ai.Target=null;Check(IdleSpacing.Handle(ai,p.gameObject,0.02f),"stay command does not get an idle formation order");ai.Target=p.gameObject;
+  Physics.Blocked=true;c.transform.position=new Vector3(0,0,0.7f);ZNet.instance.Time+=1;stopped=ai.Stopped;moved=ai.Moves;
+  Check(!IdleSpacing.Handle(ai,p.gameObject,0.02f)&&ai.Stopped==stopped+1&&ai.Moves==moved,"blocked retreat stops instead of walking into player");Physics.Blocked=false;
+  Travel.Clear();c.transform.position=new Vector3(0,0,0.7f);Travel.Tick();ZNet.instance.Time+=4.5;Travel.Tick();
+  Check(Travel.Held(c)&&Vector3.Distance(c.transform.position,p.transform.position)>3.4f,"idle creature trapped inside personal space safely rejoins farther away after four seconds");Travel.Clear();
+  c.transform.position=new Vector3(0,0,0.7f);ai.Combat=true;Travel.Tick();ZNet.instance.Time+=5;Travel.Tick();Check(!Travel.Held(c),"close combat creature is not recalled just for personal space");ai.Combat=false;Travel.Clear();
   Console.WriteLine("Behavior checks: "+count);
  }
 }
