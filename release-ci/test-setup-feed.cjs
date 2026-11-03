@@ -23,27 +23,27 @@ function loader(remote=published,cached=null,offline=false){
  return{...evaluate(content('src/ghost/GhostSetupCatalog.ts'),imports,state),state};
 }
 const profile={joinToProfilePath:(...p)=>p.join('/')};
-const retired='Voidey-WoWArmors'; const added='DEEP_FROST-VehicleRemoval';let passed=0;
+const retired='Voidey-WoWArmors';let passed=0;
 async function test(name,fn){await fn();passed++;console.log('PASS '+name);}
 (async()=>{
  await test('revision advances and exactly one retired package is removed',()=>{
-  assert.equal(published.revision,3);assert.ok(published.revision>bundled.setup.revision);
-  assert.equal(published.packages.length,29);assert.equal(bundled.setup.packages.length,29);
-  assert.equal(JSON.stringify(published.packages),JSON.stringify([...bundled.setup.packages.filter(p=>p.name!==retired),...published.packages.filter(p=>p.name===added)]));
+  assert.equal(published.revision,4);assert.ok(published.revision>bundled.setup.revision);
+  assert.equal(published.packages.length,28);assert.equal(bundled.setup.packages.length,28);
+  assert.equal(JSON.stringify(published.packages),JSON.stringify(bundled.setup.packages.filter(p=>p.name!==retired)));
  });
  await test('actual 1.0.12 validator accepts the smaller setup and all dependencies remain complete',()=>{
-  const setup=core.validateGhostSetup(published);assert.equal(setup.packages.length,29);
-  assert.equal(core.orderSetupPackages(setup.packages).length,29);
+  const setup=core.validateGhostSetup(published);assert.equal(setup.packages.length,28);
+  assert.equal(core.orderSetupPackages(setup.packages).length,28);
   assert.ok(setup.packages.every(p=>(p.dependencies||[]).every(d=>!d.startsWith(retired+'-'))));
  });
- await test('new installation fetches revision 3 instead of reinstalling the bundled retired package',async()=>{
-  const l=loader(),setup=await l.loadGhostSetup(profile);assert.equal(setup.revision,3);
-  assert.equal(setup.packages.length,29);assert.equal(l.state.writes[0].revision,2);
+ await test('new installation fetches revision 4 instead of reinstalling the bundled retired package',async()=>{
+  const l=loader(),setup=await l.loadGhostSetup(profile);assert.equal(setup.revision,4);
+  assert.equal(setup.packages.length,28);assert.equal(l.state.writes[0].revision,4);
   assert.ok(!setup.packages.some(p=>p.name===retired));assert.match(l.state.requests[0].url,/setup-release\.json$/);
  });
  await test('existing cached revision 1 upgrades without a launcher binary change',async()=>{
   const l=loader(published,bundled.setup),setup=await l.loadGhostSetup(profile);
-  assert.equal(setup.revision,3);assert.equal(setup.packages.length,29);
+  assert.equal(setup.revision,4);assert.equal(setup.packages.length,28);
  });
  await test('repair after a user uninstall never downloads or enables WoWArmors',()=>{
   const required=core.validateGhostSetup(published).packages;
@@ -54,24 +54,24 @@ async function test(name,fn){await fn();passed++;console.log('PASS '+name);}
   installed.push({name:retired,version:'1.1.2',enabled:false});
   const disabled=core.planGhostSetup(required,installed,payloads);assert.equal(disabled.enable.length,0);
  });
- await test('clean profile installs exactly the current 29 packages',()=>{
+ await test('clean profile installs exactly the current 28 packages',()=>{
   const plan=core.planGhostSetup(published.packages,[],new Map());
-  assert.equal(plan.install.length,29);assert.ok(!plan.install.some(p=>p.name===retired));
+  assert.equal(plan.install.length,28);assert.ok(!plan.install.some(p=>p.name===retired));
  });
- await test('once cached, revision 3 stays retired during offline use',async()=>{
+ await test('once cached, revision 4 stays retired during offline use',async()=>{
   const l=loader(published,published,true),setup=await l.loadGhostSetup(profile);
-  assert.equal(setup.revision,3);assert.ok(!setup.packages.some(p=>p.name===retired));
+  assert.equal(setup.revision,4);assert.ok(!setup.packages.some(p=>p.name===retired));
  });
  await test('same-revision edits are rejected, proving the revision bump is required',async()=>{
   const invalid={...published,revision:bundled.setup.revision};const l=loader(invalid);
   const result=await l.loadGhostSetup(profile);assert.equal(result.packages.length,29);assert.equal(l.state.writes.length,0);
  });
  await test('a newer cached revision cannot be rolled back by the public feed',async()=>{
-  const newer={...published,revision:3},l=loader(published,newer),setup=await l.loadGhostSetup(profile);
-  assert.equal(setup.revision,3);assert.equal(l.state.writes.length,0);
+  const newer={...published,revision:5},l=loader(published,newer),setup=await l.loadGhostSetup(profile);
+  assert.equal(setup.revision,5);assert.equal(l.state.writes.length,0);
  });
  await test('website count and safe uninstall guidance match the active setup',()=>{
-  const guide=fs.readFileSync(path.join(root,'docs/install.html'),'utf8');assert.ok(guide.includes('29개'));
+  const guide=fs.readFileSync(path.join(root,'docs/install.html'),'utf8');assert.ok(guide.includes('28개'));
   assert.ok(guide.includes('WoWArmors'));assert.ok(guide.includes('Uninstall'));
   assert.ok(!guide.includes('29개'));assert.ok(!guide.includes('전체 29개'));
   const history=JSON.parse(fs.readFileSync(path.join(root,'docs/update-history.json'),'utf8'));
