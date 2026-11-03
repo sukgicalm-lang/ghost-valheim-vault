@@ -1,5 +1,21 @@
 [
   {
+    "version": "1.0.42",
+    "date": "2026-11-03",
+    "file": "downloads/Ghost-GhostValheimSuite-1.0.42.zip",
+    "bytes": 398811516,
+    "sha256": "4916e69fcd76f247bd98c8ae745f20df1b9c7c6234dfdeedc315c7dab2a53b96",
+    "appIntegration": true,
+    "dependencies": [
+      "denikson-BepInExPack_Valheim-5.4.2351",
+      "ValheimModding-JsonDotNET-13.0.4",
+      "shudnal-ConfigurationManager-1.1.25",
+      "Ghost-GhostSmelterControl-1.0.3"
+    ],
+    "notes": "해골 방어막 이펙트 복구·실시간 잔량 표시 · 도착 시 1m 이상 간격",
+    "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.42/Ghost-GhostValheimSuite-1.0.42.zip"
+  },
+  {
     "version": "1.0.41",
     "date": "2026-11-03",
     "file": "downloads/Ghost-GhostValheimSuite-1.0.41.zip",
