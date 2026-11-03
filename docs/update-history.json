@@ -1,6 +1,23 @@
 {
   "siteUpdates": [
     {
+      "id": "setup:3",
+      "kind": "setup",
+      "component": "setup",
+      "version": "1.5.8",
+      "date": "2026-11-04",
+      "title": "선박·수레 회수 VehicleRemoval 추가 · 필수 모드 29개",
+      "changes": [
+        "VehicleRemoval 1.6.0을 Ghost r2 공식 자동 설치 목록에 추가했습니다. 필수 모드가 28개에서 29개로 늘어났습니다.",
+        "드라카·롱십 등의 선박과 수레를 망치로 해체하여 제작 재료를 회수할 수 있습니다.",
+        "기존 Ghost r2 런처는 새 설치 목록을 자동으로 읽으므로 런처를 다시 설치할 필요가 없습니다."
+      ],
+      "notes": [
+        "게임을 종료하고 Ghost r2 런처에서 필수 모드 29개가 준비 완료로 표시되는지 확인하세요.",
+        "게임 내 VehicleRemoval의 실제 해체 동작과 다른 모드와의 호환성은 별도 검증이 필요합니다."
+      ]
+    },
+    {
       "id": "module:GhostSmelterControl:1.0.3",
       "kind": "module",
       "component": "GhostSmelterControl",
