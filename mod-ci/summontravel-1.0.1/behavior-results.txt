@@ -1,0 +1,66 @@
+PASS unauthorized sender rejected
+PASS other player's follower excluded
+PASS invalid transaction rejected
+PASS native teleport captures existing follower
+PASS physics held during loading
+PASS scene unload pins existing network object
+PASS no heal or replacement summon
+PASS same character and ZDO reach native final location
+PASS identity and health preserved
+PASS live shield capacity and elapsed time preserved
+PASS normal physics restored after landing
+PASS reload deducts loading time without renewing absorb
+PASS restore is idempotent
+PASS broken shield stays broken
+PASS expired shield stays expired
+PASS authority transfer restores shield
+PASS stay command respected
+PASS hostile skeleton excluded
+PASS other animals excluded
+PASS death never resurrects summon
+PASS forged finish rejected
+PASS nonfinite destination rejected
+PASS lost finish cannot freeze indefinitely
+PASS source owner hands authority to destination player
+PASS blocked portal follows native rollback
+PASS invalid capacity rejected
+PASS negative damage rejected
+PASS backward clock cannot extend shield
+PASS exact remaining shield arithmetic
+PASS small ledge waits four seconds
+PASS jumped ledge can recall nearby follower
+PASS normal nearby follower does not teleport
+PASS distant stuck follower recalled
+PASS blocked landing is rejected
+PASS no floor means no recall
+PASS cliff below player rejected
+PASS grounded clear landing accepted
+PASS unloaded destination rejected
+PASS actual stuck-ledge controller recalls existing follower
+PASS player in air never triggers landing recall
+PASS landing prefers behind the player
+PASS landing leaves at least one metre body clearance
+PASS rear landing rotates with player facing
+PASS blocked landing never falls back onto player
+PASS pending arrival retries when a safe spot opens
+PASS missing native shield visual is recreated
+PASS visual repair never refreshes shield combat values
+PASS healthy effect is not restarted each tick
+PASS destroyed cached visual is detected and repaired
+PASS recast or owner handoff can force visual renewal only
+PASS shield effect network object is pinned with skeleton
+PASS shield effect ZDO follows its moved transform
+PASS owner HUD reads current authoritative absorb values
+PASS remote HUD reads synchronized shield without creating status effects
+PASS remote HUD has no local shield gameplay side effects
+PASS broken shield never gets a new visual
+PASS expired shield never gets a new visual
+PASS HUD formats remaining and total capacity
+PASS HUD shows zero when shield absent
+PASS unknown remote state is not falsely reported as zero
+PASS actual HUD updater creates a separate shield number label
+PASS existing health and name UI are preserved
+PASS damage refreshes same label without accumulating UI clones
+PASS shield removal clears HUD immediately
+PASS destroyed HUD releases its shield label cache
+Behavior checks: 65

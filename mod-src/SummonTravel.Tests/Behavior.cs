@@ -17,6 +17,32 @@ class Behavior{
   Check(!Travel.ShouldRecall(3,2,3.9),"small ledge waits four seconds");Check(Travel.ShouldRecall(3,2,4),"jumped ledge can recall nearby follower");Check(!Travel.ShouldRecall(3,0,10),"normal nearby follower does not teleport");Check(Travel.ShouldRecall(13,0,4),"distant stuck follower recalled");
   Vector3 pos;Physics.Blocked=true;Check(!Travel.FindLanding(p,c,0,out pos),"blocked landing is rejected");Physics.Blocked=false;ZoneSystem.instance.HasFloor=false;Check(!Travel.FindLanding(p,c,0,out pos),"no floor means no recall");ZoneSystem.instance.HasFloor=true;ZoneSystem.instance.Floor=p.transform.position.y-5;Check(!Travel.FindLanding(p,c,0,out pos),"cliff below player rejected");ZoneSystem.instance.Floor=null;Check(Travel.FindLanding(p,c,0,out pos),"grounded clear landing accepted");ZNetScene.instance.Ready=false;Check(!Travel.FindLanding(p,c,0,out pos),"unloaded destination rejected");ZNetScene.instance.Ready=true;
   Travel.Clear();p.Teleporting=false;p.Grounded=true;c.transform.position=new Vector3(0,0,0);p.transform.position=new Vector3(0,3,0);Travel.Tick();ZNet.instance.Time+=4.5;Travel.Tick();Check(Travel.Held(c)&&c.transform.position.y>2,"actual stuck-ledge controller recalls existing follower");Travel.Clear();p.Grounded=false;c.transform.position=new Vector3(0,0,0);Travel.Tick();ZNet.instance.Time+=6;Travel.Tick();Check(!Travel.Held(c),"player in air never triggers landing recall");
+  Travel.Clear();p.Grounded=true;p.transform.rotation=Quaternion.identity;c.transform.position=new Vector3(0,0,0);p.transform.position=new Vector3(0,3,0);
+  Check(Travel.FindLanding(p,c,0,out pos)&&pos.z<p.transform.position.z,"landing prefers behind the player");
+  float horizontal=(float)Math.Sqrt((pos.x-p.transform.position.x)*(pos.x-p.transform.position.x)+(pos.z-p.transform.position.z)*(pos.z-p.transform.position.z));
+  Check(horizontal>=p.GetRadius()+c.GetRadius()+1,"landing leaves at least one metre body clearance");
+  p.transform.rotation=new Quaternion{y=0.70710678f,w=0.70710678f};Travel.FindLanding(p,c,0,out pos);Check(pos.x<p.transform.position.x,"rear landing rotates with player facing");p.transform.rotation=Quaternion.identity;
+  Physics.Blocked=true;p.Teleporting=true;Travel.Start(p);p.Teleporting=false;var old=c.transform.position;Travel.CompleteLocal(p);Check(c.transform.position.x==old.x&&c.transform.position.y==old.y&&Travel.Held(c),"blocked landing never falls back onto player");Physics.Blocked=false;ZNet.instance.Time+=0.3;Travel.CompleteLocal(p);Check(c.transform.position.y>2,"pending arrival retries when a safe spot opens");Travel.Clear();
+  c.Manager.Effects.Clear();Shield(c,12,37);s=(SE_Shield)c.Manager.Effects[0];s.m_startEffects.Enabled=true;
+  ShieldPresentation.ValidateApi();ShieldPresentation.Repair(c,false);Check(s.VisualTriggers==1,"missing native shield visual is recreated");
+  Check(s.m_time==12&&s.m_damage==37&&s.m_totalAbsorbDamage==450,"visual repair never refreshes shield combat values");
+  ShieldPresentation.Repair(c,false);Check(s.VisualTriggers==1,"healthy effect is not restarted each tick");
+  UnityEngine.Object.Destroy(s.m_startEffectInstances[0]);ShieldPresentation.Repair(c,false);Check(s.VisualTriggers==2,"destroyed cached visual is detected and repaired");
+  ShieldPresentation.Repair(c,true);Check(s.VisualTriggers==3&&s.m_time==12&&s.m_damage==37,"recast or owner handoff can force visual renewal only");
+  var effectsNear=new System.Collections.Generic.List<ZDO>();ShieldPresentation.PinEffects(c,effectsNear);Check(effectsNear.Count==1,"shield effect network object is pinned with skeleton");
+  s.m_startEffectInstances[0].transform.position=new Vector3(500,8,600);ShieldPresentation.MoveEffects(c);Check(s.m_startEffectInstances[0].GetComponent<ZNetView>().Zdo.Position.x==500,"shield effect ZDO follows its moved transform");
+  float left,max;Check(Travel.ShieldAmounts(c,out left,out max)&&left==413&&max==450,"owner HUD reads current authoritative absorb values");
+  Travel.SaveShields(c);v.Zdo.Owner=2;c.Manager.Effects.Clear();Check(Travel.ShieldAmounts(c,out left,out max)&&left==413&&max==450,"remote HUD reads synchronized shield without creating status effects");
+  Check(c.Manager.Effects.Count==0,"remote HUD has no local shield gameplay side effects");v.Zdo.Owner=1;Shield(c,12,37);s=(SE_Shield)c.Manager.Effects[0];s.m_startEffects.Enabled=true;
+  s.m_damage=451;ShieldPresentation.Repair(c,true);Check(s.VisualTriggers==0,"broken shield never gets a new visual");s.m_damage=37;s.m_time=121;ShieldPresentation.Repair(c,true);Check(s.VisualTriggers==0,"expired shield never gets a new visual");s.m_time=12;
+  Check(ShieldPresentation.Format(true,413,450)=="방어막 413 / 450","HUD formats remaining and total capacity");Check(ShieldPresentation.Format(true,0,0)=="방어막 0","HUD shows zero when shield absent");Check(ShieldPresentation.Format(false,0,0)=="방어막 확인 중","unknown remote state is not falsely reported as zero");
+  var hud=new EnemyHud();var gui=new GameObject();var textGo=new GameObject();var nameText=new FakeText();textGo.Add(nameText);nameText.text="기존 해골 이름";
+  hud.m_huds.Add(c,new FakeHudData{m_character=c,m_gui=gui,m_name=nameText});ShieldPresentation.UpdateHud(hud);
+  var labels=(System.Collections.Generic.Dictionary<GameObject,Component>)typeof(ShieldPresentation).GetField("Labels",System.Reflection.BindingFlags.Static|System.Reflection.BindingFlags.NonPublic).GetValue(null);
+  var label=(FakeText)labels[gui];Check(label.text=="방어막 413 / 450","actual HUD updater creates a separate shield number label");Check(nameText.text=="기존 해골 이름","existing health and name UI are preserved");
+  s.m_damage=137;ShieldPresentation.UpdateHud(hud);Check(label.text=="방어막 313 / 450"&&labels.Count==1,"damage refreshes same label without accumulating UI clones");
+  c.Manager.Effects.Clear();ShieldPresentation.UpdateHud(hud);Check(label.text=="방어막 0","shield removal clears HUD immediately");
+  UnityEngine.Object.Destroy(gui);ShieldPresentation.UpdateHud(hud);Check(labels.Count==0,"destroyed HUD releases its shield label cache");Travel.Clear();
   Console.WriteLine("Behavior checks: "+count);
  }
 }
