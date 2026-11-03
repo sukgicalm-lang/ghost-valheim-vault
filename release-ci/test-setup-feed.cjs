@@ -28,7 +28,7 @@ async function test(name,fn){await fn();passed++;console.log('PASS '+name);}
 (async()=>{
  await test('revision advances and exactly one retired package is removed',()=>{
   assert.equal(published.revision,4);assert.ok(published.revision>bundled.setup.revision);
-  assert.equal(published.packages.length,28);assert.equal(bundled.setup.packages.length,28);
+  assert.equal(published.packages.length,28);assert.equal(bundled.setup.packages.length,29);
   assert.equal(JSON.stringify(published.packages),JSON.stringify(bundled.setup.packages.filter(p=>p.name!==retired)));
  });
  await test('actual 1.0.12 validator accepts the smaller setup and all dependencies remain complete',()=>{
