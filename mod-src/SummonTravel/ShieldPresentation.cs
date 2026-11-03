@@ -14,6 +14,10 @@ namespace GhostSummonTravel {
   static readonly FieldInfo Huds=AccessTools.Field(typeof(EnemyHud),"m_huds");
   static readonly Dictionary<GameObject,Component> Labels=new Dictionary<GameObject,Component>();
   static readonly Dictionary<Type,PropertyInfo> TextProperties=new Dictionary<Type,PropertyInfo>();
+  sealed class RepairRequest {internal bool Force;internal double Due;}
+  static readonly Dictionary<Character,RepairRequest> Pending=new Dictionary<Character,RepairRequest>();
+  internal static void RequestRepair(Character c,bool force,double delay){if(!Travel.IsSkeleton(c))return;RepairRequest request;if(Pending.TryGetValue(c,out request)){request.Force|=force;request.Due=Math.Min(request.Due,Travel.Now+delay);}else Pending[c]=new RepairRequest{Force=force,Due=Travel.Now+delay};}
+  internal static void ProcessRepairs(){Character selected=null;RepairRequest request=null;foreach(var entry in Pending){if(!entry.Key||entry.Value.Due<=Travel.Now){selected=entry.Key;request=entry.Value;break;}}if(request==null)return;Pending.Remove(selected);if(selected)Repair(selected,request.Force);}
   internal static void ValidateApi(){if(Instances==null||Trigger==null||Huds==null)throw new MissingMemberException("해골 방어막: 게임의 이펙트·체력 표시 API가 맞지 않습니다.");}
   internal static bool Missing(GameObject[] effects){return effects==null||effects.Length==0||effects.Any(x=>!x||!x.activeInHierarchy);}
   internal static void Repair(Character c,bool force){
@@ -40,7 +44,6 @@ namespace GhostSummonTravel {
     var v=fx.GetComponent<ZNetView>();if(!v||!v.IsValid())continue;
     if(!v.IsOwner())v.ClaimOwnership();
     v.GetZDO().SetPosition(fx.transform.position);v.GetZDO().SetRotation(fx.transform.rotation);
-    if(Travel.Held(c))ZDOMan.instance.ForceSendZDO(v.GetZDO().m_uid);
    }
   }
   internal static void PinEffects(Character c,List<ZDO> near){foreach(var fx in Effects(c)){var v=fx.GetComponent<ZNetView>();if(v&&v.IsValid()&&!near.Contains(v.GetZDO()))near.Add(v.GetZDO());}}
@@ -77,7 +80,8 @@ namespace GhostSummonTravel {
     SetText(label,Format(known,remaining,capacity));SetProperty(label,"color",known&&capacity>0?new Color(0.45f,0.85f,1f,1f):new Color(0.75f,0.8f,0.85f,1f));
    }
   }
-  internal static void ClearHud(){foreach(var label in Labels.Values)if(label)UnityEngine.Object.Destroy(label.gameObject);Labels.Clear();TextProperties.Clear();}
-  [HarmonyPatch(typeof(EnemyHud),"LateUpdate")]static class HudPatch{[HarmonyPostfix,HarmonyPriority(Priority.Last)]static void Postfix(EnemyHud __instance){UpdateHud(__instance);}}
+  internal static void ClearHud(){foreach(var label in Labels.Values)if(label)UnityEngine.Object.Destroy(label.gameObject);Labels.Clear();TextProperties.Clear();Pending.Clear();}
+  static bool hudFailed;
+  [HarmonyPatch(typeof(EnemyHud),"LateUpdate")]static class HudPatch{[HarmonyPostfix,HarmonyPriority(Priority.Last)]static void Postfix(EnemyHud __instance){if(hudFailed)return;try{UpdateHud(__instance);}catch(Exception e){hudFailed=true;Plugin.LogFault(e);}}}
  }
 }

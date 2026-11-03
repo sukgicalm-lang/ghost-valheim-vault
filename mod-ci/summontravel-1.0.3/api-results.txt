@@ -1,0 +1,49 @@
+PASS real unambiguous patch Character.Awake
+PASS real unambiguous patch Player.TeleportTo
+PASS real unambiguous patch Player.UpdateTeleport
+PASS real unambiguous patch ZNetScene.RemoveObjects
+PASS real injected argument currentNearObjects
+PASS real unambiguous patch ZNetView.ResetZDO
+PASS real unambiguous patch Character.CustomFixedUpdate
+PASS real unambiguous patch Tameable.UpdateSummon
+PASS real unambiguous patch Tameable.UpdateSavedFollowTarget
+PASS real unambiguous patch MonsterAI.UpdateAI
+PASS real unambiguous patch Character.UpdateMotion
+PASS real unambiguous patch Character.UnderWorldCheck
+PASS real unambiguous patch SEMan.Update
+PASS real unambiguous patch SE_Shield.OnDamaged
+PASS real unambiguous patch SEMan.Internal_AddStatusEffect
+PASS real injected argument nameHash
+PASS real unambiguous patch EnemyHud.LateUpdate
+PASS real unambiguous patch BaseAI.Follow
+PASS real injected argument go
+PASS real injected argument dt
+PASS real unambiguous patch Hud.Awake
+PASS real unambiguous patch Hud.LateUpdate
+PASS real unambiguous patch Hud.OnDestroy
+PASS real private field SE_Shield.m_totalAbsorbDamage
+PASS real private field SE_Shield.m_damage
+PASS real private field StatusEffect.m_time
+PASS real private field StatusEffect.m_character
+PASS real private field Character.m_body
+PASS real private field Character.m_maxAirAltitude
+PASS real private field SEMan.m_character
+PASS real presentation field StatusEffect.m_startEffectInstances
+PASS real presentation field EnemyHud.m_huds
+PASS real native visual recreation method
+PASS real native idle movement API
+PASS real player HUD field m_healthBarRoot
+PASS real player HUD field m_rootObject
+PASS real player HUD field m_healthBarFast
+PASS real player HUD field m_healthBarSlow
+PASS real player HUD field m_healthText
+PASS real catch-up speed field m_speed
+PASS real catch-up speed field m_runSpeed
+PASS scene removal prefix cannot re-enter readiness or global scan
+PASS module never writes native Player teleport state
+PASS no duplicate summon path
+PASS no healing path
+PASS no shield timer renewal
+PASS production identity
+PASS no test assembly dependency
+Binary API checks: 48
