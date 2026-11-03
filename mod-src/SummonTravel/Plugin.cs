@@ -88,17 +88,18 @@ namespace GhostSummonTravel {
    }
    if(Now>=nextCheck){nextCheck=Now+0.5;RescueFollowers();}
   }
-  internal static bool ShouldRecall(float gap,float height,double stalled){return stalled>=4&&gap>=8&&(height>=1.5f||gap>=12);}
+  internal static bool ShouldRecall(float gap,float height,double stalled){return stalled>=4&&((height>=1.5f&&gap>=2.5f)||gap>=12);}
   static void RescueFollowers(){
    var p=Player.m_localPlayer;if(!p||p.IsDead()||p.IsTeleporting()||!p.IsOnGround()||local!=null)return;
    var active=new HashSet<ZDOID>();int index=0;
    foreach(var c in Character.GetAllCharacters()){
     if(!Follows(c,p)||Held(c))continue;var id=c.GetZDOID();active.Add(id);float gap=Vector3.Distance(c.transform.position,p.transform.position);Progress state;
     if(!Followers.TryGetValue(id,out state)){Followers[id]=new Progress{Best=gap,LastProgress=Now,LastRecall=-99};continue;}
-    if(gap<5||gap<state.Best-0.75f){state.Best=gap;state.LastProgress=Now;}
+    float heightGap=Mathf.Abs(c.transform.position.y-p.transform.position.y);
+    if((gap<5&&heightGap<1.5f)||gap<state.Best-0.75f){state.Best=gap;state.LastProgress=Now;}
     // When the player moves farther away, measure progress from the new gap.
     if(gap>state.Best+3){state.Best=gap;}
-    if(Now-state.LastRecall<8||!ShouldRecall(gap,Mathf.Abs(c.transform.position.y-p.transform.position.y),Now-state.LastProgress))continue;
+    if(Now-state.LastRecall<8||!ShouldRecall(gap,heightGap,Now-state.LastProgress))continue;
     Vector3 pos;if(!FindLanding(p,c,index++,out pos))continue;
     string token=System.Guid.NewGuid().ToString("N");Begin(c,ZDOMan.GetSessionID(),p.GetZDOID(),token);c.GetComponent<ZNetView>().InvokeRPC(ZNetView.Everybody,BeginRpc,p.GetZDOID(),token);SendFinish(c,p,token,pos);
     state.LastRecall=Now;state.LastProgress=Now;state.Best=0;
@@ -109,7 +110,7 @@ namespace GhostSummonTravel {
    result=Vector3.zero;if(!ZoneSystem.instance||!ZNetScene.instance||!ZNetScene.instance.IsAreaReady(p.transform.position))return false;
    int mask=LayerMask.GetMask("Default","static_solid","Default_small","piece","terrain","vehicle");
    float radius=Mathf.Max(0.3f,c.GetRadius());float height=Mathf.Max(radius*2+0.2f,c.GetHeight());
-   for(int i=0;i<12;i++){float a=(index*137.5f+180f+i*30f)*Mathf.Deg2Rad;float d=1.6f+(i/6)*0.8f;
+   for(int i=0;i<13;i++){float a=(index*137.5f+180f+i*30f)*Mathf.Deg2Rad;float d=i==12?0:1.6f+(i/6)*0.8f;
     var pos=p.transform.position+new Vector3(Mathf.Sin(a)*d,1.5f,Mathf.Cos(a)*d);float floor;
     if(!ZoneSystem.instance.FindFloor(pos,out floor)||Mathf.Abs(floor-p.transform.position.y)>1.5f)continue;pos.y=floor+0.15f;
     var bottom=pos+Vector3.up*(radius+0.1f);var top=pos+Vector3.up*Mathf.Max(radius+0.1f,height-radius);

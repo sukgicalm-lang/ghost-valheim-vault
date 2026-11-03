@@ -1,0 +1,41 @@
+PASS unauthorized sender rejected
+PASS other player's follower excluded
+PASS invalid transaction rejected
+PASS native teleport captures existing follower
+PASS physics held during loading
+PASS scene unload pins existing network object
+PASS no heal or replacement summon
+PASS same character and ZDO reach native final location
+PASS identity and health preserved
+PASS live shield capacity and elapsed time preserved
+PASS normal physics restored after landing
+PASS reload deducts loading time without renewing absorb
+PASS restore is idempotent
+PASS broken shield stays broken
+PASS expired shield stays expired
+PASS authority transfer restores shield
+PASS stay command respected
+PASS hostile skeleton excluded
+PASS other animals excluded
+PASS death never resurrects summon
+PASS forged finish rejected
+PASS nonfinite destination rejected
+PASS lost finish cannot freeze indefinitely
+PASS source owner hands authority to destination player
+PASS blocked portal follows native rollback
+PASS invalid capacity rejected
+PASS negative damage rejected
+PASS backward clock cannot extend shield
+PASS exact remaining shield arithmetic
+PASS small ledge waits four seconds
+PASS jumped ledge can recall nearby follower
+PASS normal nearby follower does not teleport
+PASS distant stuck follower recalled
+PASS blocked landing is rejected
+PASS no floor means no recall
+PASS cliff below player rejected
+PASS grounded clear landing accepted
+PASS unloaded destination rejected
+PASS actual stuck-ledge controller recalls existing follower
+PASS player in air never triggers landing recall
+Behavior checks: 40

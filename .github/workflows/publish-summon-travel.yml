@@ -1,0 +1,36 @@
+name: Publish Ghost skeleton teleport and follow recovery
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'mod-ci/summontravel-1.0.0/**'
+      - 'mod-src/SummonTravel/**'
+      - 'mod-src/SummonTravel.Tests/**'
+      - '.github/workflows/publish-summon-travel.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  pages: write
+concurrency:
+  group: ghost-smelter-release
+  cancel-in-progress: false
+jobs:
+  publish:
+    if: github.repository == 'sukgicalm-lang/ghost-valheim-vault'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Test transport, shields and safe follow recovery
+        run: dotnet run --project mod-src/SummonTravel.Tests/Behavior.csproj --configuration Release
+      - name: Preserve prior modules and publish verified suite before update feed
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PYTHONUTF8: '1'
+        run: python mod-ci/summontravel-1.0.0/publish.py

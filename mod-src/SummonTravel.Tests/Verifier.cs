@@ -1,0 +1,12 @@
+using System;using System.Linq;using Mono.Cecil;
+class Verifier {
+ static void Main(string[] a){using var game=AssemblyDefinition.ReadAssembly(a[0]);using var mod=AssemblyDefinition.ReadAssembly(a[1]);int n=0;
+  void Check(bool b,string s){if(!b)throw new Exception(s);n++;Console.WriteLine("PASS "+s);}
+  foreach(var t in mod.MainModule.Types.SelectMany(t=>t.NestedTypes))foreach(var attr in t.CustomAttributes.Where(x=>x.AttributeType.Name=="HarmonyPatch")){
+   var type=((TypeReference)attr.ConstructorArguments[0].Value).FullName;var method=(string)attr.ConstructorArguments[1].Value;var target=game.MainModule.Types.Single(x=>x.FullName==type).Methods.Where(x=>x.Name==method).ToArray();Check(target.Length==1,"real unambiguous patch "+type+"."+method);
+   foreach(var hook in t.Methods.Where(x=>x.CustomAttributes.Any(y=>y.AttributeType.Name=="HarmonyPrefix"||y.AttributeType.Name=="HarmonyPostfix")))foreach(var p in hook.Parameters.Where(x=>!x.Name.StartsWith("__")))Check(target[0].Parameters.Any(x=>x.Name==p.Name&&x.ParameterType.FullName==p.ParameterType.FullName),"real injected argument "+p.Name);
+  }
+  foreach(var s in new[]{("SE_Shield","m_totalAbsorbDamage"),("SE_Shield","m_damage"),("StatusEffect","m_time"),("StatusEffect","m_character"),("Character","m_body"),("Character","m_maxAirAltitude"),("SEMan","m_character")})Check(game.MainModule.Types.Single(x=>x.Name==s.Item1).Fields.Any(x=>x.Name==s.Item2),"real private field "+s.Item1+"."+s.Item2);
+  var calls=mod.MainModule.Types.Single(x=>x.Name=="Travel").Methods.Where(x=>x.HasBody).SelectMany(x=>x.Body.Instructions).Select(x=>x.Operand).OfType<MethodReference>().ToArray();Check(!calls.Any(x=>x.DeclaringType.FullName=="UnityEngine.Object"&&x.Name=="Instantiate"),"no duplicate summon path");Check(!calls.Any(x=>x.Name=="SetHealth"||x.Name=="Heal"),"no healing path");Check(!calls.Any(x=>x.Name=="ResetTime"),"no shield timer renewal");Check(mod.Name.Name=="GhostSummonTravel"&&mod.Name.Version.ToString()=="1.0.0.0","production identity");Check(!mod.MainModule.AssemblyReferences.Any(x=>x.Name.Contains("Tests")||x.Name.Contains("Doubles")),"no test assembly dependency");Console.WriteLine("Binary API checks: "+n);
+ }
+}

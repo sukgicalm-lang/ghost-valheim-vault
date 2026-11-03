@@ -1,0 +1,10 @@
+{
+  "base_sha256": "0c4d2677828c48e9ce38acd528f8cfa09188e83858e1d88f7f4568cb7020dd54",
+  "dll_sha256": "0d06ce73b05ba9f3a99db9b8611143048cf1925e09e24a53fcaffecc12e82677",
+  "source_hashes": {
+    "mod-src/SummonTravel/GhostSummonTravel.csproj": "698cddaeb2e303ae7b993181fb3b0c08b65cef8b0b9e26664033b3e1515416ff",
+    "mod-src/SummonTravel/README.md": "33745cb053eb79d0d5dc7e26e64969c3dcf85c7da96be3fe6ad5ba8c25f40c1e",
+    "mod-src/SummonTravel/LICENSE": "7457f28aa6912e216c715875685f4e5d1dd4357a0b1c86afa35dfeaa6ab015d0",
+    "mod-src/SummonTravel/Plugin.cs": "778c70a91008d97b5a254b172a693e63f4eab1090d232611a5c2effd83e5aba5"
+  }
+}
