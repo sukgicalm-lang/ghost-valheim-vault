@@ -8,15 +8,17 @@ using UnityEngine;
 namespace GhostSummonTravel {
  internal static class PlayerShieldBar {
   static readonly FieldInfo HealthRoot=AccessTools.Field(typeof(Hud),"m_healthBarRoot"),HudRoot=AccessTools.Field(typeof(Hud),"m_rootObject"),
-   HealthFast=AccessTools.Field(typeof(Hud),"m_healthBarFast"),HealthSlow=AccessTools.Field(typeof(Hud),"m_healthBarSlow"),HealthText=AccessTools.Field(typeof(Hud),"m_healthText");
+   HealthFast=AccessTools.Field(typeof(Hud),"m_healthBarFast"),HealthSlow=AccessTools.Field(typeof(Hud),"m_healthBarSlow"),HealthText=AccessTools.Field(typeof(Hud),"m_healthText"),GuardianRoot=AccessTools.Field(typeof(Hud),"m_gpRoot");
   sealed class BarApi {internal MethodInfo Max,Value,Width;}
   sealed class Paint {internal Component Graphic;internal PropertyInfo Color;internal Color Tint;}
   static readonly Dictionary<Type,BarApi> Apis=new Dictionary<Type,BarApi>();
   static readonly List<Paint> Paints=new List<Paint>();
   static Hud owner;static RectTransform source,root;static Component fast,slow,text;static bool failed;
   static readonly Vector3[] Corners=new Vector3[4];
+  static RectTransform power;static RectTransform[] powerRects;static Vector3 powerBefore,powerApplied;static bool powerMoved;
+  internal struct Box {internal float Left,Right,Bottom,Top;}
   static float lastWidth=-1,lastCapacity=-1,lastRemaining=-1;static string lastText;
-  internal static void ValidateApi(){if(HealthRoot==null||HudRoot==null||HealthFast==null||HealthSlow==null||HealthText==null)throw new MissingFieldException("내 방어막: 게임의 HP 막대 구조가 맞지 않습니다.");}
+  internal static void ValidateApi(){if(HealthRoot==null||HudRoot==null||HealthFast==null||HealthSlow==null||HealthText==null||GuardianRoot==null)throw new MissingFieldException("내 방어막: 게임의 HP·보스 버프 표시 구조가 맞지 않습니다.");}
   internal static bool Active(Player p,out float remaining,out float capacity){remaining=capacity=0;return p&&p==Player.m_localPlayer&&!p.IsDead()&&Travel.ShieldAmounts(p,out remaining,out capacity)&&capacity>0&&remaining>0;}
   internal static string Number(float remaining,float capacity){return Math.Ceiling(Math.Max(0,remaining)).ToString("0",CultureInfo.InvariantCulture);}
   internal static Vector3 RightOfHealth(RectTransform health,Transform canvas){
@@ -24,6 +26,18 @@ namespace GhostSummonTravel {
    foreach(var point in Corners){float x=Vector3.Dot(point,right);low=Math.Min(low,x);high=Math.Max(high,x);}
    var scale=health.lossyScale;float gap=12f*Math.Max(Math.Abs(scale.x),Math.Abs(scale.y));
    return health.position+right*(high-low+gap);
+  }
+  static Box Bounds(RectTransform rect,Transform canvas){rect.GetWorldCorners(Corners);var result=new Box{Left=float.MaxValue,Right=float.MinValue,Bottom=float.MaxValue,Top=float.MinValue};foreach(var p in Corners){float x=Vector3.Dot(p,canvas.right),y=Vector3.Dot(p,canvas.up);result.Left=Math.Min(result.Left,x);result.Right=Math.Max(result.Right,x);result.Bottom=Math.Min(result.Bottom,y);result.Top=Math.Max(result.Top,y);}return result;}
+  static Box Union(Box a,Box b){return new Box{Left=Math.Min(a.Left,b.Left),Right=Math.Max(a.Right,b.Right),Bottom=Math.Min(a.Bottom,b.Bottom),Top=Math.Max(a.Top,b.Top)};}
+  internal static float Clearance(Box shield,Box guardian,float gap){return guardian.Left<shield.Right+gap&&guardian.Right>shield.Left-gap&&guardian.Bottom<shield.Top+gap&&guardian.Top>shield.Bottom-gap?Math.Max(0,shield.Right+gap-guardian.Left):0;}
+  static void RestorePower(){if(powerMoved&&power&&Vector3.Distance(power.position,powerApplied)<0.01f)power.position=powerBefore;powerMoved=false;}
+  internal static void ArrangePower(Hud hud,RectTransform shield,Transform canvas){
+   RestorePower();var current=GuardianRoot.GetValue(hud) as RectTransform;if(!current||!current.gameObject.activeInHierarchy||!shield)return;
+   if(power!=current){power=current;var set=new HashSet<RectTransform>{power};foreach(var component in power.gameObject.GetComponentsInChildren<Component>(true)){var rect=component.transform as RectTransform;if(rect)set.Add(rect);}powerRects=new RectTransform[set.Count];set.CopyTo(powerRects);}
+   var own=Bounds(shield,canvas);var label=text?text.transform as RectTransform:null;if(label&&label.gameObject.activeInHierarchy)own=Union(own,Bounds(label,canvas));
+   var other=Bounds(power,canvas);foreach(var rect in powerRects)if(rect&&rect.gameObject.activeInHierarchy)other=Union(other,Bounds(rect,canvas));
+   float gap=16f*Math.Max(Math.Abs(shield.lossyScale.x),Math.Abs(shield.lossyScale.y)),shift=Clearance(own,other,gap);if(shift<=0)return;
+   powerBefore=power.position;powerApplied=powerBefore+canvas.right*shift;power.position=powerApplied;powerMoved=true;
   }
   static MethodInfo NumericMethod(Type type,string name){
    MethodInfo best=null;foreach(var m in type.GetMethods(BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Instance)){
@@ -67,6 +81,7 @@ namespace GhostSummonTravel {
    clone.SetActive(false);return true;
   }
   internal static void UpdateHud(Hud hud){
+   RestorePower();
    var p=Player.m_localPlayer;float remaining,capacity;
    if(!Active(p,out remaining,out capacity)||Hud.IsUserHidden()){if(root&&root.gameObject.activeSelf)root.gameObject.SetActive(false);return;}
    if(!Ensure(hud))return;var host=HudRoot.GetValue(hud) as GameObject;if(!host||!host.activeInHierarchy){if(root.gameObject.activeSelf)root.gameObject.SetActive(false);return;}
@@ -82,8 +97,9 @@ namespace GhostSummonTravel {
    string value=Number(remaining,capacity);if(lastText!=value){ShieldPresentation.SetText(text,value);lastText=value;}
    foreach(var paint in Paints)if(paint.Graphic)paint.Color.SetValue(paint.Graphic,paint.Tint,null);
    if(!root.gameObject.activeSelf)root.gameObject.SetActive(true);
+   ArrangePower(hud,root,host.transform);
   }
-  internal static void Clear(){if(root)UnityEngine.Object.Destroy(root.gameObject);root=source=null;owner=null;fast=slow=text=null;Paints.Clear();lastWidth=lastCapacity=lastRemaining=-1;lastText=null;}
+  internal static void Clear(){RestorePower();power=null;powerRects=null;if(root)UnityEngine.Object.Destroy(root.gameObject);root=source=null;owner=null;fast=slow=text=null;Paints.Clear();lastWidth=lastCapacity=lastRemaining=-1;lastText=null;}
   [HarmonyPatch(typeof(Hud),"Awake")]static class CreatePatch{[HarmonyPostfix]static void Postfix(Hud __instance){failed=false;try{Ensure(__instance);}catch(Exception e){failed=true;Plugin.LogFault(e);}}}
   [HarmonyPatch(typeof(Hud),"LateUpdate")]static class UpdatePatch{[HarmonyPostfix,HarmonyPriority(Priority.Last)]static void Postfix(Hud __instance){if(failed)return;try{UpdateHud(__instance);}catch(Exception e){failed=true;Plugin.LogFault(e);}}}
   [HarmonyPatch(typeof(Hud),"OnDestroy")]static class DestroyPatch{[HarmonyPrefix]static void Prefix(Hud __instance){try{if(owner==__instance)Clear();}catch(Exception e){Plugin.LogFault(e);}}}

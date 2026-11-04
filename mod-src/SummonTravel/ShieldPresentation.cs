@@ -15,9 +15,12 @@ namespace GhostSummonTravel {
   static readonly Dictionary<GameObject,Component> Labels=new Dictionary<GameObject,Component>();
   static readonly Dictionary<Type,PropertyInfo> TextProperties=new Dictionary<Type,PropertyInfo>();
   static readonly MethodInfo ShowHud=AccessTools.Method(typeof(EnemyHud),"ShowHud");
-  sealed class Row {internal GameObject Root;internal Component Text;internal Component[] Bars;internal Color Color;internal float Value=float.NaN,Max=float.NaN;internal string Label;}
-  sealed class Vitals {internal Character Character;internal GameObject NativeHealth;internal bool WasActive;internal Row Health,Shield;}
+  sealed class Row {internal GameObject Root;internal Component Text;internal string Label;internal float Font=-1;}
+  sealed class Native {internal GameObject Root;internal bool Active;}
+  sealed class Vitals {internal Character Character;internal Component Name;internal List<Native> Hidden=new List<Native>();internal Row Health,Shield,Timer;}
   static readonly Dictionary<GameObject,Vitals> Views=new Dictionary<GameObject,Vitals>();
+  sealed class LocalHud {internal EnemyHud Hud;internal Character Character;}
+  static readonly Dictionary<GameObject,LocalHud> LocalRoots=new Dictionary<GameObject,LocalHud>();
   sealed class RepairRequest {internal bool Force;internal double Due;}
   static readonly Dictionary<Character,RepairRequest> Pending=new Dictionary<Character,RepairRequest>();
   internal static void RequestRepair(Character c,bool force,double delay){if(!Travel.IsSkeleton(c))return;RepairRequest request;if(Pending.TryGetValue(c,out request)){request.Force|=force;request.Due=Math.Min(request.Due,Travel.Now+delay);}else Pending[c]=new RepairRequest{Force=force,Due=Travel.Now+delay};}
@@ -52,9 +55,9 @@ namespace GhostSummonTravel {
   }
   internal static void PinEffects(Character c,List<ZDO> near){foreach(var fx in Effects(c)){var v=fx.GetComponent<ZNetView>();if(v&&v.IsValid()&&!near.Contains(v.GetZDO()))near.Add(v.GetZDO());}}
   internal static string Format(bool known,float remaining,float capacity){
-   if(!known)return "방어막 확인 중";
-   if(!Travel.Finite(remaining)||!Travel.Finite(capacity)||capacity<=0)return "방어막 0";
-   return "방어막 "+Math.Ceiling(Math.Max(0,remaining)).ToString("0",CultureInfo.InvariantCulture)+" / "+Math.Ceiling(Math.Max(0,capacity)).ToString("0",CultureInfo.InvariantCulture);
+   if(!known)return "?";
+   if(!Travel.Finite(remaining)||!Travel.Finite(capacity)||capacity<=0)return "0";
+   return Math.Ceiling(Math.Max(0,remaining)).ToString("0",CultureInfo.InvariantCulture)+" / "+Math.Ceiling(Math.Max(0,capacity)).ToString("0",CultureInfo.InvariantCulture);
   }
   static object Field(object obj,string name){return AccessTools.Field(obj.GetType(),name)?.GetValue(obj);}
   internal static void SetText(object component,string value){
@@ -65,39 +68,43 @@ namespace GhostSummonTravel {
   static void SetProperty(object obj,string name,object value){var p=obj.GetType().GetProperty(name,BindingFlags.Instance|BindingFlags.Public);if(p!=null&&p.CanWrite)p.SetValue(obj,value,null);}
   internal static bool Managed(Character c){return c&&(c==Player.m_localPlayer||(Travel.IsSkeleton(c)&&c.IsTamed()));}
   internal static bool Visible(Character c){var p=Player.m_localPlayer;if(!p||!c||c.IsDead())return false;if(c==p){float left,max;return PlayerShieldBar.Active(p,out left,out max);}return Managed(c)&&Vector3.Distance(c.transform.position,p.transform.position)<=30f;}
-  internal static void PrepareLocal(EnemyHud hud){var p=Player.m_localPlayer;if(p&&Visible(p))ShowHud.Invoke(hud,new object[]{p,false});}
+  internal static void PrepareLocal(EnemyHud hud){var p=Player.m_localPlayer;if(!p||!Visible(p))return;var table=Huds.GetValue(hud) as IDictionary;bool existed=table!=null&&table.Contains(p);ShowHud.Invoke(hud,new object[]{p,false});if(!existed&&table!=null&&table.Contains(p)){var gui=Field(table[p],"m_gui") as GameObject;if(gui)LocalRoots[gui]=new LocalHud{Hud=hud,Character=p};}}
   internal static void KeepVisible(EnemyHud hud){var table=Huds.GetValue(hud) as IDictionary;if(table==null)return;foreach(DictionaryEntry entry in table){var c=entry.Key as Character;if(Managed(c)&&Visible(c))AccessTools.Field(entry.Value.GetType(),"m_hoverTimer")?.SetValue(entry.Value,0f);}}
-  static void Rect(Component text,float y){var r=text.transform as RectTransform;if(!r)return;r.anchorMin=r.anchorMax=new Vector2(0.5f,0.5f);r.pivot=new Vector2(0.5f,0.5f);r.anchoredPosition=new Vector2(0,y);r.sizeDelta=new Vector2(160,18);r.localScale=Vector3.one;r.localRotation=Quaternion.identity;}
-  static void Paint(Row row){if(!row.Root)return;foreach(var c in row.Root.GetComponentsInChildren<Component>(true))if(c&&c.GetType().FullName=="UnityEngine.UI.Image"){SetProperty(c,"color",new Color(0.07f,0.07f,0.09f,0.85f));SetProperty(c,"raycastTarget",false);}foreach(var bar in row.Bars)foreach(var c in bar.gameObject.GetComponentsInChildren<Component>(true))if(c&&c.GetType().FullName=="UnityEngine.UI.Image")SetProperty(c,"color",row.Color);}
-  static Row MakeRow(GameObject gui,object data,Component template,Transform health,string name,float y,Color color){
-   var row=new Row{Color=color};var bars=new List<Component>();
-   if(health){row.Root=UnityEngine.Object.Instantiate(health.gameObject,gui.transform,false);row.Root.name=name;var from=health as RectTransform;var to=row.Root.transform as RectTransform;
-    if(to){to.anchorMin=to.anchorMax=new Vector2(0.5f,0.5f);to.pivot=new Vector2(0.5f,0.5f);to.anchoredPosition=new Vector2(from?from.anchoredPosition.x:0,(from?from.anchoredPosition.y:0)+y);to.sizeDelta=new Vector2(160,18);to.localScale=Vector3.one;to.localRotation=Quaternion.identity;}
-    foreach(var key in new[]{"m_healthFast","m_healthFastFriendly","m_healthSlow"}){var original=Field(data,key) as Component;var copy=from&&to?PlayerShieldBar.CopyReference(original,from,to):null;if(copy){bars.Add(copy);copy.gameObject.SetActive(true);PlayerShieldBar.SetNumber(copy,"SetWidth",160);}}
-    foreach(var component in row.Root.GetComponentsInChildren<Component>(true))if(component&&component.GetType().GetProperty("text")!=null)component.gameObject.SetActive(false);
-    var label=UnityEngine.Object.Instantiate(template.gameObject,row.Root.transform,false);label.name=name+"Text";row.Text=label.GetComponent(template.GetType());Rect(row.Text,0);
-   }else{row.Root=UnityEngine.Object.Instantiate(template.gameObject,gui.transform,false);row.Root.name=name;row.Text=row.Root.GetComponent(template.GetType());Rect(row.Text,y);}
-   row.Bars=bars.ToArray();SetProperty(row.Text,"fontSize",12f);SetProperty(row.Text,"enableAutoSizing",true);SetProperty(row.Text,"fontSizeMin",9f);SetProperty(row.Text,"raycastTarget",false);SetProperty(row.Text,"color",new Color(1,1,1,1));
-   var align=row.Text.GetType().GetProperty("alignment");if(align!=null&&align.CanWrite&&align.PropertyType.IsEnum)align.SetValue(row.Text,Enum.Parse(align.PropertyType,"Center"),null);
-   row.Text.gameObject.SetActive(true);row.Root.SetActive(true);Paint(row);return row;
+  static float NameSize(Component template){var value=template.GetType().GetProperty("fontSize")?.GetValue(template,null);float size=value is float?(float)value:0;return Travel.Finite(size)&&size>0?size:14;}
+  internal static string TimeFormat(float seconds){if(!Travel.Finite(seconds)||seconds<=0)return "";double value=Math.Ceiling(seconds);return Math.Floor(value/60).ToString("0",CultureInfo.InvariantCulture)+":"+(value%60).ToString("00",CultureInfo.InvariantCulture);}
+  static Row MakeRow(GameObject gui,Component template,string name,Color color){
+   var root=UnityEngine.Object.Instantiate(template.gameObject,gui.transform,false);root.name=name;var row=new Row{Root=root,Text=root.GetComponent(template.GetType())};
+   // Clone only the name text. Never clone the Health panel or its bar images.
+   foreach(var component in root.GetComponentsInChildren<Component>(true)){SetProperty(component,"raycastTarget",false);if(component.GetType().FullName=="UnityEngine.UI.Image")SetProperty(component,"enabled",false);}
+   SetProperty(row.Text,"enableAutoSizing",false);SetProperty(row.Text,"color",color);var align=row.Text.GetType().GetProperty("alignment");if(align!=null&&align.CanWrite&&align.PropertyType.IsEnum)align.SetValue(row.Text,Enum.Parse(align.PropertyType,"Center"),null);root.SetActive(true);return row;
   }
-  static void UpdateRow(Row row,float value,float max,string text){max=Math.Max(1,max);value=Math.Max(0,value);if(row.Max!=max){foreach(var bar in row.Bars)PlayerShieldBar.SetNumber(bar,"SetMaxValue",max);row.Max=max;row.Value=float.NaN;}if(row.Value!=value){foreach(var bar in row.Bars)PlayerShieldBar.SetNumber(bar,"SetValue",value);row.Value=value;}if(row.Label!=text){SetText(row.Text,text);row.Label=text;}}
-  internal static string HealthFormat(Character c){return "HP "+Math.Ceiling(Math.Max(0,c.GetHealth())).ToString("0",CultureInfo.InvariantCulture)+" / "+Math.Ceiling(Math.Max(0,c.GetMaxHealth())).ToString("0",CultureInfo.InvariantCulture);}
-  static void DestroyView(Vitals view){if(view.Health?.Root)UnityEngine.Object.Destroy(view.Health.Root);if(view.Shield?.Root)UnityEngine.Object.Destroy(view.Shield.Root);if(view.NativeHealth)view.NativeHealth.SetActive(view.WasActive);}
+  static void Layout(Row row,Component template,float size,float index,float factor){
+   if(row==null)return;float font=size*factor;if(row.Font!=font){SetProperty(row.Text,"fontSize",font);row.Font=font;}var from=template.transform as RectTransform;var to=row.Root.transform as RectTransform;if(!from||!to)return;
+   to.anchorMin=from.anchorMin;to.anchorMax=from.anchorMax;to.pivot=from.pivot;to.sizeDelta=from.sizeDelta;to.localScale=from.localScale;to.localRotation=from.localRotation;
+   var pos=new Vector2(from.anchoredPosition.x,from.anchoredPosition.y+index*(size*1.15f+2f));if(!to.anchoredPosition.Equals(pos))to.anchoredPosition=pos;
+  }
+  static void UpdateRow(Row row,string text,bool visible=true){if(row==null||!row.Root)return;if(row.Label!=text){SetText(row.Text,text);row.Label=text;}if(row.Root.activeSelf!=visible)row.Root.SetActive(visible);}
+  internal static string HealthFormat(Character c){return Math.Ceiling(Math.Max(0,c.GetHealth())).ToString("0",CultureInfo.InvariantCulture)+" / "+Math.Ceiling(Math.Max(0,c.GetMaxHealth())).ToString("0",CultureInfo.InvariantCulture);}
+  static void Remember(Vitals view,GameObject root){if(root)view.Hidden.Add(new Native{Root=root,Active=root.activeSelf});}
+  static void DestroyView(Vitals view){foreach(var row in new[]{view.Health,view.Shield,view.Timer})if(row?.Root)UnityEngine.Object.Destroy(row.Root);foreach(var native in view.Hidden)if(native.Root)native.Root.SetActive(native.Active);}
   internal static void UpdateHud(EnemyHud hud){
    var table=Huds.GetValue(hud) as IDictionary;if(table==null)return;
+   foreach(var dead in LocalRoots.Keys.Where(x=>!x).ToArray())LocalRoots.Remove(dead);
    foreach(var dead in Views.Keys.Where(x=>!x||!Managed(Views[x].Character)).ToArray()){DestroyView(Views[dead]);Views.Remove(dead);Labels.Remove(dead);}
    foreach(DictionaryEntry entry in table){
-    var c=entry.Key as Character;if(!Managed(c))continue;var gui=Field(entry.Value,"m_gui") as GameObject;if(!gui||!gui.activeInHierarchy)continue;
+    var c=entry.Key as Character;if(!Managed(c))continue;var gui=Field(entry.Value,"m_gui") as GameObject;if(!gui||!gui.activeInHierarchy)continue;bool self=c==Player.m_localPlayer;
     Vitals view;if(!Views.TryGetValue(gui,out view)){
-     var template=Field(entry.Value,"m_name") as Component;if(!template)continue;var health=gui.transform.Find("Health");view=new Vitals{Character=c,NativeHealth=health?health.gameObject:null,WasActive=health&&health.gameObject.activeSelf};Views[gui]=view;
-     view.Health=MakeRow(gui,entry.Value,template,health,"GhostHealthRow",0,new Color(0.9f,0.15f,0.15f,1));view.Shield=MakeRow(gui,entry.Value,template,health,"GhostShieldRow",-22,new Color(0.15f,0.65f,1,1));Labels[gui]=view.Shield.Text;
+     var template=Field(entry.Value,"m_name") as Component;if(!template)continue;view=new Vitals{Character=c,Name=template};Views[gui]=view;
+     if(self){for(int i=0;i<gui.transform.childCount;i++)Remember(view,gui.transform.GetChild(i).gameObject);}else{var health=gui.transform.Find("Health");if(health)Remember(view,health.gameObject);}
+     if(!self){view.Health=MakeRow(gui,template,"GhostHealthRow",new Color(1f,0.65f,0.6f,1));view.Shield=MakeRow(gui,template,"GhostShieldRow",new Color(0.4f,0.85f,1,1));Labels[gui]=view.Shield.Text;}
+     view.Timer=MakeRow(gui,template,"GhostShieldTime",new Color(0.65f,0.9f,1,1));
     }
-    if(view.NativeHealth)view.NativeHealth.SetActive(false);
-    UpdateRow(view.Health,c.GetHealth(),c.GetMaxHealth(),HealthFormat(c));float left,max;bool known=Travel.ShieldAmounts(c,out left,out max);UpdateRow(view.Shield,left,max,Format(known,left,max));
+    foreach(var native in view.Hidden)if(native.Root&&native.Root.activeSelf)native.Root.SetActive(false);
+    float size=NameSize(view.Name);Layout(view.Timer,view.Name,size,1,1);Layout(view.Health,view.Name,size,-1,0.85f);Layout(view.Shield,view.Name,size,-2,0.85f);
+    float left,max,seconds;bool known=Travel.ShieldInfo(c,out left,out max,out seconds);string clock=TimeFormat(seconds);UpdateRow(view.Timer,clock,clock.Length>0);if(!self){UpdateRow(view.Health,HealthFormat(c));UpdateRow(view.Shield,Format(known,left,max));}
    }
   }
-  internal static void ClearHud(){foreach(var view in Views.Values)DestroyView(view);Views.Clear();Labels.Clear();TextProperties.Clear();Pending.Clear();}
+  internal static void ClearHud(){foreach(var view in Views.Values)DestroyView(view);Views.Clear();foreach(var entry in LocalRoots){var data=entry.Value;var table=data.Hud?Huds.GetValue(data.Hud) as IDictionary:null;if(table!=null&&table.Contains(data.Character)&&Field(table[data.Character],"m_gui") as GameObject==entry.Key)table.Remove(data.Character);if(entry.Key)UnityEngine.Object.Destroy(entry.Key);}LocalRoots.Clear();Labels.Clear();TextProperties.Clear();Pending.Clear();}
   static bool hudFailed;
   [HarmonyPatch(typeof(EnemyHud),"LateUpdate")]static class HudPatch{
    [HarmonyPrefix]static void Prefix(EnemyHud __instance){if(hudFailed)return;try{PrepareLocal(__instance);}catch(Exception e){hudFailed=true;Plugin.LogFault(e);}}
