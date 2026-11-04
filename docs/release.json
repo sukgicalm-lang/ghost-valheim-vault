@@ -1,9 +1,9 @@
 {
-  "version": "1.0.48",
+  "version": "1.0.49",
   "date": "2026-11-04",
-  "file": "downloads/Ghost-GhostValheimSuite-1.0.48.zip",
-  "bytes": 398870993,
-  "sha256": "455e44f854fc7701d40672d04398013f8b5f3cd9a68785ff1cfc3a7ddbf994e2",
+  "file": "downloads/Ghost-GhostValheimSuite-1.0.49.zip",
+  "bytes": 398878804,
+  "sha256": "6d2fffdea562a5901b06f07288a801bef2684ae67811feb62672a144ce8ca31c",
   "appIntegration": true,
   "dependencies": [
     "denikson-BepInExPack_Valheim-5.4.2351",
@@ -12,5 +12,5 @@
     "Ghost-GhostSmelterControl-1.0.3"
   ],
   "notes": "내 HP 오른쪽 방어막 · 본인 머리 위 수치 · 해골 HP·방어막 2줄 표시와 회복 개선",
-  "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.48/Ghost-GhostValheimSuite-1.0.48.zip"
+  "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.49/Ghost-GhostValheimSuite-1.0.49.zip"
 }
