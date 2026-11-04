@@ -1,7 +1,7 @@
 import base64,hashlib,json,sys,zipfile
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2];INPUT=Path(__file__).resolve().parent
-NEW='1.0.50';NOTES='머리 위 숫자만 표시 · 이름 위 보호막 시간 · 내 머리는 시간만 · 보스 버프 겹침 개선'
+NEW='1.0.50';NOTES='최대 수 일괄 소환 · 해골 장비 분산 · 간결한 보호막 숫자와 남은 시간'
 DLL='BepInEx/plugins/Ghost-GhostSummonTravel/GhostSummonTravel.dll'
 def sha(data):return hashlib.sha256(data).hexdigest()
 def build(base,output):

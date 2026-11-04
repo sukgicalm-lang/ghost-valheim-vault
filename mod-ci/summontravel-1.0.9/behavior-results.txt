@@ -204,4 +204,25 @@ PASS installed Regeneration health and time multipliers produce matching player 
 PASS disabled optional regeneration mod retains native food rate
 PASS invalid optional regeneration interval cannot create infinite healing
 PASS missing optional regeneration mod remains supported
-Behavior checks: 206
+PASS batch summon uses highest matching native skill setting as the maximum
+PASS weapon-quality-controlled native summon limit is respected
+PASS one native cast fills all four available summon slots
+PASS batch spawn spreads arrivals while retaining native global cap
+PASS native bow, spear and sword categories remain balanced instead of all rolling one weapon
+PASS subsequent cast summons only the one missing living follower
+PASS replacement prioritizes the weapon category missing from existing followers
+PASS existing skeleton identity, HP and spent shield remain unchanged by batch fill
+PASS casting at the maximum never replaces or duplicates existing skeletons
+PASS persisted native equipment seed reproduces the same weapons after peer load or reconnect
+PASS native loadout predictor matches actual generation and preserves global random state
+PASS repeated melee-heavy rolls prioritize an available native bow
+PASS another player's skeletons do not consume this player's summon limit
+PASS in-flight cast reserves missing slots so overlapping casts cannot oversummon
+PASS disposing a partially completed cast releases unspawned reservations
+PASS other creature and boss spawners retain original batch behavior
+PASS ambient spawn-on-awake abilities are never converted to summon batches
+PASS non-owner cannot change spawn batches or equipment seeds
+PASS random item-set loadouts preserve native shield, armor and set RNG order
+PASS native spawn exception propagates while pending slots and active scope are released
+PASS unrelated or reloaded skeletons outside the native summon scope retain their equipment seed
+Behavior checks: 227

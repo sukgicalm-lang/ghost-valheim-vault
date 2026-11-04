@@ -1,4 +1,4 @@
-name: Verify and publish Ghost compact shield UI
+name: Verify and publish Ghost summon roster and compact UI
 on:
   push:
     branches: [main, ghost/summon-travel-20261103]
@@ -27,7 +27,7 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
-      - name: Test compact numbers, countdowns, guardian spacing and gameplay preservation
+      - name: Test summon batches, equipment balance, compact HUD and preservation
         run: dotnet run --project mod-src/SummonTravel.Tests/Behavior.csproj --configuration Release
       - name: Build real Harmony refresh regression harness
         run: dotnet build mod-src/SummonTravel.Tests/Runtime/RuntimeRecastIntegration.csproj --configuration Release
