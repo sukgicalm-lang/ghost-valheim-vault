@@ -1,5 +1,21 @@
 [
   {
+    "version": "1.0.53",
+    "date": "2026-11-04",
+    "file": "downloads/Ghost-GhostValheimSuite-1.0.53.zip",
+    "bytes": 398937095,
+    "sha256": "c455e18bc2c5e7a60ab4baf6dd2cbce40bdeddd84eeba651ec61177969924b5e",
+    "appIntegration": true,
+    "dependencies": [
+      "denikson-BepInExPack_Valheim-5.4.2351",
+      "ValheimModding-JsonDotNET-13.0.4",
+      "shudnal-ConfigurationManager-1.1.25",
+      "Ghost-GhostSmelterControl-1.0.3"
+    ],
+    "notes": "재소환 후 유령 이름표·보호막 잔상 정리",
+    "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.53/Ghost-GhostValheimSuite-1.0.53.zip"
+  },
+  {
     "version": "1.0.52",
     "date": "2026-11-04",
     "file": "downloads/Ghost-GhostValheimSuite-1.0.52.zip",
