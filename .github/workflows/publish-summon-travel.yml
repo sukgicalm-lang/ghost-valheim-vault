@@ -1,9 +1,9 @@
-name: Publish Ghost protection staff recast refill
+name: Publish Ghost twenty metre protection staff range
 on:
   push:
     branches: [main]
     paths:
-      - 'mod-ci/summontravel-1.0.4/**'
+      - 'mod-ci/summontravel-1.0.5/**'
       - 'mod-src/SummonTravel/**'
       - 'mod-src/SummonTravel.Tests/**'
       - '.github/workflows/publish-summon-travel.yml'
@@ -27,10 +27,10 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
-      - name: Test protection recast refill, teleport preservation and shield HUD
+      - name: Test twenty metre protection range, recast and teleport preservation
         run: dotnet run --project mod-src/SummonTravel.Tests/Behavior.csproj --configuration Release
       - name: Preserve prior modules and publish verified suite before update feed
         env:
           GH_TOKEN: ${{ github.token }}
           PYTHONUTF8: '1'
-        run: python mod-ci/summontravel-1.0.4/publish.py
+        run: python mod-ci/summontravel-1.0.5/publish.py

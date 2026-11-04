@@ -130,6 +130,20 @@ class Behavior{
   summonShield.m_damage=99;recastHook.Invoke(null,new object[]{c.Manager,Travel.ProtectionShieldHash,true});Check(summonShield.m_damage==0,"actual Harmony recast hook refills and synchronizes summon shield");
   recastShield.m_totalAbsorbDamage=300;recastShield.m_damage=200;recastHook.Invoke(null,new object[]{p.Manager,Travel.ProtectionShieldHash,true});Check(recastShield.m_damage==0,"actual Harmony recast hook refills player before skeleton-only presentation checks");
   Travel.SaveShields(c);v.Zdo.Owner=2;Check(Travel.ShieldAmounts(c,out left,out max)&&left==300&&max==300,"refilled summon shield is exported to remote HUD snapshot");v.Zdo.Owner=1;Travel.Clear();
+  Check(!ProtectionRange.Apply(null),"missing area effect is ignored safely");
+  var aoeGo=new GameObject{name="staff_shield_aoe(Clone)"};var aoe=new Aoe();aoeGo.Add(aoe);var sphere=new SphereCollider();aoeGo.Add(sphere);
+  Check(ProtectionRange.Apply(aoe)&&aoe.m_radius==20,"protection staff cast applies twenty metre native query radius");
+  Check(sphere.radius==5&&!aoe.m_useTriggers,"native sphere-query mode leaves unused trigger colliders unchanged");aoe.m_useTriggers=true;ProtectionRange.Apply(aoe);
+  Check(sphere.radius==20,"protection staff trigger collider also covers twenty world metres");
+  Check(aoeGo.transform.localScale.x==1&&aoeGo.transform.localScale.y==1&&aoeGo.transform.localScale.z==1,"range extension never enlarges shield particles or visual transforms");
+  Check(aoe.m_ttl==3&&aoe.m_statusEffect=="Staff_shield"&&aoe.m_hitOwner&&aoe.m_hitFriendly&&!aoe.m_hitEnemy,"native lifetime, status, caster and ally targeting flags are preserved");
+  sphere.radius=5;aoeGo.transform.localScale=new Vector3(2,1,1);ProtectionRange.Apply(aoe);Check(sphere.radius==10&&aoe.m_radius==20,"scaled trigger collider still has twenty metre world radius");
+  ProtectionRange.Apply(aoe);Check(sphere.radius==10&&aoe.m_radius==20,"Awake and Setup hooks do not multiply radius on repeated application");
+  aoeGo.name="staff_shield_aoe";Check(ProtectionRange.Apply(aoe),"uncloned protection effect prefab is supported");
+  aoeGo.name="staff_FrostOrbs_aoe(Clone)";aoe.m_radius=5;sphere.radius=5;Check(!ProtectionRange.Apply(aoe)&&aoe.m_radius==5&&sphere.radius==5,"other five metre ally spells keep their original radius");
+  aoeGo.name="staff_shield_aoe_extra(Clone)";Check(!ProtectionRange.Apply(aoe),"similarly named mod spells are not changed");
+  aoeGo.name="staff_shield_aoe(Clone)";sphere.isTrigger=false;sphere.radius=5;ProtectionRange.Apply(aoe);Check(sphere.radius==5,"physical non-trigger colliders are never enlarged");
+  sphere.isTrigger=true;aoeGo.transform.localScale=new Vector3(0,0,0);ProtectionRange.Apply(aoe);Check(!float.IsNaN(sphere.radius)&&!float.IsInfinity(sphere.radius),"zero-scale visual helpers cannot create invalid collider radii");
   Console.WriteLine("Behavior checks: "+count);
  }
 }
