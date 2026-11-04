@@ -1,5 +1,7 @@
 using System;using System.Linq;using GhostSummonTravel;using UnityEngine;
 class Behavior{
+ class Setting<T>{public T Value{get;set;}}
+ class RegenSettings{public static Setting<bool> modEnabled=new Setting<bool>{Value=true};public static Setting<float> healthRegenMult=new Setting<float>{Value=2},healthRegenTimeMult=new Setting<float>{Value=0.5f};}
  static int count;static void Check(bool b,string s){if(!b)throw new Exception("FAIL "+s);count++;Console.WriteLine("PASS "+s);}
  static T Make<T>(int id,string prefab)where T:Character,new(){var go=new GameObject();var c=new T();go.Add(c);go.Add(new ZNetView{Zdo=new ZDO{m_uid=new ZDOID{Value=id},Prefab=Travel.StableHash(prefab)}});c.Manager=new SEMan{m_character=c};Character.All.Add(c);ZNetScene.instance.Objects[c.GetZDOID()]=go;return c;}
  static Character Skeleton(int id,Player p){var c=Make<Character>(id,"Skeleton_Friendly");c.gameObject.Add(new Tameable());c.gameObject.Add(new MonsterAI{Target=p.gameObject});return c;}
@@ -7,6 +9,7 @@ class Behavior{
  static void Step(){Time.frameCount++;Travel.Tick();}
  static void Complete(Player p){Time.frameCount++;Travel.CompleteLocal(p);}
  static bool Landing(Player p,Character c,int i,out Vector3 v,float clearance=1f,bool retreat=false){Time.frameCount++;return Travel.FindLanding(p,c,i,out v,clearance,retreat);}
+ static FakeHudData Head(Character c){var gui=new GameObject{name="HeadHud",transform=new RectTransform()};var name=new GameObject{name="Name",transform=new RectTransform()};name.transform.parent=gui.transform;var text=new FakeText{text="원래 이름"};name.Add(text);var health=new GameObject{name="Health",transform=new RectTransform()};health.transform.parent=gui.transform;var data=new FakeHudData{m_character=c,m_gui=gui,m_name=text};int i=0;foreach(var n in new[]{"health_fast","health_slow","health_fast_friendly"}){var go=new GameObject{name=n,transform=new RectTransform()};go.transform.parent=health.transform;var bar=new FakeGuiBar();go.Add(bar);go.Add(new UnityEngine.UI.Image());if(i==0)data.m_healthFast=bar;else if(i==1)data.m_healthSlow=bar;else data.m_healthFastFriendly=bar;i++;}return data;}
  static void Main(){
   Travel.ValidateApi();var p=Make<Player>(1,"Player");Player.m_localPlayer=p;p.Teleporting=true;var c=Skeleton(2,p);Shield(c);var v=c.GetComponent<ZNetView>();string token=new string('a',32);
   Travel.Begin(c,7,p.GetZDOID(),token);Check(!Travel.Held(c),"unauthorized sender rejected");var other=Make<Player>(3,"Player");Travel.Begin(c,1,other.GetZDOID(),token);Check(!Travel.Held(c),"other player's follower excluded");Travel.Begin(c,1,p.GetZDOID(),"bad");Check(!Travel.Held(c),"invalid transaction rejected");
@@ -103,10 +106,10 @@ class Behavior{
   var hpLabelGo=new GameObject{name="HealthText"};hpLabelGo.transform.parent=hpGo.transform;var hpText=new FakeText{text="100 / 150"};hpLabelGo.Add(hpText);ownHud.m_healthText=hpText;
   PlayerShieldBar.ValidateApi();Check(PlayerShieldBar.Ensure(ownHud),"own shield bar clones native HP hierarchy successfully");PlayerShieldBar.UpdateHud(ownHud);
   var shieldRoot=hudHost.transform.Find("GhostPlayerShieldBar");var shieldFast=shieldRoot.Find("Fast").gameObject.GetComponent<FakeGuiBar>();var shieldLabel=shieldRoot.Find("HealthText").gameObject.GetComponent<FakeText>();
-  Check(shieldRoot.gameObject.activeSelf&&shieldFast.Max==450&&shieldFast.Value==413&&shieldLabel.text=="방어막 413 / 450","own shield bar shows real capacity and remaining numbers");
+  Check(shieldRoot.gameObject.activeSelf&&shieldFast.Max==450&&shieldFast.Value==413&&shieldLabel.text=="413","own shield bar shows real capacity and remaining numbers");
   var tint=shieldRoot.Find("Fast").gameObject.GetComponent<UnityEngine.UI.Image>().color;Check(tint.b>tint.r&&hpFast.Max==150&&hpFast.Value==100&&hpText.text=="100 / 150","shield bar is blue and preserves original HP presentation");
   Check(shieldRoot.position.x==312&&((RectTransform)shieldRoot).rect.width==ownHud.m_healthBarRoot.rect.width,"shield bar uses native HP shape directly beside it");
-  selfShield.m_damage=225;PlayerShieldBar.UpdateHud(ownHud);Check(shieldFast.Value/shieldFast.Max==0.5f&&shieldLabel.text=="방어막 225 / 450","damage updates bar ratio and live number");
+  selfShield.m_damage=225;PlayerShieldBar.UpdateHud(ownHud);Check(shieldFast.Value/shieldFast.Max==0.5f&&shieldLabel.text=="225","damage updates bar ratio and live number");
   reads=shieldFast.ValueCalls;PlayerShieldBar.UpdateHud(ownHud);Check(shieldFast.ValueCalls==reads&&hudHost.transform.Children.Count==2,"unchanged frame reuses UI clone without rewriting values");
   ownHud.m_healthBarRoot.sizeDelta=new Vector2(300,20);ownHud.m_healthBarRoot.localScale=new Vector3(2,2,1);PlayerShieldBar.UpdateHud(ownHud);Check(shieldFast.Width==300&&shieldRoot.position.x==724&&shieldRoot.lossyScale.x==2,"shield bar follows food-driven HP width and UI scale");
   Hud.Hidden=true;PlayerShieldBar.UpdateHud(ownHud);Check(!shieldRoot.gameObject.activeSelf,"user HUD hide also hides shield bar");Hud.Hidden=false;selfShield.m_damage=450;PlayerShieldBar.UpdateHud(ownHud);Check(!shieldRoot.gameObject.activeSelf,"depleted own shield hides immediately");
@@ -146,6 +149,33 @@ class Behavior{
   aoeGo.name="staff_shield_aoe_extra(Clone)";Check(!ProtectionRange.Apply(aoe),"similarly named mod spells are not changed");
   aoeGo.name="staff_shield_aoe(Clone)";sphere.isTrigger=false;sphere.radius=5;ProtectionRange.Apply(aoe);Check(sphere.radius==5,"physical non-trigger colliders are never enlarged");
   sphere.isTrigger=true;aoeGo.transform.localScale=new Vector3(0,0,0);ProtectionRange.Apply(aoe);Check(!float.IsNaN(sphere.radius)&&!float.IsInfinity(sphere.radius),"zero-scale visual helpers cannot create invalid collider radii");
+  var rotated=new GameObject{transform=new RectTransform()};var rect=(RectTransform)rotated.transform;rect.position=new Vector3(100,50,0);rect.sizeDelta=new Vector2(200,20);rect.rotation=new Quaternion{z=0.70710678f,w=0.70710678f};var canvas=new GameObject();var rightPoint=PlayerShieldBar.RightOfHealth(rect,canvas.transform);
+  Check(Math.Abs(rightPoint.x-132)<0.001f&&Math.Abs(rightPoint.y-50)<0.001f,"vertical HP shield is screen-right at the same height rather than above");
+  rect.localScale=new Vector3(2,2,1);rightPoint=PlayerShieldBar.RightOfHealth(rect,canvas.transform);Check(Math.Abs(rightPoint.x-164)<0.001f&&Math.Abs(rightPoint.y-50)<0.001f,"rotated vertical bars keep horizontal separation with UI scaling");
+  Check(PlayerShieldBar.Number(310,310)=="310","narrow player shield bar uses compact native-style remaining number");
+  Travel.Clear();p.Dead=false;p.Manager.Effects.Clear();Shield(p);c.Dead=false;c.Tamed=true;c.Health=45;c.MaxHealth=100;c.transform.position=p.transform.position;var overhead=new EnemyHud();var hd=Head(c);hd.m_gui.transform.Find("Health").gameObject.SetActive(false);overhead.m_huds[c]=hd;
+  ShieldPresentation.UpdateHud(overhead);var hpRow=hd.m_gui.transform.Find("GhostHealthRow");var shieldRow=hd.m_gui.transform.Find("GhostShieldRow");
+  Check(hpRow&&shieldRow&&((RectTransform)hpRow).anchoredPosition.y>((RectTransform)shieldRow).anchoredPosition.y,"skeleton overhead HP is on the row above shield");
+  Check(hpRow.gameObject.activeSelf&&hpRow.Find("health_fast").gameObject.GetComponent<FakeGuiBar>().Value==45,"own skeleton health bar remains visible even when original friendly HP was hidden");
+  Check(hpRow.Find("GhostHealthRowText").gameObject.GetComponent<FakeText>().text=="HP 45 / 100","overhead health label shows current and maximum HP");
+  c.Health=80;ShieldPresentation.UpdateHud(overhead);Check(hpRow.Find("health_fast").gameObject.GetComponent<FakeGuiBar>().Value==80,"overhead HP bar updates after healing without recreating rows");
+  var ownHead=Head(p);overhead.m_huds[p]=ownHead;ShieldPresentation.PrepareLocal(overhead);ShieldPresentation.KeepVisible(overhead);ShieldPresentation.UpdateHud(overhead);
+  Check(overhead.ShowCalls==1&&ownHead.m_gui.transform.Find("GhostShieldRow"),"local player is explicitly included in native overhead HUD with shield row");
+  Check(hd.m_hoverTimer==0&&ownHead.m_hoverTimer==0,"summon HP and own shield display do not expire when not hovered");
+  Check(ShieldPresentation.Visible(p),"own overhead is visible while protection shield is active");p.Manager.Effects.Clear();Check(!ShieldPresentation.Visible(p),"own overhead shield hides after protection ends");
+  c.transform.position=p.transform.position+new Vector3(0,0,29);Check(ShieldPresentation.Visible(c),"summon vitals stay visible within thirty metres");c.transform.position=p.transform.position+new Vector3(0,0,31);Check(!ShieldPresentation.Visible(c),"distant summon HUD respects thirty metre limit");c.transform.position=p.transform.position;
+  c.Tamed=false;ShieldPresentation.UpdateHud(overhead);Check(!hpRow.gameObject,"losing friendly summon status removes only custom overhead rows");c.Tamed=true;Travel.Clear();
+  p.Foods.Clear();p.Foods.Add(new Player.Food{m_item=new ItemDrop.ItemData{m_shared=new ItemDrop.SharedData{m_foodRegen=4}}});p.Foods.Add(new Player.Food{m_item=new ItemDrop.ItemData{m_shared=new ItemDrop.SharedData{m_foodRegen=6}}});p.Manager.RegenMultiplier=2;
+  Check(FollowerRecovery.FoodRate(p)==2,"summon target rate matches food healing and player regeneration modifiers per second");FollowerRecovery.Tick();c.Health=45;c.m_regenAllHPTime=3600;ai.Target=p.gameObject;v.Zdo.Owner=1;FollowerRecovery.State regenState;
+  Check(FollowerRecovery.Begin(ai,out regenState)&&regenState.Changed&&c.m_regenAllHPTime==50&&c.Health==45,"native summon regeneration rate is adjusted without immediate healing");
+  ai.SimulateRegeneration(3);FollowerRecovery.End(regenState);Check(c.Health==51&&c.m_regenAllHPTime==3600,"native healing uses player-like HP per second then restores original settings");
+  c.m_regenAllHPTime=10;Check(FollowerRecovery.Begin(ai,out regenState)&&!regenState.Changed&&c.m_regenAllHPTime==10,"already faster native regeneration is not reduced");c.m_regenAllHPTime=3600;
+  v.Zdo.Owner=2;FollowerRecovery.Begin(ai,out regenState);Check(!regenState.Changed&&c.m_regenAllHPTime==3600,"nonowner never changes summon healing");v.Zdo.Owner=1;
+  c.Dead=true;FollowerRecovery.Begin(ai,out regenState);Check(!regenState.Changed,"dead summon never gets recovery override");c.Dead=false;
+  ai.Target=null;FollowerRecovery.Begin(ai,out regenState);Check(regenState.Changed,"locally owned waiting summon uses local player's recovery");FollowerRecovery.End(regenState);ai.Target=p.gameObject;
+  FollowerRecovery.Clear();p.Foods.Clear();FollowerRecovery.Begin(ai,out regenState);Check(!regenState.Changed,"missing food healing falls back to native regeneration");
+  p.Foods.Add(new Player.Food{m_item=new ItemDrop.ItemData{m_shared=new ItemDrop.SharedData{m_foodRegen=10}}});FollowerRecovery.Clear();FollowerRecovery.Tick();ai.Target=other.gameObject;other.GetComponent<ZNetView>().Zdo.Set("ghost.summontravel.foodregen.v1","1.5;"+Travel.Now.ToString(System.Globalization.CultureInfo.InvariantCulture));FollowerRecovery.Begin(ai,out regenState);Check(regenState.Changed&&Math.Abs(c.m_regenAllHPTime-100f/1.5f)<0.001f,"remote player's synchronized recovery rate supports multiplayer followers");FollowerRecovery.End(regenState);FollowerRecovery.Clear();ZNet.instance.Time+=16;FollowerRecovery.Begin(ai,out regenState);Check(!regenState.Changed,"stale remote recovery snapshot is ignored safely");ai.Target=p.gameObject;p.Manager.RegenMultiplier=1;Travel.Clear();
+  Check(FollowerRecovery.RegenScale(typeof(RegenSettings))==4,"installed Regeneration health and time multipliers produce matching player HP per second");RegenSettings.modEnabled.Value=false;Check(FollowerRecovery.RegenScale(typeof(RegenSettings))==1,"disabled optional regeneration mod retains native food rate");RegenSettings.modEnabled.Value=true;RegenSettings.healthRegenTimeMult.Value=0;Check(FollowerRecovery.RegenScale(typeof(RegenSettings))==1,"invalid optional regeneration interval cannot create infinite healing");Check(FollowerRecovery.RegenScale(null)==1,"missing optional regeneration mod remains supported");
   Console.WriteLine("Behavior checks: "+count);
  }
 }

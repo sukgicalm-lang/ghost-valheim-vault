@@ -8,16 +8,16 @@ using System.Runtime.CompilerServices;
 using BepInEx;
 using HarmonyLib;
 using UnityEngine;
-[assembly: AssemblyVersion("1.0.6.0")]
-[assembly: AssemblyFileVersion("1.0.6.0")]
+[assembly: AssemblyVersion("1.0.7.0")]
+[assembly: AssemblyFileVersion("1.0.7.0")]
 namespace GhostSummonTravel {
- [BepInPlugin(Guid,"Ghost 해골 동행·방어막 표시","1.0.6")]
+ [BepInPlugin(Guid,"Ghost 해골 동행·방어막 표시","1.0.7")]
  public sealed class Plugin:BaseUnityPlugin {
   public const string Guid="ghost.valheim.summontravel";Harmony harmony;internal static Plugin Instance;
-  void Awake(){Instance=this;Travel.Faulted=false;Travel.ValidateApi();ShieldPresentation.ValidateApi();IdleSpacing.ValidateApi();PlayerShieldBar.ValidateApi();harmony=new Harmony(Guid);try{harmony.PatchAll(typeof(Plugin).Assembly);}catch{harmony.UnpatchSelf();throw;}Logger.LogInfo("해골 동행 1.0.6: 본인·아군 방어막 재시전의 두 갱신 경로 처리·반경 20m");}
+  void Awake(){Instance=this;Travel.Faulted=false;Travel.ValidateApi();ShieldPresentation.ValidateApi();IdleSpacing.ValidateApi();PlayerShieldBar.ValidateApi();harmony=new Harmony(Guid);try{harmony.PatchAll(typeof(Plugin).Assembly);}catch{harmony.UnpatchSelf();throw;}Logger.LogInfo("해골 동행 1.0.7: HP 오른쪽 방어막·머리 위 HP와 방어막·음식 기반 해골 회복");}
   internal static void LogShieldRecast(Character c){if(Instance){float left,max;Travel.ShieldAmounts(c,out left,out max);Instance.Logger.LogInfo("보호막 재시전 갱신: "+(c==Player.m_localPlayer?"본인":Travel.IsSkeleton(c)?"해골":"아군")+" / 방어막 "+left+" / "+max);}}
   internal static void LogFault(Exception e){if(Instance)Instance.Logger.LogError("해골 자동 동행 오류로 해당 기능을 중단하고 기본 게임 이동을 유지합니다. 게임 재시작 전 로그를 보관하세요. "+e);}
-  void Update(){try{Travel.Tick();}catch(Exception e){Travel.Abort(e);}}void OnDestroy(){Travel.Clear();if(harmony!=null)harmony.UnpatchSelf();Instance=null;}
+  void Update(){try{Travel.Tick();}catch(Exception e){Travel.Abort(e);}try{FollowerRecovery.Tick();}catch(Exception e){LogFault(e);}}void OnDestroy(){Travel.Clear();if(harmony!=null)harmony.UnpatchSelf();Instance=null;}
  }
  internal static class Travel {
   internal static bool Faulted;
@@ -147,7 +147,7 @@ namespace GhostSummonTravel {
   }
   internal static void Pin(List<ZDO> near){if(Faulted)return;foreach(var t in Moving.Values)if(t.V&&t.V.IsValid()){if(!near.Contains(t.V.GetZDO()))near.Add(t.V.GetZDO());ShieldPresentation.PinEffects(t.C,near);}}
   internal static void BeforeUnload(ZNetView view){if(!view||!view.IsValid()||!view.IsOwner()||view.GetZDO().GetPrefab()!=SkeletonPrefab)return;var c=view.GetComponent<Character>();if(IsSkeleton(c))SaveShields(c);}
-  internal static void Clear(){foreach(var t in Moving.Values)try{Release(t);}catch{}Moving.Clear();Followers.Clear();Finished.Clear();local=null;nextCheck=0;lastTickFrame=lastArrivalFrame=searchFrame=-1;searchProbes=0;Shields=new ConditionalWeakTable<Character,ShieldState>();Kinds=new ConditionalWeakTable<Character,CharacterKind>();Searches=new ConditionalWeakTable<Character,SearchState[]>();ShieldPresentation.ClearHud();PlayerShieldBar.Clear();IdleSpacing.Clear();ProtectionRecast.Clear();}
+  internal static void Clear(){foreach(var t in Moving.Values)try{Release(t);}catch{}Moving.Clear();Followers.Clear();Finished.Clear();local=null;nextCheck=0;lastTickFrame=lastArrivalFrame=searchFrame=-1;searchProbes=0;Shields=new ConditionalWeakTable<Character,ShieldState>();Kinds=new ConditionalWeakTable<Character,CharacterKind>();Searches=new ConditionalWeakTable<Character,SearchState[]>();ShieldPresentation.ClearHud();PlayerShieldBar.Clear();IdleSpacing.Clear();ProtectionRecast.Clear();FollowerRecovery.Clear();}
   internal static void RestoreIfNewOwner(Character c){if(!IsSkeleton(c))return;var v=c.GetComponent<ZNetView>();var state=Shields.GetOrCreateValue(c);bool owner=v.IsOwner();if(owner&&!state.WasOwner)RestoreShields(c);state.WasOwner=owner;}
   internal static void SaveShields(Character c){
    if(!IsSkeleton(c)||!c.GetComponent<ZNetView>().IsOwner())return;var rows=new List<string>{Now.ToString("R",Inv)};

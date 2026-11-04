@@ -14,10 +14,17 @@ namespace GhostSummonTravel {
   static readonly Dictionary<Type,BarApi> Apis=new Dictionary<Type,BarApi>();
   static readonly List<Paint> Paints=new List<Paint>();
   static Hud owner;static RectTransform source,root;static Component fast,slow,text;static bool failed;
+  static readonly Vector3[] Corners=new Vector3[4];
   static float lastWidth=-1,lastCapacity=-1,lastRemaining=-1;static string lastText;
   internal static void ValidateApi(){if(HealthRoot==null||HudRoot==null||HealthFast==null||HealthSlow==null||HealthText==null)throw new MissingFieldException("내 방어막: 게임의 HP 막대 구조가 맞지 않습니다.");}
   internal static bool Active(Player p,out float remaining,out float capacity){remaining=capacity=0;return p&&p==Player.m_localPlayer&&!p.IsDead()&&Travel.ShieldAmounts(p,out remaining,out capacity)&&capacity>0&&remaining>0;}
-  internal static string Number(float remaining,float capacity){return "방어막 "+Math.Ceiling(Math.Max(0,remaining)).ToString("0",CultureInfo.InvariantCulture)+" / "+Math.Ceiling(Math.Max(0,capacity)).ToString("0",CultureInfo.InvariantCulture);}
+  internal static string Number(float remaining,float capacity){return Math.Ceiling(Math.Max(0,remaining)).ToString("0",CultureInfo.InvariantCulture);}
+  internal static Vector3 RightOfHealth(RectTransform health,Transform canvas){
+   health.GetWorldCorners(Corners);var right=canvas.right;float low=float.MaxValue,high=float.MinValue;
+   foreach(var point in Corners){float x=Vector3.Dot(point,right);low=Math.Min(low,x);high=Math.Max(high,x);}
+   var scale=health.lossyScale;float gap=12f*Math.Max(Math.Abs(scale.x),Math.Abs(scale.y));
+   return health.position+right*(high-low+gap);
+  }
   static MethodInfo NumericMethod(Type type,string name){
    MethodInfo best=null;foreach(var m in type.GetMethods(BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Instance)){
     if(m.Name!=name)continue;var p=m.GetParameters();if(p.Length==0||p[0].ParameterType!=typeof(float))continue;bool valid=true;for(int i=1;i<p.Length;i++)if(!p[i].IsOptional)valid=false;
@@ -32,10 +39,10 @@ namespace GhostSummonTravel {
   static string RelativePath(Transform node,Transform ancestor){
    if(node==ancestor)return "";var names=new List<string>();for(var t=node;t&&t!=ancestor;t=t.parent){names.Add(t.name);if(t.parent==ancestor){names.Reverse();return string.Join("/",names.ToArray());}}return null;
   }
-  static Component CopyReference(Component original,RectTransform from,RectTransform to){
+  internal static Component CopyReference(Component original,RectTransform from,RectTransform to){
    if(!original)return null;string path=RelativePath(original.transform,from);if(path==null)return null;var node=path.Length==0?to:to.Find(path);return node?node.gameObject.GetComponent(original.GetType()):null;
   }
-  static void Property(object obj,string name,object value){var p=obj.GetType().GetProperty(name,BindingFlags.Public|BindingFlags.Instance);if(p!=null&&p.CanWrite)p.SetValue(obj,value,null);}
+  internal static void Property(object obj,string name,object value){var p=obj.GetType().GetProperty(name,BindingFlags.Public|BindingFlags.Instance);if(p!=null&&p.CanWrite)p.SetValue(obj,value,null);}
   static void AddPaints(Component bar,Color tint){
    foreach(var component in bar.gameObject.GetComponentsInChildren<Component>(true)){
     if(!component||component.GetType().FullName!="UnityEngine.UI.Image")continue;
@@ -68,7 +75,7 @@ namespace GhostSummonTravel {
    root.anchorMin=root.anchorMax=new Vector2(0.5f,0.5f);root.pivot=source.pivot;root.sizeDelta=new Vector2(width,height);
    var parentScale=root.parent.lossyScale;var desired=source.lossyScale;
    root.localScale=new Vector3(Math.Abs(parentScale.x)>0.00001f?desired.x/parentScale.x:1f,Math.Abs(parentScale.y)>0.00001f?desired.y/parentScale.y:1f,1f);
-   root.rotation=source.rotation;root.position=source.position+source.right*((width+12f)*Math.Abs(desired.x));
+   root.rotation=source.rotation;root.position=RightOfHealth(source,host.transform);
    if(lastWidth!=width){SetNumber(fast,"SetWidth",width);SetNumber(slow,"SetWidth",width);lastWidth=width;}
    if(lastCapacity!=capacity){SetNumber(fast,"SetMaxValue",capacity);SetNumber(slow,"SetMaxValue",capacity);lastCapacity=capacity;lastRemaining=-1;}
    if(lastRemaining!=remaining){SetNumber(fast,"SetValue",remaining);SetNumber(slow,"SetValue",remaining);lastRemaining=remaining;}
