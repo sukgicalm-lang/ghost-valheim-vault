@@ -1,9 +1,9 @@
 {
-  "version": "1.0.47",
+  "version": "1.0.48",
   "date": "2026-11-04",
-  "file": "downloads/Ghost-GhostValheimSuite-1.0.47.zip",
-  "bytes": 398856097,
-  "sha256": "5cb0a263d48df7609fe05cd386489fb4c1b5c59c90aae66e76e1cb6f36c477a7",
+  "file": "downloads/Ghost-GhostValheimSuite-1.0.48.zip",
+  "bytes": 398870993,
+  "sha256": "455e44f854fc7701d40672d04398013f8b5f3cd9a68785ff1cfc3a7ddbf994e2",
   "appIntegration": true,
   "dependencies": [
     "denikson-BepInExPack_Valheim-5.4.2351",
@@ -11,6 +11,6 @@
     "shudnal-ConfigurationManager-1.1.25",
     "Ghost-GhostSmelterControl-1.0.3"
   ],
-  "notes": "본인·해골 방어막 재시전 경로 누락 수정 · 실제 충전과 표시 갱신 · 반경 20m 유지",
-  "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.47/Ghost-GhostValheimSuite-1.0.47.zip"
+  "notes": "내 HP 오른쪽 방어막 · 본인 머리 위 수치 · 해골 HP·방어막 2줄 표시와 회복 개선",
+  "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.48/Ghost-GhostValheimSuite-1.0.48.zip"
 }
