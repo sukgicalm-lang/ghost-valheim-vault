@@ -42,13 +42,15 @@ class RuntimeRecastIntegration {
    p.GetComponent<ZNetView>().Zdo.Owner=2;NativeStatusHit(p);Check(own.m_damage==90,"non-owner does not mutate absorb during refresh");p.GetComponent<ZNetView>().Zdo.Owner=1;
    summon.m_damage=125;summon.m_time=25;Travel.GetMethod("SaveShields",BindingFlags.Static|BindingFlags.NonPublic).Invoke(null,new object[]{npc});summon.m_damage=0;summon.m_time=0;Travel.GetMethod("RestoreShields",BindingFlags.Static|BindingFlags.NonPublic).Invoke(null,new object[]{npc});Check(summon.m_damage==125&&summon.m_time==25,"teleport restore keeps spent shield while real detours are installed");
    npc.Manager.Effects.Clear();NativeStatusHit(npc);var fresh=(SE_Shield)npc.Manager.Effects[0];Check(fresh.m_totalAbsorbDamage==300&&fresh.m_damage==0,"first-time native hit still creates one normal full shield");
+   var ai=npc.GetComponent<MonsterAI>();ai.m_tamable=npc.GetComponent<Tameable>();ai.m_tamable.Hungry=true;ai.SimulateRegeneration(3);Check(npc.Health==45,"reproduced native animal hunger blocking summon regeneration");
    var recovery=Production.GetType("GhostSummonTravel.FollowerRecovery");var hooks=recovery.GetNestedType("RegenPatch",BindingFlags.NonPublic);
    harmony.Patch(typeof(BaseAI).GetMethod("UpdateRegeneration",BindingFlags.NonPublic|BindingFlags.Instance),prefix:new HarmonyMethod(hooks.GetMethod("Prefix",BindingFlags.Static|BindingFlags.NonPublic)),finalizer:new HarmonyMethod(hooks.GetMethod("Finalizer",BindingFlags.Static|BindingFlags.NonPublic)));
    p.Foods.Add(new Player.Food{m_item=new ItemDrop.ItemData{m_shared=new ItemDrop.SharedData{m_foodRegen=10}}});p.Manager.RegenMultiplier=2;recovery.GetMethod("Tick",BindingFlags.NonPublic|BindingFlags.Static).Invoke(null,null);
-   var ai=npc.GetComponent<MonsterAI>();npc.Health=45;npc.m_regenAllHPTime=3600;ai.SimulateRegeneration(3);
-   Check(npc.Health==51,"real regeneration prefix uses player's two HP per second through native healing");Check(npc.m_regenAllHPTime==3600,"real finalizer restores original summon regeneration setting after success");
-   ai.ThrowRegen=true;bool thrown=false;try{ai.SimulateRegeneration(3);}catch(InvalidOperationException){thrown=true;}Check(thrown&&npc.m_regenAllHPTime==3600,"real finalizer restores original setting while preserving native exceptions");ai.ThrowRegen=false;
-   npc.GetComponent<ZNetView>().Zdo.Owner=2;float before=npc.Health;ai.SimulateRegeneration(3);Check(Math.Abs(npc.Health-before-100f/3600*3)<0.001f,"real regeneration hook leaves non-owned followers on native healing");
+   npc.Health=45;npc.m_regenAllHPTime=3600;ai.SimulateRegeneration(3);
+   Check(npc.Health==51,"real regeneration prefix uses player's two HP per second through native healing");Check(npc.m_regenAllHPTime==3600,"real finalizer restores original summon regeneration setting after success");Check(ai.m_tamable==npc.GetComponent<Tameable>()&&ai.m_tamable.Hungry,"real finalizer restores original hunger reference without changing feeding state");
+   ai.ThrowRegen=true;bool thrown=false;try{ai.SimulateRegeneration(3);}catch(InvalidOperationException){thrown=true;}Check(thrown&&npc.m_regenAllHPTime==3600&&ai.m_tamable==npc.GetComponent<Tameable>(),"real finalizer restores original healing and hunger settings while preserving native exceptions");ai.ThrowRegen=false;
+   npc.GetComponent<ZNetView>().Zdo.Owner=2;float before=npc.Health;ai.SimulateRegeneration(3);Check(npc.Health==before&&ai.m_tamable==npc.GetComponent<Tameable>(),"real regeneration hook preserves native hunger for non-owned followers");
+   npc.GetComponent<ZNetView>().Zdo.Owner=1;npc.Tamed=false;ai.SimulateRegeneration(3);Check(ai.m_tamable==npc.GetComponent<Tameable>()&&npc.m_regenAllHPTime==3600,"wild creatures retain original hunger and regeneration settings");
   }finally{harmony.UnpatchAll(harmony.Id);}
   Console.WriteLine("Runtime detour checks: "+checks);
  }

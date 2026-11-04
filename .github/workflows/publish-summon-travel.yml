@@ -3,7 +3,7 @@ on:
   push:
     branches: [main, ghost/summon-travel-20261103]
     paths:
-      - 'mod-ci/summontravel-1.0.7/**'
+      - 'mod-ci/summontravel-1.0.8/**'
       - 'mod-src/SummonTravel/**'
       - 'mod-src/SummonTravel.Tests/**'
       - '.github/workflows/publish-summon-travel.yml'
@@ -35,10 +35,10 @@ jobs:
         shell: bash
         run: |
           set -o pipefail
-          dotnet mod-src/SummonTravel.Tests/Runtime/bin/Release/net8.0/RuntimeRecastIntegration.dll | tee mod-ci/summontravel-1.0.7/runtime-results.txt
+          dotnet mod-src/SummonTravel.Tests/Runtime/bin/Release/net8.0/RuntimeRecastIntegration.dll | tee mod-ci/summontravel-1.0.8/runtime-results.txt
       - name: Preserve prior modules and publish verified suite before update feed
         if: github.ref == 'refs/heads/main'
         env:
           GH_TOKEN: ${{ github.token }}
           PYTHONUTF8: '1'
-        run: python mod-ci/summontravel-1.0.7/publish.py
+        run: python mod-ci/summontravel-1.0.8/publish.py

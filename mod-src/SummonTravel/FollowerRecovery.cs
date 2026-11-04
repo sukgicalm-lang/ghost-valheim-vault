@@ -9,6 +9,7 @@ namespace GhostSummonTravel {
  internal static class FollowerRecovery {
   const string Key="ghost.summontravel.foodregen.v1";
   static readonly CultureInfo Inv=CultureInfo.InvariantCulture;
+  static readonly FieldInfo Tamable=AccessTools.Field(typeof(BaseAI),"m_tamable");
   sealed class Sample {internal double Next;internal float Rate;}
   static ConditionalWeakTable<Player,Sample> Samples=new ConditionalWeakTable<Player,Sample>();
   static Player published;static double nextSample,nextPublish;
@@ -24,7 +25,7 @@ namespace GhostSummonTravel {
    if(regeneration==null)foreach(var assembly in AppDomain.CurrentDomain.GetAssemblies())if(assembly.GetName().Name=="Regeneration"){regeneration=assembly.GetType("Regeneration.Regeneration",false);break;}
    return RegenScale(regeneration);
   }
-  internal struct State {internal Character Character;internal float Original;internal bool Changed;}
+  internal struct State {internal Character Character;internal BaseAI AI;internal Tameable Tamable;internal float Original;internal bool Changed;}
   internal static float FoodRate(Player player){
    if(!player||player.IsDead())return 0;float amount=0;foreach(var food in player.GetFoods())if(food.m_item!=null)amount+=food.m_item.m_shared.m_foodRegen;
    float multiplier=1;player.GetSEMan().ModifyHealthRegen(ref multiplier);float rate=amount*multiplier*InstalledScale()/10f;
@@ -47,10 +48,13 @@ namespace GhostSummonTravel {
    state=default(State);var c=ai.GetComponent<Character>();if(!Travel.IsSkeleton(c)||!c.IsTamed()||c.IsDead())return true;var v=c.GetComponent<ZNetView>();if(!v||!v.IsValid()||!v.IsOwner())return true;
    if(Travel.Held(c))return false;var monster=ai as MonsterAI;var go=monster?monster.GetFollowTarget():null;var p=go?go.GetComponent<Player>():Player.m_localPlayer;float rate;
    if(!Rate(p,out rate)||rate<=0||!Travel.Finite(c.m_regenAllHPTime)||c.m_regenAllHPTime<=0)return true;
-   float native=c.GetMaxHealth()/c.m_regenAllHPTime;if(rate<=native)return true;
-   state=new State{Character=c,Original=c.m_regenAllHPTime,Changed=true};c.m_regenAllHPTime=c.GetMaxHealth()/rate;return true;
+   float native=c.GetMaxHealth()/c.m_regenAllHPTime;
+   // Raised skeletons cannot eat. Bypass the animal hunger gate only for this
+   // owned summon regeneration call, without changing feeding ZDO or pet rules.
+   state=new State{Character=c,AI=ai,Tamable=Tamable.GetValue(ai) as Tameable,Original=c.m_regenAllHPTime,Changed=rate>native};
+   if(state.Tamable)Tamable.SetValue(ai,null);if(state.Changed)c.m_regenAllHPTime=c.GetMaxHealth()/rate;return true;
   }
-  internal static void End(State state){if(state.Changed&&state.Character)state.Character.m_regenAllHPTime=state.Original;}
+  internal static void End(State state){if(state.Changed&&state.Character)state.Character.m_regenAllHPTime=state.Original;if(state.AI&&state.Tamable)Tamable.SetValue(state.AI,state.Tamable);}
   internal static void Clear(){Samples=new ConditionalWeakTable<Player,Sample>();published=null;nextSample=nextPublish=0;}
   [HarmonyPatch(typeof(BaseAI),"UpdateRegeneration")]static class RegenPatch{
    [HarmonyPrefix]static bool Prefix(BaseAI __instance,out State __state){__state=default(State);try{return Begin(__instance,out __state);}catch(Exception e){Plugin.LogFault(e);return true;}}
