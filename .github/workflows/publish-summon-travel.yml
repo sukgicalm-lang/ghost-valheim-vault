@@ -1,9 +1,9 @@
-name: Verify and publish Ghost summon roster and compact UI
+name: Verify and publish Ghost replacement summons and proportional UI
 on:
   push:
     branches: [main, ghost/summon-travel-20261103]
     paths:
-      - 'mod-ci/summontravel-1.0.9/**'
+      - 'mod-ci/summontravel-1.0.10/**'
       - 'mod-src/SummonTravel/**'
       - 'mod-src/SummonTravel.Tests/**'
       - '.github/workflows/publish-summon-travel.yml'
@@ -27,18 +27,18 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
-      - name: Test summon batches, equipment balance, compact HUD and preservation
+      - name: Test full summon replacement, weapon balance and native UI spacing
         run: dotnet run --project mod-src/SummonTravel.Tests/Behavior.csproj --configuration Release
       - name: Build real Harmony refresh regression harness
         run: dotnet build mod-src/SummonTravel.Tests/Runtime/RuntimeRecastIntegration.csproj --configuration Release
-      - name: Verify real shield recast and summon regeneration detours
+      - name: Verify runtime replacement, shield recast and regeneration detours
         shell: bash
         run: |
           set -o pipefail
-          dotnet mod-src/SummonTravel.Tests/Runtime/bin/Release/net8.0/RuntimeRecastIntegration.dll | tee mod-ci/summontravel-1.0.9/runtime-results.txt
+          dotnet mod-src/SummonTravel.Tests/Runtime/bin/Release/net8.0/RuntimeRecastIntegration.dll | tee mod-ci/summontravel-1.0.10/runtime-results.txt
       - name: Preserve prior modules and publish verified suite before update feed
         if: github.ref == 'refs/heads/main'
         env:
           GH_TOKEN: ${{ github.token }}
           PYTHONUTF8: '1'
-        run: python mod-ci/summontravel-1.0.9/publish.py
+        run: python mod-ci/summontravel-1.0.10/publish.py
