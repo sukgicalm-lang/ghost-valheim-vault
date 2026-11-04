@@ -45,7 +45,7 @@ namespace GhostSummonTravel {
    sample=Samples.GetOrCreateValue(p);sample.Rate=rate=value;sample.Next=Travel.Now+1;return true;
   }
   internal static bool Begin(BaseAI ai,out State state){
-   state=default(State);var c=ai.GetComponent<Character>();if(!Travel.IsSkeleton(c)||!c.IsTamed()||c.IsDead())return true;var v=c.GetComponent<ZNetView>();if(!v||!v.IsValid()||!v.IsOwner())return true;
+   state=default(State);var c=ai.GetComponent<Character>();if(!Travel.IsSkeleton(c)||!c.IsTamed()||!SummonLifecycle.Usable(c))return true;var v=c.GetComponent<ZNetView>();if(!v||!v.IsValid()||!v.IsOwner())return true;
    if(Travel.Held(c))return false;var monster=ai as MonsterAI;var go=monster?monster.GetFollowTarget():null;var p=go?go.GetComponent<Player>():Player.m_localPlayer;float rate;
    if(!Rate(p,out rate)||rate<=0||!Travel.Finite(c.m_regenAllHPTime)||c.m_regenAllHPTime<=0)return true;
    float native=c.GetMaxHealth()/c.m_regenAllHPTime;

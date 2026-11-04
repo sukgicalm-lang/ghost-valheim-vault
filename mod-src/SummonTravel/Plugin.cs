@@ -8,13 +8,13 @@ using System.Runtime.CompilerServices;
 using BepInEx;
 using HarmonyLib;
 using UnityEngine;
-[assembly: AssemblyVersion("1.0.11.0")]
-[assembly: AssemblyFileVersion("1.0.11.0")]
+[assembly: AssemblyVersion("1.0.12.0")]
+[assembly: AssemblyFileVersion("1.0.12.0")]
 namespace GhostSummonTravel {
- [BepInPlugin(Guid,"Ghost 해골 동행·방어막 표시","1.0.11")]
+ [BepInPlugin(Guid,"Ghost 해골 동행·방어막 표시","1.0.12")]
  public sealed class Plugin:BaseUnityPlugin {
   public const string Guid="ghost.valheim.summontravel";Harmony harmony;internal static Plugin Instance;
-  void Awake(){Instance=this;Travel.Faulted=false;Travel.ValidateApi();ShieldPresentation.ValidateApi();IdleSpacing.ValidateApi();PlayerShieldBar.ValidateApi();SpawnRoster.ValidateApi();harmony=new Harmony(Guid);try{harmony.PatchAll(typeof(Plugin).Assembly);}catch{harmony.UnpatchSelf();throw;}Logger.LogInfo("해골 동행 1.0.11: 머리 위 숫자만 표시·이름 위 방어막 시간·내 시간만 표시·보스 버프 기본 간격 유지·기존 해골 교체 동시 소환·장비 다양화");}
+  void Awake(){Instance=this;Travel.Faulted=false;Travel.ValidateApi();ShieldPresentation.ValidateApi();IdleSpacing.ValidateApi();PlayerShieldBar.ValidateApi();SpawnRoster.ValidateApi();harmony=new Harmony(Guid);try{harmony.PatchAll(typeof(Plugin).Assembly);}catch{harmony.UnpatchSelf();throw;}Logger.LogInfo("해골 동행 1.0.12: 머리 위 숫자만 표시·이름 위 방어막 시간·내 시간만 표시·보스 버프 기본 간격 유지·기존 해골 교체 동시 소환·장비 다양화");}
   internal static void LogShieldRecast(Character c){if(Instance){float left,max;Travel.ShieldAmounts(c,out left,out max);Instance.Logger.LogInfo("보호막 재시전 갱신: "+(c==Player.m_localPlayer?"본인":Travel.IsSkeleton(c)?"해골":"아군")+" / 방어막 "+left+" / "+max);}}
   internal static void LogFault(Exception e){if(Instance)Instance.Logger.LogError("해골 자동 동행 오류로 해당 기능을 중단하고 기본 게임 이동을 유지합니다. 게임 재시작 전 로그를 보관하세요. "+e);}
   void Update(){try{Travel.Tick();}catch(Exception e){Travel.Abort(e);}try{FollowerRecovery.Tick();}catch(Exception e){LogFault(e);}}void OnDestroy(){Travel.Clear();if(harmony!=null)harmony.UnpatchSelf();Instance=null;}
@@ -49,7 +49,7 @@ namespace GhostSummonTravel {
   internal static int StableHash(string s){unchecked{int a=5381,b=a;for(int i=0;i<s.Length&&s[i]!='\0';i+=2){a=((a<<5)+a)^s[i];if(i==s.Length-1||s[i+1]=='\0')break;b=((b<<5)+b)^s[i+1];}return a+b*1566083941;}}
   internal static bool Finite(float n){return !float.IsNaN(n)&&!float.IsInfinity(n);}
   internal static bool IsSkeleton(Character c){if(!c||c is Player)return false;CharacterKind kind;if(Kinds.TryGetValue(c,out kind))return kind.Skeleton&&kind.View&&kind.View.IsValid();var v=c.GetComponent<ZNetView>();if(!v||!v.IsValid()||v.GetZDO().GetPrefab()==0)return false;kind=new CharacterKind{View=v,Skeleton=v.GetZDO().GetPrefab()==SkeletonPrefab&&c.GetComponent<Tameable>()&&c.GetComponent<MonsterAI>()};Kinds.Add(c,kind);return kind.Skeleton;}
-  internal static bool Follows(Character c,Player p){if(!IsSkeleton(c)||!p||!c.IsTamed()||c.IsDead())return false;var target=c.GetComponent<MonsterAI>().GetFollowTarget();return target?target==p.gameObject:c.GetComponent<ZNetView>().GetZDO().GetString(ZDOVars.s_follow)==p.GetPlayerName();}
+  internal static bool Follows(Character c,Player p){if(!IsSkeleton(c)||!p||!c.IsTamed()||!SummonLifecycle.Usable(c))return false;var target=c.GetComponent<MonsterAI>().GetFollowTarget();return target?target==p.gameObject:c.GetComponent<ZNetView>().GetZDO().GetString(ZDOVars.s_follow)==p.GetPlayerName();}
   internal static void ValidateApi(){
    if(new[]{Total,Damage,EffectTime,EffectCharacter,Body,Altitude,ManagerCharacter}.Any(x=>x==null))throw new MissingFieldException("해골 동행: 게임 필드가 달라 시작을 중단합니다.");
    var t=Body.FieldType;BodyPosition=t.GetProperty("position");BodyRotation=t.GetProperty("rotation");BodyVelocity=t.GetProperty("linearVelocity");BodyAngular=t.GetProperty("angularVelocity");BodyKinematic=t.GetProperty("isKinematic");BodyGravity=t.GetProperty("useGravity");
@@ -90,7 +90,7 @@ namespace GhostSummonTravel {
   static void Move(Transit t){MoveVisual(t);var z=t.V.GetZDO();z.SetPosition(t.Target);z.SetRotation(t.Rotation);z.Set(ZDOVars.s_bodyVelocity,Vector3.zero);ShieldPresentation.MoveEffects(t.C);}
   static void Freeze(Transit t){if(!t.C)return;var b=Body.GetValue(t.C);if(!(bool)BodyKinematic.GetValue(b,null)){BodyVelocity.SetValue(b,Vector3.zero,null);BodyAngular.SetValue(b,Vector3.zero,null);}BodyGravity.SetValue(b,false,null);BodyKinematic.SetValue(b,true,null);}
   static void Release(Transit t){if(!t.C)return;var b=Body.GetValue(t.C);BodyGravity.SetValue(b,t.Gravity,null);BodyKinematic.SetValue(b,t.Kinematic,null);}
-  internal static bool ProtectFollowDistance(Character c){if(Faulted||!IsSkeleton(c)||c.IsDead()||!c.IsTamed())return false;var go=c.GetComponent<MonsterAI>().GetFollowTarget();var p=go?go.GetComponent<Player>():null;return p&&!p.IsDead();}
+  internal static bool ProtectFollowDistance(Character c){if(Faulted||!IsSkeleton(c)||!SummonLifecycle.Usable(c)||!c.IsTamed())return false;var go=c.GetComponent<MonsterAI>().GetFollowTarget();var p=go?go.GetComponent<Player>():null;return p&&!p.IsDead();}
   internal static bool Held(Character c){return Moving.Count>0&&c&&Moving.ContainsKey(c.GetZDOID());}
   internal static void Tick(){
    if(Faulted||lastTickFrame==Time.frameCount)return;lastTickFrame=Time.frameCount;IdleSpacing.RefreshSpeeds();
@@ -146,16 +146,21 @@ namespace GhostSummonTravel {
    }return false;
   }
   internal static void Pin(List<ZDO> near){if(Faulted)return;foreach(var t in Moving.Values)if(t.V&&t.V.IsValid()){if(!near.Contains(t.V.GetZDO()))near.Add(t.V.GetZDO());ShieldPresentation.PinEffects(t.C,near);}}
-  internal static void BeforeUnload(ZNetView view){if(!view||!view.IsValid()||!view.IsOwner()||view.GetZDO().GetPrefab()!=SkeletonPrefab)return;var c=view.GetComponent<Character>();if(IsSkeleton(c))SaveShields(c);}
-  internal static void Clear(){foreach(var t in Moving.Values)try{Release(t);}catch{}Moving.Clear();Followers.Clear();Finished.Clear();local=null;nextCheck=0;lastTickFrame=lastArrivalFrame=searchFrame=-1;searchProbes=0;Shields=new ConditionalWeakTable<Character,ShieldState>();Kinds=new ConditionalWeakTable<Character,CharacterKind>();Searches=new ConditionalWeakTable<Character,SearchState[]>();ShieldPresentation.ClearHud();PlayerShieldBar.Clear();IdleSpacing.Clear();ProtectionRecast.Clear();FollowerRecovery.Clear();SpawnRoster.Clear();}
-  internal static void RestoreIfNewOwner(Character c){if(!IsSkeleton(c))return;var v=c.GetComponent<ZNetView>();var state=Shields.GetOrCreateValue(c);bool owner=v.IsOwner();if(owner&&!state.WasOwner)RestoreShields(c);state.WasOwner=owner;}
+  internal static void BeforeUnload(ZNetView view){if(!view||!view.IsValid()||!view.IsOwner()||view.GetZDO().GetPrefab()!=SkeletonPrefab)return;var c=view.GetComponent<Character>();if(IsSkeleton(c)&&SummonLifecycle.Usable(c))SaveShields(c);}
+  internal static void Forget(Character c){
+   foreach(var entry in Moving.Where(x=>ReferenceEquals(x.Value.C,c)).ToArray()){Release(entry.Value);Moving.Remove(entry.Key);Followers.Remove(entry.Key);}
+   if(c){var view=c.GetComponent<ZNetView>();if(view&&view.IsValid())Followers.Remove(c.GetZDOID());if(local!=null){local.Views.RemoveAll(v=>!v||ReferenceEquals(v.GetComponent<Character>(),c));if(local.Views.Count==0)local=null;}}
+   Shields.Remove(c);Searches.Remove(c);IdleSpacing.Forget(c);
+  }
+  internal static void Clear(){foreach(var t in Moving.Values)try{Release(t);}catch{}Moving.Clear();Followers.Clear();Finished.Clear();local=null;nextCheck=0;lastTickFrame=lastArrivalFrame=searchFrame=-1;searchProbes=0;Shields=new ConditionalWeakTable<Character,ShieldState>();Kinds=new ConditionalWeakTable<Character,CharacterKind>();Searches=new ConditionalWeakTable<Character,SearchState[]>();ShieldPresentation.ClearHud();PlayerShieldBar.Clear();IdleSpacing.Clear();ProtectionRecast.Clear();FollowerRecovery.Clear();SpawnRoster.Clear();SummonLifecycle.Clear();}
+  internal static void RestoreIfNewOwner(Character c){if(!IsSkeleton(c)||!SummonLifecycle.Usable(c))return;var v=c.GetComponent<ZNetView>();var state=Shields.GetOrCreateValue(c);bool owner=v.IsOwner();if(owner&&!state.WasOwner)RestoreShields(c);state.WasOwner=owner;}
   internal static void SaveShields(Character c){
-   if(!IsSkeleton(c)||!c.GetComponent<ZNetView>().IsOwner())return;var rows=new List<string>{Now.ToString("R",Inv)};
+   if(!IsSkeleton(c)||!SummonLifecycle.Usable(c)||!c.GetComponent<ZNetView>().IsOwner())return;var rows=new List<string>{Now.ToString("R",Inv)};
    foreach(var s in c.GetSEMan().GetStatusEffects().OfType<SE_Shield>())rows.Add(string.Join(",",s.NameHash().ToString(Inv),s.m_ttl.ToString("R",Inv),s.GetDuration().ToString("R",Inv),((float)Total.GetValue(s)).ToString("R",Inv),((float)Damage.GetValue(s)).ToString("R",Inv)));
    c.GetComponent<ZNetView>().GetZDO().Set(ShieldKey,string.Join(";",rows.ToArray()));Shields.GetOrCreateValue(c).SavedAt=Now;
   }
   internal static bool ReadShieldRecords(Character c,out List<ShieldRecord> records){
-   records=new List<ShieldRecord>();if(!IsSkeleton(c))return false;
+   records=new List<ShieldRecord>();if(!IsSkeleton(c)||!SummonLifecycle.Usable(c))return false;
    string text=c.GetComponent<ZNetView>().GetZDO().GetString(ShieldKey);if(string.IsNullOrEmpty(text)||text.Length>4096)return false;
    var rows=text.Split(';');double saved;if(!double.TryParse(rows[0],NumberStyles.Float,Inv,out saved)||double.IsNaN(saved)||double.IsInfinity(saved))return false;
    foreach(var row in rows.Skip(1)){ShieldRecord r;if(!ShieldRecord.TryParse(row,Now-saved,out r))return false;records.Add(r);}return true;
@@ -165,7 +170,7 @@ namespace GhostSummonTravel {
   }
   static void ShieldSeconds(float ttl,float elapsed,float remaining,ref float seconds){if(remaining<=0||!Finite(ttl)||ttl<=0||!Finite(elapsed)||elapsed<0)return;float left=ttl-elapsed;if(left>0&&(seconds<=0||left<seconds))seconds=left;}
   internal static bool ShieldInfo(Character c,out float remaining,out float capacity,out float seconds){
-   remaining=0;capacity=0;seconds=0;if(!c)return false;bool self=c is Player&&c==Player.m_localPlayer;if(!self&&!IsSkeleton(c))return false;
+   remaining=0;capacity=0;seconds=0;if(!SummonLifecycle.Usable(c))return false;bool self=c is Player&&c==Player.m_localPlayer;if(!self&&!IsSkeleton(c))return false;
    if(self||c.GetComponent<ZNetView>().IsOwner()){
     foreach(var s in c.GetSEMan().GetStatusEffects().OfType<SE_Shield>()){
      float value,total;if(!ActiveShield(s,out value,out total))continue;
