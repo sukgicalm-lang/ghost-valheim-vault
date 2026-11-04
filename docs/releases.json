@@ -1,5 +1,21 @@
 [
   {
+    "version": "1.0.46",
+    "date": "2026-11-04",
+    "file": "downloads/Ghost-GhostValheimSuite-1.0.46.zip",
+    "bytes": 398847409,
+    "sha256": "a9137a723f3eaf146269516019d6cfb42cc15777aeffe25cd8fcd63151e03597",
+    "appIntegration": true,
+    "dependencies": [
+      "denikson-BepInExPack_Valheim-5.4.2351",
+      "ValheimModding-JsonDotNET-13.0.4",
+      "shudnal-ConfigurationManager-1.1.25",
+      "Ghost-GhostSmelterControl-1.0.3"
+    ],
+    "notes": "보호의 스태프 적용 반경 20m로 확대 · 재시전 방어막 충전·실시간 표시 유지",
+    "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.46/Ghost-GhostValheimSuite-1.0.46.zip"
+  },
+  {
     "version": "1.0.45",
     "date": "2026-11-04",
     "file": "downloads/Ghost-GhostValheimSuite-1.0.45.zip",
