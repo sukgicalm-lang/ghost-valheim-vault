@@ -1,9 +1,9 @@
 {
-  "version": "1.0.49",
+  "version": "1.0.50",
   "date": "2026-11-04",
-  "file": "downloads/Ghost-GhostValheimSuite-1.0.49.zip",
-  "bytes": 398878804,
-  "sha256": "6d2fffdea562a5901b06f07288a801bef2684ae67811feb62672a144ce8ca31c",
+  "file": "downloads/Ghost-GhostValheimSuite-1.0.50.zip",
+  "bytes": 398900102,
+  "sha256": "a36f8e59b6e94a76c2031a5045d66b2a8c5d06c12e6467731f2719a2ebd7ae35",
   "appIntegration": true,
   "dependencies": [
     "denikson-BepInExPack_Valheim-5.4.2351",
@@ -11,6 +11,6 @@
     "shudnal-ConfigurationManager-1.1.25",
     "Ghost-GhostSmelterControl-1.0.3"
   ],
-  "notes": "내 HP 오른쪽 방어막 · 본인 머리 위 수치 · 해골 HP·방어막 2줄 표시와 회복 개선",
-  "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.49/Ghost-GhostValheimSuite-1.0.49.zip"
+  "notes": "최대 수 일괄 소환 · 해골 장비 분산 · 간결한 보호막 숫자와 남은 시간",
+  "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.50/Ghost-GhostValheimSuite-1.0.50.zip"
 }
