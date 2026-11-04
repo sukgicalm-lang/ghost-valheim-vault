@@ -29,15 +29,17 @@ namespace GhostSummonTravel {
   }
   static Box Bounds(RectTransform rect,Transform canvas){rect.GetWorldCorners(Corners);var result=new Box{Left=float.MaxValue,Right=float.MinValue,Bottom=float.MaxValue,Top=float.MinValue};foreach(var p in Corners){float x=Vector3.Dot(p,canvas.right),y=Vector3.Dot(p,canvas.up);result.Left=Math.Min(result.Left,x);result.Right=Math.Max(result.Right,x);result.Bottom=Math.Min(result.Bottom,y);result.Top=Math.Max(result.Top,y);}return result;}
   static Box Union(Box a,Box b){return new Box{Left=Math.Min(a.Left,b.Left),Right=Math.Max(a.Right,b.Right),Bottom=Math.Min(a.Bottom,b.Bottom),Top=Math.Max(a.Top,b.Top)};}
+  static Box Shift(Box box,Vector3 delta,Transform canvas){float x=Vector3.Dot(delta,canvas.right),y=Vector3.Dot(delta,canvas.up);return new Box{Left=box.Left+x,Right=box.Right+x,Bottom=box.Bottom+y,Top=box.Top+y};}
   internal static float Clearance(Box shield,Box guardian,float gap){return guardian.Left<shield.Right+gap&&guardian.Right>shield.Left-gap&&guardian.Bottom<shield.Top+gap&&guardian.Top>shield.Bottom-gap?Math.Max(0,shield.Right+gap-guardian.Left):0;}
-  static void RestorePower(){if(powerMoved&&power&&Vector3.Distance(power.position,powerApplied)<0.01f)power.position=powerBefore;powerMoved=false;}
+  static void RestorePower(){if(powerMoved&&power&&Vector3.Distance(power.localPosition,powerApplied)<0.01f)power.localPosition=powerBefore;powerMoved=false;}
   internal static void ArrangePower(Hud hud,RectTransform shield,Transform canvas){
-   RestorePower();var current=GuardianRoot.GetValue(hud) as RectTransform;if(!current||!current.gameObject.activeInHierarchy||!shield)return;
-   if(power!=current){power=current;var set=new HashSet<RectTransform>{power};foreach(var component in power.gameObject.GetComponentsInChildren<Component>(true)){var rect=component.transform as RectTransform;if(rect)set.Add(rect);}powerRects=new RectTransform[set.Count];set.CopyTo(powerRects);}
+   var current=GuardianRoot.GetValue(hud) as RectTransform;if(!current||!current.gameObject.activeInHierarchy||!shield){RestorePower();return;}
+   if(power!=current){RestorePower();power=current;var set=new HashSet<RectTransform>{power};foreach(var component in power.gameObject.GetComponentsInChildren<Component>(true)){var rect=component.transform as RectTransform;if(rect)set.Add(rect);}powerRects=new RectTransform[set.Count];set.CopyTo(powerRects);}
    var own=Bounds(shield,canvas);var label=text?text.transform as RectTransform:null;if(label&&label.gameObject.activeInHierarchy)own=Union(own,Bounds(label,canvas));
    var other=Bounds(power,canvas);foreach(var rect in powerRects)if(rect&&rect.gameObject.activeInHierarchy)other=Union(other,Bounds(rect,canvas));
-   float gap=16f*Math.Max(Math.Abs(shield.lossyScale.x),Math.Abs(shield.lossyScale.y)),shift=Clearance(own,other,gap);if(shift<=0)return;
-   powerBefore=power.position;powerApplied=powerBefore+canvas.right*shift;power.position=powerApplied;powerMoved=true;
+   bool applied=powerMoved&&Vector3.Distance(power.localPosition,powerApplied)<0.01f;var originalLocal=applied?powerBefore:power.localPosition;var before=applied?(power.parent?power.parent.TransformPoint(originalLocal):originalLocal):power.position;if(applied)other=Shift(other,before+power.position*(-1),canvas);
+   float gap=16f*Math.Max(Math.Abs(shield.lossyScale.x),Math.Abs(shield.lossyScale.y)),shift=Clearance(own,other,gap);
+   var target=before+canvas.right*shift;if(Vector3.Distance(power.position,target)>0.01f)power.position=target;powerBefore=originalLocal;powerApplied=power.localPosition;powerMoved=shift>0;
   }
   static MethodInfo NumericMethod(Type type,string name){
    MethodInfo best=null;foreach(var m in type.GetMethods(BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Instance)){
@@ -81,12 +83,11 @@ namespace GhostSummonTravel {
    clone.SetActive(false);return true;
   }
   internal static void UpdateHud(Hud hud){
-   RestorePower();
    var p=Player.m_localPlayer;float remaining,capacity;
-   if(!Active(p,out remaining,out capacity)||Hud.IsUserHidden()){if(root&&root.gameObject.activeSelf)root.gameObject.SetActive(false);return;}
-   if(!Ensure(hud))return;var host=HudRoot.GetValue(hud) as GameObject;if(!host||!host.activeInHierarchy){if(root.gameObject.activeSelf)root.gameObject.SetActive(false);return;}
+   if(!Active(p,out remaining,out capacity)||Hud.IsUserHidden()){RestorePower();if(root&&root.gameObject.activeSelf)root.gameObject.SetActive(false);return;}
+   if(!Ensure(hud))return;var host=HudRoot.GetValue(hud) as GameObject;if(!host||!host.activeInHierarchy){RestorePower();if(root.gameObject.activeSelf)root.gameObject.SetActive(false);return;}
    float width=source.rect.width,height=source.rect.height;
-   if(width<=0||height<=0)return;
+   if(width<=0||height<=0){RestorePower();return;}
    root.anchorMin=root.anchorMax=new Vector2(0.5f,0.5f);root.pivot=source.pivot;root.sizeDelta=new Vector2(width,height);
    var parentScale=root.parent.lossyScale;var desired=source.lossyScale;
    root.localScale=new Vector3(Math.Abs(parentScale.x)>0.00001f?desired.x/parentScale.x:1f,Math.Abs(parentScale.y)>0.00001f?desired.y/parentScale.y:1f,1f);

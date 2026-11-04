@@ -113,6 +113,7 @@ PASS shield bar is blue and preserves original HP presentation
 PASS shield bar uses native HP shape directly beside it
 PASS guardian power block moves right beyond shield plus sixteen pixel clearance
 PASS guardian power spacing does not accumulate or drift between unchanged frames
+PASS unchanged frames never restore and reapply guardian transforms or force redundant UI rebuilds
 PASS damage updates bar ratio and live number
 PASS unchanged frame reuses UI clone without rewriting values
 PASS shield bar follows food-driven HP width and UI scale
@@ -203,4 +204,4 @@ PASS installed Regeneration health and time multipliers produce matching player 
 PASS disabled optional regeneration mod retains native food rate
 PASS invalid optional regeneration interval cannot create infinite healing
 PASS missing optional regeneration mod remains supported
-Behavior checks: 205
+Behavior checks: 206
