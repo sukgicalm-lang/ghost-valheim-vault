@@ -1,9 +1,9 @@
 {
-  "version": "1.0.50",
+  "version": "1.0.51",
   "date": "2026-11-04",
-  "file": "downloads/Ghost-GhostValheimSuite-1.0.50.zip",
-  "bytes": 398900102,
-  "sha256": "a36f8e59b6e94a76c2031a5045d66b2a8c5d06c12e6467731f2719a2ebd7ae35",
+  "file": "downloads/Ghost-GhostValheimSuite-1.0.51.zip",
+  "bytes": 398909913,
+  "sha256": "af8930cdf3d6961b627eb3f80465fb8299b1157181e612bbc99be2628e2aa2d1",
   "appIntegration": true,
   "dependencies": [
     "denikson-BepInExPack_Valheim-5.4.2351",
@@ -11,6 +11,6 @@
     "shudnal-ConfigurationManager-1.1.25",
     "Ghost-GhostSmelterControl-1.0.3"
   ],
-  "notes": "최대 수 일괄 소환 · 해골 장비 분산 · 간결한 보호막 숫자와 남은 시간",
-  "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.50/Ghost-GhostValheimSuite-1.0.50.zip"
+  "notes": "기존 해골 교체 소환 · 여왕 버프 기본 간격 복원",
+  "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.51/Ghost-GhostValheimSuite-1.0.51.zip"
 }
