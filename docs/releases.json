@@ -1,5 +1,21 @@
 [
   {
+    "version": "1.0.45",
+    "date": "2026-11-04",
+    "file": "downloads/Ghost-GhostValheimSuite-1.0.45.zip",
+    "bytes": 398840081,
+    "sha256": "7399082b476e4b0a420c9a5a1651d17b0d986a381a411d81f133fe0e99f7a85c",
+    "appIntegration": true,
+    "dependencies": [
+      "denikson-BepInExPack_Valheim-5.4.2351",
+      "ValheimModding-JsonDotNET-13.0.4",
+      "shudnal-ConfigurationManager-1.1.25",
+      "Ghost-GhostSmelterControl-1.0.3"
+    ],
+    "notes": "보호의 스태프 재시전 시 방어막을 새 최대치로 충전 · 내 HP·해골 방어막 수치 즉시 반영",
+    "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.45/Ghost-GhostValheimSuite-1.0.45.zip"
+  },
+  {
     "version": "1.0.44",
     "date": "2026-11-03",
     "file": "downloads/Ghost-GhostValheimSuite-1.0.44.zip",
