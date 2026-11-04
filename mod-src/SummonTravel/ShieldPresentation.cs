@@ -17,18 +17,18 @@ namespace GhostSummonTravel {
   static readonly MethodInfo ShowHud=AccessTools.Method(typeof(EnemyHud),"ShowHud");
   sealed class Row {internal GameObject Root;internal Component Text;internal string Label;internal float Font=-1;}
   sealed class Native {internal GameObject Root;internal bool Active;}
-  sealed class Vitals {internal Character Character;internal Component Name;internal List<Native> Hidden=new List<Native>();internal Row Health,Shield,Timer;}
+  sealed class Vitals {internal EnemyHud Hud;internal Character Character;internal Component Name;internal List<Native> Hidden=new List<Native>();internal Row Health,Shield,Timer;}
   static readonly Dictionary<GameObject,Vitals> Views=new Dictionary<GameObject,Vitals>();
   sealed class LocalHud {internal EnemyHud Hud;internal Character Character;}
   static readonly Dictionary<GameObject,LocalHud> LocalRoots=new Dictionary<GameObject,LocalHud>();
   sealed class RepairRequest {internal bool Force;internal double Due;}
   static readonly Dictionary<Character,RepairRequest> Pending=new Dictionary<Character,RepairRequest>();
-  internal static void RequestRepair(Character c,bool force,double delay){if(!Travel.IsSkeleton(c))return;RepairRequest request;if(Pending.TryGetValue(c,out request)){request.Force|=force;request.Due=Math.Min(request.Due,Travel.Now+delay);}else Pending[c]=new RepairRequest{Force=force,Due=Travel.Now+delay};}
+  internal static void RequestRepair(Character c,bool force,double delay){if(!Travel.IsSkeleton(c)||!SummonLifecycle.Usable(c))return;RepairRequest request;if(Pending.TryGetValue(c,out request)){request.Force|=force;request.Due=Math.Min(request.Due,Travel.Now+delay);}else Pending[c]=new RepairRequest{Force=force,Due=Travel.Now+delay};}
   internal static void ProcessRepairs(){Character selected=null;RepairRequest request=null;foreach(var entry in Pending){if(!entry.Key||entry.Value.Due<=Travel.Now){selected=entry.Key;request=entry.Value;break;}}if(request==null)return;Pending.Remove(selected);if(selected)Repair(selected,request.Force);}
   internal static void ValidateApi(){if(Instances==null||Trigger==null||Huds==null||ShowHud==null)throw new MissingMemberException("해골 방어막: 게임의 이펙트·체력 표시 API가 맞지 않습니다.");}
   internal static bool Missing(GameObject[] effects){return effects==null||effects.Length==0||effects.Any(x=>!x||!x.activeInHierarchy);}
   internal static void Repair(Character c,bool force){
-   if(!Travel.IsSkeleton(c)||c.IsDead()||!c.GetComponent<ZNetView>().IsOwner())return;
+   if(!Travel.IsSkeleton(c)||!SummonLifecycle.Usable(c)||!c.GetComponent<ZNetView>().IsOwner())return;
    foreach(var shield in c.GetSEMan().GetStatusEffects().OfType<SE_Shield>()){
     float remaining,total;if(!Travel.ActiveShield(shield,out remaining,out total)||total<=0)continue;
     if((shield.m_ttl>0&&shield.GetDuration()>shield.m_ttl)||!shield.m_startEffects.HasEffects())continue;
@@ -67,7 +67,7 @@ namespace GhostSummonTravel {
   }
   static void SetProperty(object obj,string name,object value){var p=obj.GetType().GetProperty(name,BindingFlags.Instance|BindingFlags.Public);if(p!=null&&p.CanWrite)p.SetValue(obj,value,null);}
   internal static bool Managed(Character c){return c&&(c==Player.m_localPlayer||(Travel.IsSkeleton(c)&&c.IsTamed()));}
-  internal static bool Visible(Character c){var p=Player.m_localPlayer;if(!p||!c||c.IsDead())return false;if(c==p){float left,max;return PlayerShieldBar.Active(p,out left,out max);}return Managed(c)&&Vector3.Distance(c.transform.position,p.transform.position)<=30f;}
+  internal static bool Visible(Character c){var p=Player.m_localPlayer;if(!p||!SummonLifecycle.Usable(c))return false;if(c==p){float left,max;return PlayerShieldBar.Active(p,out left,out max);}return Managed(c)&&Vector3.Distance(c.transform.position,p.transform.position)<=30f;}
   internal static void PrepareLocal(EnemyHud hud){var p=Player.m_localPlayer;if(!p||!Visible(p))return;var table=Huds.GetValue(hud) as IDictionary;bool existed=table!=null&&table.Contains(p);ShowHud.Invoke(hud,new object[]{p,false});if(!existed&&table!=null&&table.Contains(p)){var gui=Field(table[p],"m_gui") as GameObject;if(gui)LocalRoots[gui]=new LocalHud{Hud=hud,Character=p};}}
   internal static void KeepVisible(EnemyHud hud){var table=Huds.GetValue(hud) as IDictionary;if(table==null)return;foreach(DictionaryEntry entry in table){var c=entry.Key as Character;if(Managed(c)&&Visible(c))AccessTools.Field(entry.Value.GetType(),"m_hoverTimer")?.SetValue(entry.Value,0f);}}
   static float NameSize(Component template){var value=template.GetType().GetProperty("fontSize")?.GetValue(template,null);float size=value is float?(float)value:0;return Travel.Finite(size)&&size>0?size:14;}
@@ -86,15 +86,39 @@ namespace GhostSummonTravel {
   static void UpdateRow(Row row,string text,bool visible=true){if(row==null||!row.Root)return;if(row.Label!=text){SetText(row.Text,text);row.Label=text;}if(row.Root.activeSelf!=visible)row.Root.SetActive(visible);}
   internal static string HealthFormat(Character c){return Math.Ceiling(Math.Max(0,c.GetHealth())).ToString("0",CultureInfo.InvariantCulture)+" / "+Math.Ceiling(Math.Max(0,c.GetMaxHealth())).ToString("0",CultureInfo.InvariantCulture);}
   static void Remember(Vitals view,GameObject root){if(root)view.Hidden.Add(new Native{Root=root,Active=root.activeSelf});}
-  static void DestroyView(Vitals view){foreach(var row in new[]{view.Health,view.Shield,view.Timer})if(row?.Root)UnityEngine.Object.Destroy(row.Root);foreach(var native in view.Hidden)if(native.Root)native.Root.SetActive(native.Active);}
+  static void DestroyView(Vitals view){foreach(var row in new[]{view.Health,view.Shield,view.Timer})if(row?.Root){row.Root.SetActive(false);UnityEngine.Object.Destroy(row.Root);}foreach(var native in view.Hidden)if(native.Root)native.Root.SetActive(native.Active);}
+  internal static void Forget(Character c){Pending.Remove(c);foreach(var entry in Views)if(ReferenceEquals(entry.Value.Character,c)&&entry.Key)entry.Key.SetActive(false);}
+  static readonly HashSet<Character> ActiveActors=new HashSet<Character>();
+  static readonly HashSet<GameObject> ActiveRoots=new HashSet<GameObject>();
+  static readonly List<object> RemovedKeys=new List<object>();
+  internal static void PruneHud(EnemyHud hud){
+   var table=Huds.GetValue(hud) as IDictionary;if(table==null)return;var actors=ActiveActors;actors.Clear();foreach(var actor in Character.GetAllCharacters())actors.Add(actor);var roots=ActiveRoots;roots.Clear();var remove=RemovedKeys;remove.Clear();
+   foreach(DictionaryEntry entry in table){
+    var c=entry.Key as Character;var gui=Field(entry.Value,"m_gui") as GameObject;
+    bool ours=!ReferenceEquals(gui,null)&&(Views.ContainsKey(gui)||LocalRoots.ContainsKey(gui))||SummonLifecycle.IsRetiring(c)||Managed(c);if(!ours){if(gui)roots.Add(gui);continue;}
+    if(!SummonLifecycle.Usable(c)||!actors.Contains(c)){
+     remove.Add(entry.Key);if(gui){if(Views.TryGetValue(gui,out var view)){DestroyView(view);Views.Remove(gui);}Labels.Remove(gui);LocalRoots.Remove(gui);gui.SetActive(false);UnityEngine.Object.Destroy(gui);}if(!ReferenceEquals(c,null))Pending.Remove(c);continue;
+    }
+    if(gui)roots.Add(gui);
+   }
+   foreach(var key in remove)table.Remove(key);
+   // A still-alive actor or an active GUI is not proof that this is its current
+   // HUD. Native removal/rebinding can happen before the cache is revisited.
+   foreach(var gui in Views.Keys.ToArray()){
+    var view=Views[gui];if(!ReferenceEquals(view.Hud,hud))continue;bool bound=gui&&roots.Contains(gui)&&table.Contains(view.Character)&&ReferenceEquals(Field(table[view.Character],"m_gui"),gui);
+    if(bound)continue;DestroyView(view);Views.Remove(gui);Labels.Remove(gui);LocalRoots.Remove(gui);
+    if(gui&&!roots.Contains(gui)){gui.SetActive(false);UnityEngine.Object.Destroy(gui);}
+   }
+  }
   internal static void UpdateHud(EnemyHud hud){
+   PruneHud(hud);
    var table=Huds.GetValue(hud) as IDictionary;if(table==null)return;
    foreach(var dead in LocalRoots.Keys.Where(x=>!x).ToArray())LocalRoots.Remove(dead);
    foreach(var dead in Views.Keys.Where(x=>!x||!Managed(Views[x].Character)).ToArray()){DestroyView(Views[dead]);Views.Remove(dead);Labels.Remove(dead);}
    foreach(DictionaryEntry entry in table){
-    var c=entry.Key as Character;if(!Managed(c))continue;var gui=Field(entry.Value,"m_gui") as GameObject;if(!gui||!gui.activeInHierarchy)continue;bool self=c==Player.m_localPlayer;
+    var c=entry.Key as Character;if(!Managed(c)||!SummonLifecycle.Usable(c))continue;var gui=Field(entry.Value,"m_gui") as GameObject;if(!gui||!gui.activeInHierarchy)continue;bool self=c==Player.m_localPlayer;
     Vitals view;if(!Views.TryGetValue(gui,out view)){
-     var template=Field(entry.Value,"m_name") as Component;if(!template)continue;view=new Vitals{Character=c,Name=template};Views[gui]=view;
+     var template=Field(entry.Value,"m_name") as Component;if(!template)continue;view=new Vitals{Hud=hud,Character=c,Name=template};Views[gui]=view;
      if(self){for(int i=0;i<gui.transform.childCount;i++)Remember(view,gui.transform.GetChild(i).gameObject);}else{var health=gui.transform.Find("Health");if(health)Remember(view,health.gameObject);}
      if(!self){view.Health=MakeRow(gui,template,"GhostHealthRow",new Color(1f,0.65f,0.6f,1));view.Shield=MakeRow(gui,template,"GhostShieldRow",new Color(0.4f,0.85f,1,1));Labels[gui]=view.Shield.Text;}
      view.Timer=MakeRow(gui,template,"GhostShieldTime",new Color(0.65f,0.9f,1,1));
@@ -104,7 +128,7 @@ namespace GhostSummonTravel {
     float left,max,seconds;bool known=Travel.ShieldInfo(c,out left,out max,out seconds);string clock=TimeFormat(seconds);UpdateRow(view.Timer,clock,clock.Length>0);if(!self){UpdateRow(view.Health,HealthFormat(c));UpdateRow(view.Shield,Format(known,left,max));}
    }
   }
-  internal static void ClearHud(){foreach(var view in Views.Values)DestroyView(view);Views.Clear();foreach(var entry in LocalRoots){var data=entry.Value;var table=data.Hud?Huds.GetValue(data.Hud) as IDictionary:null;if(table!=null&&table.Contains(data.Character)&&Field(table[data.Character],"m_gui") as GameObject==entry.Key)table.Remove(data.Character);if(entry.Key)UnityEngine.Object.Destroy(entry.Key);}LocalRoots.Clear();Labels.Clear();TextProperties.Clear();Pending.Clear();}
+  internal static void ClearHud(){foreach(var view in Views.Values)DestroyView(view);Views.Clear();foreach(var entry in LocalRoots){var data=entry.Value;var table=data.Hud?Huds.GetValue(data.Hud) as IDictionary:null;if(table!=null&&table.Contains(data.Character)&&Field(table[data.Character],"m_gui") as GameObject==entry.Key)table.Remove(data.Character);if(entry.Key)UnityEngine.Object.Destroy(entry.Key);}LocalRoots.Clear();Labels.Clear();TextProperties.Clear();Pending.Clear();ActiveActors.Clear();ActiveRoots.Clear();RemovedKeys.Clear();}
   static bool hudFailed;
   [HarmonyPatch(typeof(EnemyHud),"LateUpdate")]static class HudPatch{
    [HarmonyPrefix]static void Prefix(EnemyHud __instance){if(hudFailed)return;try{PrepareLocal(__instance);}catch(Exception e){hudFailed=true;Plugin.LogFault(e);}}
