@@ -112,6 +112,24 @@ class Behavior{
   Hud.Hidden=true;PlayerShieldBar.UpdateHud(ownHud);Check(!shieldRoot.gameObject.activeSelf,"user HUD hide also hides shield bar");Hud.Hidden=false;selfShield.m_damage=450;PlayerShieldBar.UpdateHud(ownHud);Check(!shieldRoot.gameObject.activeSelf,"depleted own shield hides immediately");
   selfShield.m_damage=0;selfShield.m_time=121;Check(!PlayerShieldBar.Active(p,out left,out max),"expired own shield cannot appear active");selfShield.m_time=12;p.Dead=true;Check(!PlayerShieldBar.Active(p,out left,out max),"dead player has no active shield bar");p.Dead=false;Travel.Clear();Check(!shieldRoot.gameObject,"cleanup destroys only cloned shield UI");
   p.Teleporting=true;Travel.Begin(c,1,p.GetZDOID(),token);Travel.Abort(new Exception("test containment"));Check(Travel.Faulted&&!c.m_body.isKinematic&&c.m_body.useGravity&&p.Teleporting,"unexpected mod error releases bodies without changing native player teleport state");Travel.Faulted=false;p.Teleporting=false;
+  p.Manager.Effects.Clear();var recastShield=new SE_Shield{Hash=Travel.ProtectionShieldHash,m_character=p,m_totalAbsorbDamage=300,m_damage=245,m_ttl=120,m_time=0};p.Manager.Effects.Add(recastShield);
+  Check(Travel.RefillProtection(p.Manager,Travel.ProtectionShieldHash,true)&&recastShield.m_damage==0,"successful protection staff recast refills 55 remaining to full 300");
+  Check(Travel.ShieldAmounts(p,out left,out max)&&left==300&&max==300,"own shield HUD sees immediate 300 of 300 after recast");
+  Check(recastShield.m_time==0&&recastShield.m_ttl==120,"recast preserves native timer and staff duration calculation");
+  recastShield.m_damage=25;Check(Travel.RefillProtection(p.Manager,Travel.ProtectionShieldHash,true)&&p.Manager.Effects.Count==1&&recastShield.m_damage==0,"repeated recasts overwrite remaining absorb without stacking effects");
+  recastShield.m_totalAbsorbDamage=350;recastShield.m_damage=40;Travel.RefillProtection(p.Manager,Travel.ProtectionShieldHash,true);Check(recastShield.m_totalAbsorbDamage==350&&recastShield.m_damage==0,"skill-scaled native capacity is retained rather than hardcoded to 300");
+  recastShield.m_totalAbsorbDamage=300;recastShield.m_damage=80;Check(!Travel.RefillProtection(p.Manager,Travel.ProtectionShieldHash,false)&&recastShield.m_damage==80,"non-refresh status application never recharges an existing shield");
+  recastShield.Hash=111;Check(!Travel.RefillProtection(p.Manager,111,true)&&recastShield.m_damage==80,"unrelated shield types are excluded from protection staff change");recastShield.Hash=Travel.ProtectionShieldHash;
+  p.GetComponent<ZNetView>().Zdo.Owner=2;Check(!Travel.RefillProtection(p.Manager,Travel.ProtectionShieldHash,true)&&recastShield.m_damage==80,"remote peer cannot refill another player's shield");p.GetComponent<ZNetView>().Zdo.Owner=1;
+  p.Dead=true;Check(!Travel.RefillProtection(p.Manager,Travel.ProtectionShieldHash,true)&&recastShield.m_damage==80,"recast never revives or modifies a dead target");p.Dead=false;
+  recastShield.m_totalAbsorbDamage=float.NaN;Check(!Travel.RefillProtection(p.Manager,Travel.ProtectionShieldHash,true),"invalid native capacity cannot be refilled");
+  c.Manager.Effects.Clear();var summonShield=new SE_Shield{Hash=Travel.ProtectionShieldHash,m_character=c,m_totalAbsorbDamage=300,m_damage=100,m_ttl=120,m_time=10};c.Manager.Effects.Add(summonShield);
+  Travel.SaveShields(c);summonShield.m_damage=0;summonShield.m_time=0;Travel.RestoreShields(c);Check(summonShield.m_damage==100&&summonShield.m_time==10,"teleport restoration preserves spent protection shield and elapsed duration");
+  Check(Travel.RefillProtection(c.Manager,Travel.ProtectionShieldHash,true)&&summonShield.m_damage==0,"same successful staff recast also refills an existing summon shield");
+  var recastHook=typeof(Travel).GetNestedType("RecastPatch",System.Reflection.BindingFlags.NonPublic).GetMethod("Postfix",System.Reflection.BindingFlags.Static|System.Reflection.BindingFlags.NonPublic);
+  summonShield.m_damage=99;recastHook.Invoke(null,new object[]{c.Manager,Travel.ProtectionShieldHash,true});Check(summonShield.m_damage==0,"actual Harmony recast hook refills and synchronizes summon shield");
+  recastShield.m_totalAbsorbDamage=300;recastShield.m_damage=200;recastHook.Invoke(null,new object[]{p.Manager,Travel.ProtectionShieldHash,true});Check(recastShield.m_damage==0,"actual Harmony recast hook refills player before skeleton-only presentation checks");
+  Travel.SaveShields(c);v.Zdo.Owner=2;Check(Travel.ShieldAmounts(c,out left,out max)&&left==300&&max==300,"refilled summon shield is exported to remote HUD snapshot");v.Zdo.Owner=1;Travel.Clear();
   Console.WriteLine("Behavior checks: "+count);
  }
 }

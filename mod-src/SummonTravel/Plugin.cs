@@ -8,13 +8,13 @@ using System.Runtime.CompilerServices;
 using BepInEx;
 using HarmonyLib;
 using UnityEngine;
-[assembly: AssemblyVersion("1.0.3.0")]
-[assembly: AssemblyFileVersion("1.0.3.0")]
+[assembly: AssemblyVersion("1.0.4.0")]
+[assembly: AssemblyFileVersion("1.0.4.0")]
 namespace GhostSummonTravel {
- [BepInPlugin(Guid,"Ghost 해골 동행·방어막 표시","1.0.3")]
+ [BepInPlugin(Guid,"Ghost 해골 동행·방어막 표시","1.0.4")]
  public sealed class Plugin:BaseUnityPlugin {
   public const string Guid="ghost.valheim.summontravel";Harmony harmony;internal static Plugin Instance;
-  void Awake(){Instance=this;Travel.Faulted=false;Travel.ValidateApi();ShieldPresentation.ValidateApi();IdleSpacing.ValidateApi();PlayerShieldBar.ValidateApi();harmony=new Harmony(Guid);try{harmony.PatchAll(typeof(Plugin).Assembly);}catch{harmony.UnpatchSelf();throw;}Logger.LogInfo("해골 동행 1.0.3: 검은 로딩 화면 충돌 수정·순간이동 반복 작업 제한·내 HP 옆 방어막 막대");}
+  void Awake(){Instance=this;Travel.Faulted=false;Travel.ValidateApi();ShieldPresentation.ValidateApi();IdleSpacing.ValidateApi();PlayerShieldBar.ValidateApi();harmony=new Harmony(Guid);try{harmony.PatchAll(typeof(Plugin).Assembly);}catch{harmony.UnpatchSelf();throw;}Logger.LogInfo("해골 동행 1.0.4: 보호의 스태프 재시전 시 새 방어막 흡수량으로 충전");}
   internal static void LogFault(Exception e){if(Instance)Instance.Logger.LogError("해골 자동 동행 오류로 해당 기능을 중단하고 기본 게임 이동을 유지합니다. 게임 재시작 전 로그를 보관하세요. "+e);}
   void Update(){try{Travel.Tick();}catch(Exception e){Travel.Abort(e);}}void OnDestroy(){Travel.Clear();if(harmony!=null)harmony.UnpatchSelf();Instance=null;}
  }
@@ -170,6 +170,17 @@ namespace GhostSummonTravel {
    List<ShieldRecord> records;if(!ReadShieldRecords(c,out records))return false;
    foreach(var r in records.Where(r=>r.Alive)){capacity+=r.Total;remaining+=Math.Max(0,r.Total-r.Damage);}return true;
   }
+  internal static readonly int ProtectionShieldHash=StableHash("Staff_shield");
+  // Native Internal_AddStatusEffect(resetTime:true) already resets the timer
+  // and computes this cast's capacity through SetLevel, but retains m_damage.
+  // Clear only that spent absorb, after native success, on the owning peer.
+  internal static bool RefillProtection(SEMan manager,int nameHash,bool resetTime){
+   if(!resetTime||nameHash!=ProtectionShieldHash)return false;
+   var c=ManagerCharacter.GetValue(manager) as Character;var s=manager.GetStatusEffect(nameHash) as SE_Shield;
+   if(!c||c.IsDead()||!s)return false;var v=c.GetComponent<ZNetView>();if(!v||!v.IsValid()||!v.IsOwner())return false;
+   float capacity=(float)Total.GetValue(s);if(!Finite(capacity)||capacity<=0)return false;
+   Damage.SetValue(s,0f);return true;
+  }
   internal static bool ActiveShield(SE_Shield s,out float remaining,out float capacity){
    capacity=(float)Total.GetValue(s);float damage=(float)Damage.GetValue(s);remaining=0;
    if(!Finite(capacity)||!Finite(damage)||capacity<0||damage<0||(s.m_ttl>0&&s.GetDuration()>s.m_ttl)||damage>capacity)return false;
@@ -201,6 +212,6 @@ namespace GhostSummonTravel {
   [HarmonyPatch(typeof(Character),"UnderWorldCheck")]static class FloorPatch{[HarmonyPrefix]static bool Prefix(Character __instance){return !Held(__instance);}}
   [HarmonyPatch(typeof(SEMan),"Update")]static class SavePatch{[HarmonyPostfix]static void Postfix(SEMan __instance){try{var c=ManagerCharacter.GetValue(__instance) as Character;if(IsSkeleton(c)&&Now-Shields.GetOrCreateValue(c).SavedAt>=0.1)SaveShields(c);}catch(Exception e){Abort(e);}}}
   [HarmonyPatch(typeof(SE_Shield),"OnDamaged")]static class DamagePatch{[HarmonyPostfix]static void Postfix(SE_Shield __instance){try{var c=EffectCharacter.GetValue(__instance) as Character;SaveShields(c);if(IsSkeleton(c)&&c.GetComponent<ZNetView>().IsOwner())ZDOMan.instance.ForceSendZDO(c.GetZDOID());}catch(Exception e){Abort(e);}}}
-  [HarmonyPatch(typeof(SEMan),"Internal_AddStatusEffect")]static class RecastPatch{[HarmonyPostfix]static void Postfix(SEMan __instance,int nameHash){try{var c=ManagerCharacter.GetValue(__instance) as Character;if(!IsSkeleton(c)||!c.GetComponent<ZNetView>().IsOwner()||!(__instance.GetStatusEffect(nameHash) is SE_Shield))return;ShieldPresentation.RequestRepair(c,true,0.05);SaveShields(c);ZDOMan.instance.ForceSendZDO(c.GetZDOID());}catch(Exception e){Abort(e);}}}
+  [HarmonyPatch(typeof(SEMan),"Internal_AddStatusEffect")]static class RecastPatch{[HarmonyPostfix]static void Postfix(SEMan __instance,int nameHash,bool resetTime){try{RefillProtection(__instance,nameHash,resetTime);var c=ManagerCharacter.GetValue(__instance) as Character;if(!IsSkeleton(c)||!c.GetComponent<ZNetView>().IsOwner()||!(__instance.GetStatusEffect(nameHash) is SE_Shield))return;ShieldPresentation.RequestRepair(c,true,0.05);SaveShields(c);ZDOMan.instance.ForceSendZDO(c.GetZDOID());}catch(Exception e){Abort(e);}}}
  }
 }
