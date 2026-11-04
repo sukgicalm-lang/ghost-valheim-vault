@@ -1,5 +1,21 @@
 [
   {
+    "version": "1.0.52",
+    "date": "2026-11-04",
+    "file": "downloads/Ghost-GhostValheimSuite-1.0.52.zip",
+    "bytes": 398922960,
+    "sha256": "5b19596e4c5321c417cd3981d34f0474b73907550ca56c858a7380688407dfa1",
+    "appIntegration": true,
+    "dependencies": [
+      "denikson-BepInExPack_Valheim-5.4.2351",
+      "ValheimModding-JsonDotNET-13.0.4",
+      "shudnal-ConfigurationManager-1.1.25",
+      "Ghost-GhostSmelterControl-1.0.3"
+    ],
+    "notes": "해골 최대 수 동시 소환 · 실제 무기 종류 다양화 수정",
+    "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.52/Ghost-GhostValheimSuite-1.0.52.zip"
+  },
+  {
     "version": "1.0.51",
     "date": "2026-11-04",
     "file": "downloads/Ghost-GhostValheimSuite-1.0.51.zip",
