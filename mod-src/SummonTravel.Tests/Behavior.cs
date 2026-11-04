@@ -126,9 +126,11 @@ class Behavior{
   c.Manager.Effects.Clear();var summonShield=new SE_Shield{Hash=Travel.ProtectionShieldHash,m_character=c,m_totalAbsorbDamage=300,m_damage=100,m_ttl=120,m_time=10};c.Manager.Effects.Add(summonShield);
   Travel.SaveShields(c);summonShield.m_damage=0;summonShield.m_time=0;Travel.RestoreShields(c);Check(summonShield.m_damage==100&&summonShield.m_time==10,"teleport restoration preserves spent protection shield and elapsed duration");
   Check(Travel.RefillProtection(c.Manager,Travel.ProtectionShieldHash,true)&&summonShield.m_damage==0,"same successful staff recast also refills an existing summon shield");
-  var recastHook=typeof(Travel).GetNestedType("RecastPatch",System.Reflection.BindingFlags.NonPublic).GetMethod("Postfix",System.Reflection.BindingFlags.Static|System.Reflection.BindingFlags.NonPublic);
-  summonShield.m_damage=99;recastHook.Invoke(null,new object[]{c.Manager,Travel.ProtectionShieldHash,true});Check(summonShield.m_damage==0,"actual Harmony recast hook refills and synchronizes summon shield");
-  recastShield.m_totalAbsorbDamage=300;recastShield.m_damage=200;recastHook.Invoke(null,new object[]{p.Manager,Travel.ProtectionShieldHash,true});Check(recastShield.m_damage==0,"actual Harmony recast hook refills player before skeleton-only presentation checks");
+  summonShield.m_damage=99;ProtectionRecast.Mark(summonShield);Check(ProtectionRecast.Finish(summonShield)&&summonShield.m_damage==0,"shared native refresh completion refills and synchronizes summon shield");
+  recastShield.m_totalAbsorbDamage=300;recastShield.m_damage=200;ProtectionRecast.Mark(recastShield);Check(ProtectionRecast.Finish(recastShield)&&recastShield.m_damage==0,"shared native refresh completion refills player before summon-only presentation");
+  recastShield.m_damage=90;Check(!ProtectionRecast.Finish(recastShield)&&recastShield.m_damage==90,"SetLevel without ResetTime never recharges shield");
+  ProtectionRecast.Mark(recastShield);Time.frameCount++;Check(!ProtectionRecast.Finish(recastShield)&&recastShield.m_damage==90,"stale timer reset cannot recharge a later unrelated level update");
+  ProtectionRecast.Mark(recastShield);ProtectionRecast.Clear();Check(!ProtectionRecast.Finish(recastShield)&&recastShield.m_damage==90,"world cleanup discards pending refresh markers");
   Travel.SaveShields(c);v.Zdo.Owner=2;Check(Travel.ShieldAmounts(c,out left,out max)&&left==300&&max==300,"refilled summon shield is exported to remote HUD snapshot");v.Zdo.Owner=1;Travel.Clear();
   Check(!ProtectionRange.Apply(null),"missing area effect is ignored safely");
   var aoeGo=new GameObject{name="staff_shield_aoe(Clone)"};var aoe=new Aoe();aoeGo.Add(aoe);var sphere=new SphereCollider();aoeGo.Add(sphere);
