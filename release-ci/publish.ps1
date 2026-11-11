@@ -55,7 +55,7 @@ git -C $root config user.email '41898282+github-actions[bot]@users.noreply.githu
 git -C $root add -- docs/index.html docs/client-release.json docs/smelter-release.json docs/smelter-releases.json docs/install.html docs/install.js docs/update-history.json
 git -C $root diff --cached --quiet
 if ($LASTEXITCODE -ne 0) {
-    git -C $root commit -m 'Publish launcher 1.0.14 fix production binary verification for Ghost cleanup'
+    git -C $root commit -m ('Publish launcher ' + $bundle.client.version + ' with preserved mod activation settings')
     if ($LASTEXITCODE) { throw 'Could not commit website release metadata' }
     git -C $root push origin HEAD:main
     if ($LASTEXITCODE) { throw 'Concurrent website update; stopped without force-pushing' }
