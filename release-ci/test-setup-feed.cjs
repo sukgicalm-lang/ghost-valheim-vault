@@ -1,4 +1,4 @@
-// Execute the exact published launcher 1.0.12 setup loader/planner with mocked I/O.
+// Execute the launcher source patch's setup loader and planner with mocked I/O.
 // Run: GHOST_TYPESCRIPT=/path/to/typescript.js node release-ci/test-setup-feed.cjs
 const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),assert=require('node:assert/strict');
 const ts=require(process.env.GHOST_TYPESCRIPT||'typescript');
@@ -31,7 +31,7 @@ async function test(name,fn){await fn();passed++;console.log('PASS '+name);}
   assert.equal(published.packages.length,28);assert.equal(bundled.setup.packages.length,29);
   assert.equal(JSON.stringify(published.packages),JSON.stringify(bundled.setup.packages.filter(p=>p.name!==retired)));
  });
- await test('actual 1.0.12 validator accepts the smaller setup and all dependencies remain complete',()=>{
+ await test('launcher validator accepts the smaller setup and all dependencies remain complete',()=>{
   const setup=core.validateGhostSetup(published);assert.equal(setup.packages.length,28);
   assert.equal(core.orderSetupPackages(setup.packages).length,28);
   assert.ok(setup.packages.every(p=>(p.dependencies||[]).every(d=>!d.startsWith(retired+'-'))));
@@ -50,13 +50,24 @@ async function test(name,fn){await fn();passed++;console.log('PASS '+name);}
   const installed=required.map(p=>({name:p.name,version:p.version,enabled:true}));
   const payloads=new Map(required.map(p=>[p.name,true]));
   const plan=core.planGhostSetup(required,installed,payloads);
-  assert.equal(plan.install.length,0);assert.equal(plan.enable.length,0);
+  assert.equal(plan.length,0);
   installed.push({name:retired,version:'1.1.2',enabled:false});
-  const disabled=core.planGhostSetup(required,installed,payloads);assert.equal(disabled.enable.length,0);
+  assert.equal(core.planGhostSetup(required,installed,payloads).length,0);
+ });
+ await test('a disabled Hotbar stays out of the plan even when outdated or missing its DLL',()=>{
+  const required=core.validateGhostSetup(published).packages;
+  const installed=required.map(p=>({name:p.name,version:p.version,enabled:true}));
+  const payloads=new Map(required.map(p=>[p.name,true]));
+  const hotbar=installed.find(p=>p.name==='cjayride-HotbarSwitch');assert.ok(hotbar);
+  hotbar.enabled=false;hotbar.version='0.1.0';payloads.delete(hotbar.name);
+  assert.equal(core.planGhostSetup(required,installed,payloads).length,0);
+  hotbar.enabled=true;
+  const plan=core.planGhostSetup(required,installed,payloads);
+  assert.equal(plan.length,1);assert.equal(plan[0].name,hotbar.name);
  });
  await test('clean profile installs exactly the current 28 packages',()=>{
   const plan=core.planGhostSetup(published.packages,[],new Map());
-  assert.equal(plan.install.length,28);assert.ok(!plan.install.some(p=>p.name===retired));
+  assert.equal(plan.length,28);assert.ok(!plan.some(p=>p.name===retired));
  });
  await test('once cached, revision 4 stays retired during offline use',async()=>{
   const l=loader(published,published,true),setup=await l.loadGhostSetup(profile);
@@ -77,5 +88,5 @@ async function test(name,fn){await fn();passed++;console.log('PASS '+name);}
   const history=JSON.parse(fs.readFileSync(path.join(root,'docs/update-history.json'),'utf8'));
   assert.ok([...history.entries,...history.siteUpdates].every(r=>/^\d+\.\d+\.\d+$/.test(r.version)));
  });
- console.log('RESULT: '+passed+' passed, 0 failed. Published launcher executable unchanged.');
+ console.log('RESULT: '+passed+' passed, 0 failed.');
 })().catch(e=>{console.error(e);process.exitCode=1;});
