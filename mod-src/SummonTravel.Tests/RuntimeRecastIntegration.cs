@@ -32,6 +32,24 @@ class RuntimeRecastIntegration {
   try{
    harmony.Patch(typeof(StatusEffect).GetMethod("ResetTime"),postfix:new HarmonyMethod(Hook("ResetPatch")));
    harmony.Patch(typeof(SE_Shield).GetMethod("SetLevel"),postfix:new HarmonyMethod(Hook("LevelPatch")));
+   var fallPatch=Travel.GetNestedType("FallShieldPatch",BindingFlags.NonPublic);
+   var fallTarget=typeof(SE_Shield).GetMethod(nameof(SE_Shield.OnDamaged));
+   harmony.Patch(fallTarget,prefix:new HarmonyMethod(fallPatch.GetMethod("Prefix",BindingFlags.Static|BindingFlags.NonPublic)),
+    postfix:new HarmonyMethod(fallPatch.GetMethod("Postfix",BindingFlags.Static|BindingFlags.NonPublic)));
+   HitData Fall(float amount)=>new HitData{m_hitType=HitData.HitType.Fall,m_damage=new HitData.DamageTypes{m_damage=amount}};
+   own.m_damage=0;
+   var fall=Fall(100);own.OnDamaged(fall,null);
+   Check(own.m_damage==100&&fall.GetTotalDamage()==0&&!own.IsDone(),"100 fall damage takes a 300 shield to 200 without health damage");
+   own.m_damage=275;fall=Fall(100);own.OnDamaged(fall,null);
+   Check(own.IsDone()&&fall.GetTotalDamage()==75,"25 shield absorbs exactly 25 of 100 fall damage and breaks");
+   fall=Fall(10);float spent=own.m_damage;own.OnDamaged(fall,null);
+   Check(own.m_damage==spent&&fall.GetTotalDamage()==10,"another fall before native shield cleanup passes through untouched");
+   own.m_damage=200;fall=Fall(100);own.OnDamaged(fall,null);
+   Check(own.IsDone()&&fall.GetTotalDamage()==0,"exact depletion breaks the shield and keeps health intact");
+   own.m_damage=299;var normal=new HitData{m_damage=new HitData.DamageTypes{m_blunt=100}};own.OnDamaged(normal,null);
+   Check(own.IsDone()&&normal.GetTotalDamage()==0,"ordinary attacks retain the native final-hit shield behavior");
+   var other=new SE_Shield{Hash=123,m_totalAbsorbDamage=300};fall=Fall(100);other.OnDamaged(fall,null);
+   Check(other.m_damage==100&&fall.GetTotalDamage()==100,"unrelated shield effects retain their original behavior");
    NativeStatusHit(p);NativeStatusHit(npc);
    Check(own.m_totalAbsorbDamage==300&&own.m_damage==0,"real detours refill player through native direct-hit refresh branch");
    Check(summon.m_totalAbsorbDamage==300&&summon.m_damage==0,"real detours refill summon through native direct-hit refresh branch");

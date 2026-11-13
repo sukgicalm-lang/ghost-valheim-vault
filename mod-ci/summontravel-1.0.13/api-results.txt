@@ -1,0 +1,117 @@
+PASS real unambiguous patch BaseAI.UpdateRegeneration
+PASS real unambiguous patch BaseAI.Follow
+PASS real injected argument go
+PASS real injected argument dt
+PASS real unambiguous patch Hud.Awake
+PASS real unambiguous patch Hud.LateUpdate
+PASS real unambiguous patch Hud.OnDestroy
+PASS real unambiguous patch SE_Shield.OnDamaged
+PASS real injected argument hit
+PASS real injected argument hit
+PASS real unambiguous patch Character.Awake
+PASS real unambiguous patch Player.TeleportTo
+PASS real unambiguous patch Player.UpdateTeleport
+PASS real unambiguous patch ZNetScene.RemoveObjects
+PASS real injected argument currentNearObjects
+PASS real unambiguous patch ZNetView.ResetZDO
+PASS real unambiguous patch Character.CustomFixedUpdate
+PASS real unambiguous patch Tameable.UpdateSummon
+PASS real unambiguous patch Tameable.UpdateSavedFollowTarget
+PASS real unambiguous patch MonsterAI.UpdateAI
+PASS real unambiguous patch Character.UpdateMotion
+PASS real unambiguous patch Character.UnderWorldCheck
+PASS real unambiguous patch SEMan.Update
+PASS real unambiguous patch SE_Shield.OnDamaged
+PASS real unambiguous patch Aoe.Awake
+PASS real unambiguous patch Aoe.Setup
+PASS real unambiguous patch StatusEffect.ResetTime
+PASS real unambiguous patch SE_Shield.SetLevel
+PASS real unambiguous patch EnemyHud.LateUpdate
+PASS real unambiguous patch EnemyHud.UpdateHuds
+PASS real unambiguous patch EnemyHud.TestShow
+PASS real injected argument c
+PASS real unambiguous patch SpawnAbility.Setup
+PASS real injected argument owner
+PASS real injected argument item
+PASS real unambiguous patch SpawnAbility.Spawn
+PASS real unambiguous patch Humanoid.GiveDefaultItems
+PASS real unambiguous patch Humanoid.Awake
+PASS real unambiguous patch Tameable.UnSummon
+PASS real unambiguous patch Tameable.RPC_UnSummon
+PASS real private field SE_Shield.m_totalAbsorbDamage
+PASS real private field SE_Shield.m_damage
+PASS real private field StatusEffect.m_time
+PASS real private field StatusEffect.m_character
+PASS real private field Character.m_body
+PASS real private field Character.m_maxAirAltitude
+PASS real private field SEMan.m_character
+PASS real presentation field StatusEffect.m_startEffectInstances
+PASS real presentation field EnemyHud.m_huds
+PASS real presentation field EnemyHud.m_hudRoot
+PASS real presentation field EnemyHud.m_baseHud
+PASS real native visual recreation method
+PASS real native idle movement API
+PASS real player HUD field m_healthBarRoot
+PASS real player HUD field m_rootObject
+PASS real player HUD field m_healthBarFast
+PASS real player HUD field m_healthBarSlow
+PASS real player HUD field m_healthText
+PASS real player HUD field m_gpRoot
+PASS real player HUD field m_gpName
+PASS real player HUD field m_gpCooldown
+PASS real player HUD field m_gpIcon
+PASS real catch-up speed field m_speed
+PASS real catch-up speed field m_runSpeed
+PASS real native Aoe radius field
+PASS real native area query uses world-space sphere overlap
+PASS range patch writes only native area radius, not damage or targeting fields
+PASS real native refresh path reaches shared reset and level hooks: StatusEffect SEMan::Internal_AddStatusEffect(System.Int32,System.Boolean,System.Int32,System.Single,System.Int16)
+PASS real native refresh path reaches shared reset and level hooks: StatusEffect SEMan::AddStatusEffect(StatusEffect,System.Boolean,System.Int32,System.Single,System.Int16)
+PASS native shield inherits the patched shared timer-reset method
+PASS real landing sends pure damage through Character.Damage
+PASS real hit type distinguishes falls from other damage
+PASS native shield counts the raw fall before zeroing its blockable channels
+PASS native hit modifier preserves pure damage
+PASS real Character.RPC_Damage refreshes existing shield directly, bypassing SEMan insertion hooks
+PASS real native full-health regeneration time field
+PASS real player food regeneration inputs
+PASS real player health regeneration modifiers
+PASS real local overhead HUD creation method
+PASS real native animal hunger reference available for scoped summon recovery
+PASS real regeneration retains native hunger gate, world-time tick and healing call
+PASS real animal hunger method exists
+PASS real shield duration field for countdown
+PASS real elapsed effect timer for countdown
+PASS real batch spawn field m_spawnPrefab
+PASS real batch spawn field m_minToSpawn
+PASS real batch spawn field m_maxToSpawn
+PASS real batch spawn field m_setMaxInstancesFromWeaponLevel
+PASS real batch spawn field m_levelUpSettings
+PASS real batch spawn field m_spawnDelay
+PASS real batch spawn field m_preSpawnDelay
+PASS real batch spawn field m_initialSpawnDelay
+PASS real batch spawn field m_circleSpawn
+PASS real batch spawn field m_spawnRadius
+PASS real deterministic native equipment field m_seed
+PASS real deterministic native equipment field m_randomWeapon
+PASS real deterministic native equipment field m_randomShield
+PASS real deterministic native equipment field m_randomArmor
+PASS real deterministic native equipment field m_randomSets
+PASS real deterministic native equipment field m_randomItems
+PASS real deterministic native equipment field m_defaultItems
+PASS equipment predictor follows actual native shield, weapon, armor, set RNG order
+PASS real native equipment generation happens at Start after creation/Awake
+PASS native summon coroutine owns creation, skill scaling and follow command
+PASS native zero m_preSpawnDelay bypasses its per-creature WaitForSeconds and yield
+PASS native zero m_spawnDelay bypasses its per-creature WaitForSeconds and yield
+PASS native command enforces max instances after each fresh spawn
+PASS native max instances retires old summons through network unsummon lifecycle
+PASS batch patch never duplicates native creation, charges resources again or heals existing summons
+PASS scene removal prefix cannot re-enter readiness or global scan
+PASS module never writes native Player teleport state
+PASS no duplicate summon path
+PASS no healing path
+PASS travel restoration never renews shield timer
+PASS production identity
+PASS no test assembly dependency
+Binary API checks: 116

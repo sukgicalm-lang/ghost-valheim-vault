@@ -1,0 +1,256 @@
+PASS unauthorized sender rejected
+PASS other player's follower excluded
+PASS invalid transaction rejected
+PASS native teleport captures existing follower
+PASS physics held during loading
+PASS scene unload pins existing network object
+PASS no heal or replacement summon
+PASS same character and ZDO reach native final location
+PASS identity and health preserved
+PASS live shield capacity and elapsed time preserved
+PASS normal physics restored after landing
+PASS reload deducts loading time without renewing absorb
+PASS restore is idempotent
+PASS broken shield stays broken
+PASS expired shield stays expired
+PASS authority transfer restores shield
+PASS stay command respected
+PASS hostile skeleton excluded
+PASS other animals excluded
+PASS death never resurrects summon
+PASS forged finish rejected
+PASS nonfinite destination rejected
+PASS lost finish cannot freeze indefinitely
+PASS source owner hands authority to destination player
+PASS blocked portal follows native rollback
+PASS invalid capacity rejected
+PASS negative damage rejected
+PASS backward clock cannot extend shield
+PASS exact remaining shield arithmetic
+PASS neither threshold reached means no teleport
+PASS 100 metre boundary triggers recovery
+PASS 10 second stationary boundary triggers recovery
+PASS moving follower below 100 metres never distance-teleports
+PASS blocked landing is rejected
+PASS no floor means no recall
+PASS cliff below player rejected
+PASS grounded clear landing accepted
+PASS unloaded destination rejected
+PASS actual stuck-ledge controller recalls existing follower
+PASS player in air never triggers landing recall
+PASS landing prefers behind the player
+PASS landing leaves at least one metre body clearance
+PASS rear landing rotates with player facing
+PASS blocked landing never falls back onto player
+PASS pending arrival retries when a safe spot opens
+PASS missing native shield visual is recreated
+PASS visual repair never refreshes shield combat values
+PASS healthy effect is not restarted each tick
+PASS destroyed cached visual is detected and repaired
+PASS recast or owner handoff can force visual renewal only
+PASS shield effect network object is pinned with skeleton
+PASS shield effect ZDO follows its moved transform
+PASS owner HUD reads current authoritative absorb values
+PASS remote HUD reads synchronized shield without creating status effects
+PASS remote HUD has no local shield gameplay side effects
+PASS broken shield never gets a new visual
+PASS expired shield never gets a new visual
+PASS HUD formats remaining and total capacity
+PASS HUD shows zero when shield absent
+PASS unknown remote state is not falsely reported as zero
+PASS actual HUD updater creates a separate shield number label
+PASS existing health and name UI are preserved
+PASS damage refreshes same label without accumulating UI clones
+PASS shield removal clears HUD immediately
+PASS destroyed HUD releases its shield label cache
+PASS idle inner band detects bodies too close
+PASS close idle skeleton actively walks away instead of only stopping
+PASS close retreat stays on same side and never targets through player
+PASS retreat goal gives generous room beyond one metre
+PASS safe idle distance holds position without approaching player centre
+PASS comfortable body gap is not treated as crowding
+PASS far follower still catches up using native run and pathfinding
+PASS far idle follower aims at rear waiting area rather than player centre
+PASS combat target keeps native AI untouched
+PASS nonowner never directs creature movement
+PASS stay command does not get an idle formation order
+PASS blocked retreat stops instead of walking into player
+PASS crowding alone never triggers early teleport
+PASS crowded follower only recovers after ten actual stationary seconds
+PASS close combat creature is not recalled just for personal space
+PASS following skeleton survives native distance unsummon while approaching 100m recovery
+PASS distance protection excludes stay command
+PASS 20m gap enables sixfold native movement speed
+PASS catch-up speed does not reposition or teleport creature
+PASS catch-up hysteresis keeps boost until within eight metres
+PASS close arrival restores speed and clamps horizontal overshoot only
+PASS combat immediately restores native speed
+PASS stay command restores native speed
+PASS dead follower cannot retain speed boost
+PASS ownership loss restores local speed fields
+PASS world cleanup restores every active speed boost
+PASS 99m moving recovery starts with no teleport
+PASS actual creature movement resets ten-second stuck timer even when player distance stays large
+PASS actual 100m controller recalls immediately without initial wait
+PASS stationary normal waiting is never classified as stuck
+PASS actual stuck controller waits beyond nine seconds
+PASS actual stuck controller triggers at exactly ten seconds
+PASS scene removal hook preserves the native shared loading list
+PASS scene removal hook never runs area readiness or scans characters
+PASS landing searches share a hard four-probe budget per rendered frame
+PASS budget-limited landing search resumes on the next frame
+PASS search cursor advances past blocked early candidates across frames
+PASS 100 held frames at target cause no repeated rigidbody reposition or forced network sends
+PASS duplicate tick in same frame does no work
+PASS visual repair queue recreates at most one character per processing frame
+PASS multi-summon teleport arrives one creature per rendered frame
+PASS next frame completes the next existing summon
+PASS cached skeleton classification avoids repeated component lookup per physics tick
+PASS player shield reads own live absorb rather than summon snapshot
+PASS own shield bar clones native HP hierarchy successfully
+PASS own shield bar shows real capacity and remaining numbers
+PASS shield bar is blue and preserves original HP presentation
+PASS shield bar uses native HP shape directly beside it
+PASS guardian power preserves original 200 pixel visible HP-to-power gap after adding shield
+PASS guardian power spacing does not accumulate or drift between unchanged frames
+PASS unchanged frames never restore and reapply guardian transforms or force redundant UI rebuilds
+PASS damage updates bar ratio and live number
+PASS unchanged frame reuses UI clone without rewriting values
+PASS shield bar follows food-driven HP width and UI scale
+PASS guardian stays beside expanded HP and shield without reverting into the health bar
+PASS user HUD hide also hides shield bar
+PASS depleted own shield hides immediately
+PASS expired own shield cannot appear active
+PASS dead player has no active shield bar
+PASS cleanup destroys only cloned shield UI
+PASS unexpected mod error releases bodies without changing native player teleport state
+PASS successful protection staff recast refills 55 remaining to full 300
+PASS own shield HUD sees immediate 300 of 300 after recast
+PASS recast preserves native timer and staff duration calculation
+PASS repeated recasts overwrite remaining absorb without stacking effects
+PASS skill-scaled native capacity is retained rather than hardcoded to 300
+PASS non-refresh status application never recharges an existing shield
+PASS unrelated shield types are excluded from protection staff change
+PASS remote peer cannot refill another player's shield
+PASS recast never revives or modifies a dead target
+PASS invalid native capacity cannot be refilled
+PASS teleport restoration preserves spent protection shield and elapsed duration
+PASS same successful staff recast also refills an existing summon shield
+PASS shared native refresh completion refills and synchronizes summon shield
+PASS shared native refresh completion refills player before summon-only presentation
+PASS SetLevel without ResetTime never recharges shield
+PASS stale timer reset cannot recharge a later unrelated level update
+PASS world cleanup discards pending refresh markers
+PASS refilled summon shield is exported to remote HUD snapshot
+PASS missing area effect is ignored safely
+PASS protection staff cast applies twenty metre native query radius
+PASS native sphere-query mode leaves unused trigger colliders unchanged
+PASS protection staff trigger collider also covers twenty world metres
+PASS range extension never enlarges shield particles or visual transforms
+PASS native lifetime, status, caster and ally targeting flags are preserved
+PASS scaled trigger collider still has twenty metre world radius
+PASS Awake and Setup hooks do not multiply radius on repeated application
+PASS uncloned protection effect prefab is supported
+PASS other five metre ally spells keep their original radius
+PASS similarly named mod spells are not changed
+PASS physical non-trigger colliders are never enlarged
+PASS zero-scale visual helpers cannot create invalid collider radii
+PASS vertical HP shield is screen-right at the same height rather than above
+PASS rotated vertical bars keep horizontal separation with UI scaling
+PASS narrow player shield bar uses compact native-style remaining number
+PASS skeleton numeric HP row remains above numeric shield row
+PASS skeleton numbers have no background images or HP and shield bars
+PASS skeleton HP and shield show only numbers without HP or shield prefixes
+PASS healing updates existing numeric rows without accumulating UI objects
+PASS shield countdown appears above skeleton name at exactly its font size
+PASS skeleton name remains visible while original health panel stays hidden
+PASS countdown follows runtime name font size changes
+PASS local overhead is explicitly created for shield countdown only
+PASS own head displays only countdown and no name, HP, shield amount, bar or background panel
+PASS own countdown uses original native name font size
+PASS friendly numbers and own countdown do not expire when not hovered
+PASS own overhead is visible while shield is active
+PASS own overhead becomes completely empty immediately after shield ends
+PASS summon numbers stay visible within thirty metres
+PASS distant summon HUD respects thirty metre limit
+PASS losing friendly summon status removes only custom overhead rows
+PASS countdown reads actual shield duration minus elapsed time
+PASS remote countdown ages synchronized shield state without creating or renewing effects
+PASS depleted or zero-time shield hides countdown
+PASS countdown rounds fractional seconds upward and rejects invalid values
+PASS vertical shield preserves native 13 pixel visible HP-to-Queen gap
+PASS vertically separated guardian power block keeps its existing position
+PASS actual guardian root is moved by measured screen-space bounds
+PASS shield cleanup restores original guardian position
+PASS cleanup respects a newer guardian position changed by another UI mod
+PASS huge guardian root and empty label rectangle cannot push Queen far away; native 20 pixel gap survives
+PASS compact Queen layout restores exact native position on shield removal
+PASS doubling UI scale doubles the added offset and preserves original proportional gap
+PASS native local HUD created by timer feature contains countdown only
+PASS cleanup removes only locally created overhead GUI so native own name cannot leak after unload
+PASS summon target rate matches food healing and player regeneration modifiers per second
+PASS native summon regeneration rate is adjusted without immediate healing
+PASS native healing uses player-like HP per second then restores original settings
+PASS already faster native regeneration is not reduced
+PASS nonowner never changes summon healing
+PASS dead summon never gets recovery override
+PASS locally owned waiting summon uses local player's recovery
+PASS missing food healing falls back to native regeneration
+PASS remote player's synchronized recovery rate supports multiplayer followers
+PASS stale remote recovery snapshot is ignored safely
+PASS native animal hunger gate reproduces blocked healing for an unfed summon
+PASS owned summon bypasses animal hunger only during native regeneration call
+PASS summon heals at player rate and original animal hunger reference is restored without feeding
+PASS already faster summon healing also bypasses inapplicable animal hunger
+PASS non-owner cannot bypass animal hunger
+PASS installed Regeneration health and time multipliers produce matching player HP per second
+PASS disabled optional regeneration mod retains native food rate
+PASS invalid optional regeneration interval cannot create infinite healing
+PASS missing optional regeneration mod remains supported
+PASS batch summon uses highest matching native skill setting as the maximum
+PASS weapon-quality-controlled native summon limit is respected
+PASS one native cast fills all four available summon slots
+PASS batch spawn removes both per-creature waits while retaining native circle placement and global cap
+PASS native bow, spear and sword categories remain balanced instead of all rolling one weapon
+PASS one shared original cast delay is preserved before simultaneous summoning
+PASS all four replacement skeletons are created in one iterator step with no individual pre-spawn or between-spawn yield
+PASS same-frame replacement preserves diverse native weapon loadouts
+PASS partial roster recast creates a full new batch and native limit retires every old skeleton
+PASS replacement skeletons have new identities and do not inherit old injury or shield
+PASS casting at maximum replaces all four old skeletons through native command limit
+PASS repeated replacement keeps native maximum and diverse fresh loadouts 0
+PASS repeated replacement keeps native maximum and diverse fresh loadouts 1
+PASS repeated replacement keeps native maximum and diverse fresh loadouts 2
+PASS repeated replacement keeps native maximum and diverse fresh loadouts 3
+PASS repeated replacement keeps native maximum and diverse fresh loadouts 4
+PASS repeated replacement keeps native maximum and diverse fresh loadouts 5
+PASS repeated replacement keeps native maximum and diverse fresh loadouts 6
+PASS repeated replacement keeps native maximum and diverse fresh loadouts 7
+PASS failed replacement keeps the three not-yet-replaced old skeletons instead of deleting entire roster first
+PASS persisted native weapon identity reproduces actual gear after delayed peer load
+PASS regression harness defers native equipment until after summon coroutine finishes, matching Humanoid.Start
+PASS NPC weapons sharing None skill and random-consuming item setup still receive one diverse actual weapon each
+PASS three simultaneous skeletons have three actual native weapon kinds instead of three swords
+PASS lower current weapon cap replaces four old skeletons with exactly two fresh summons
+PASS another player's skeletons do not consume this player's summon limit
+PASS overlapping cast is a full replacement request and retains native limit enforcement
+PASS overlapping replacement coroutines obey native cap and never remove another player's skeletons
+PASS disposing a cast during the shared initial wait permits a full replacement cast
+PASS other creature and boss spawners retain original batch behavior
+PASS ambient spawn-on-awake abilities are never converted to summon batches
+PASS non-owner cannot change spawn batches or equipment seeds
+PASS native item-set-only equipment is diversified without injecting foreign weapons
+PASS native spawn exception propagates while active scope is released for full retry
+PASS unrelated or reloaded skeletons outside summon scope retain their saved native loadout
+PASS retiring summon reproduces an outstanding teleport/retention record
+PASS unsummon immediately cancels held transit and restores native physics before deferred destruction
+PASS retired but still valid actor cannot retain a nameplate, follow-distance exemption or recall eligibility
+PASS one HUD update removes all retired and detached names, retaining exactly three current skeletons without teleport
+PASS cleanup leaves native deferred actor destruction in charge and never recreates retiring shield effects
+PASS three current summons retain real shields, visibility, health and native targeting eligibility
+PASS unlinked cached nameplate is destroyed even if its previous actor remains alive
+PASS native GUI rebound to another summon rebuilds the cached view without deleting current HUD
+PASS two uncached native clones are removed from the canvas while all four current nameplates survive
+PASS native template and unrelated canvas widgets survive cleanup
+PASS invalid network actor removes entire native nameplate rather than only custom numbers
+Behavior checks: 255
