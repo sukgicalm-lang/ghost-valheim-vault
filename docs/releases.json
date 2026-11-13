@@ -1,5 +1,21 @@
 [
   {
+    "version": "1.0.55",
+    "date": "2026-11-14",
+    "file": "downloads/Ghost-GhostValheimSuite-1.0.55.zip",
+    "bytes": 398962385,
+    "sha256": "bd3b3d3648bfce0157b5fdde558fa0cfa5864a6829500849e4cc5999b6d282de",
+    "appIntegration": true,
+    "dependencies": [
+      "denikson-BepInExPack_Valheim-5.4.2351",
+      "ValheimModding-JsonDotNET-13.0.4",
+      "shudnal-ConfigurationManager-1.1.25",
+      "Ghost-GhostSmelterControl-1.0.3"
+    ],
+    "notes": "인벤토리에 해골 소환 해제 버튼 추가",
+    "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.55/Ghost-GhostValheimSuite-1.0.55.zip"
+  },
+  {
     "version": "1.0.54",
     "date": "2026-11-13",
     "file": "downloads/Ghost-GhostValheimSuite-1.0.54.zip",
