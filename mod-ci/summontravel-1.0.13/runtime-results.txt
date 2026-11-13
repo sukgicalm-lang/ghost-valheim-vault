@@ -1,0 +1,46 @@
+PASS reproduced original direct-hit refresh retaining spent absorb for player and summon
+PASS 100 fall damage takes a 300 shield to 200 without health damage
+PASS 25 shield absorbs exactly 25 of 100 fall damage and breaks
+PASS another fall before native shield cleanup passes through untouched
+PASS exact depletion breaks the shield and keeps health intact
+PASS ordinary attacks retain the native final-hit shield behavior
+PASS unrelated shield effects retain their original behavior
+PASS real detours refill player through native direct-hit refresh branch
+PASS real detours refill summon through native direct-hit refresh branch
+PASS native duration and timer survive actual detour execution
+PASS real shield recast resets own visible countdown to native duration
+PASS real detours also cover direct StatusEffect overload
+PASS real detours also cover hash and RPC application path
+PASS actual native SetLevel computes new skill-scaled capacity before refill
+PASS repeated native recasts never stack duplicate shields
+PASS own HUD reads full real shield immediately after detoured recast
+PASS non-refresh status insertion does not refill
+PASS countdown reads elapsed time without mutating shield while real recast detours are installed
+PASS level-only recalculation cannot refill without native timer reset
+PASS stale timer reset cannot refill an unrelated later level update
+PASS unrelated SE_Shield effects retain spent damage
+PASS non-owner does not mutate absorb during refresh
+PASS teleport restore keeps spent shield while real detours are installed
+PASS teleport restoration retains remaining shield countdown under real detours
+PASS first-time native hit still creates one normal full shield
+PASS reproduced native animal hunger blocking summon regeneration
+PASS real regeneration prefix uses player's two HP per second through native healing
+PASS real finalizer restores original summon regeneration setting after success
+PASS real finalizer restores original hunger reference without changing feeding state
+PASS real finalizer restores original healing and hunger settings while preserving native exceptions
+PASS real regeneration hook preserves native hunger for non-owned followers
+PASS wild creatures retain original hunger and regeneration settings
+PASS real native Setup and iterator detours fill maximum slots with one cast
+PASS real coroutine scope and humanoid Awake detours diversify native weapon categories
+PASS real detours preserve a single shared initial casting delay
+PASS real iterator and Setup detours create full replacement batch in one coroutine step without per-unit waits
+PASS real recast replaces partial roster with full new batch through native command limit
+PASS real full-roster cast replaces all old summons without leaving duplicates
+PASS real equipment prefix persists identical native weapon across delayed peer reconstruction
+PASS real delayed Start equipment prefix diversifies three same-skill NPC weapons despite item-init RNG
+PASS real spawn detours leave other creature abilities unchanged
+PASS real iterator failure preserves exception and releases reserved summon slots for retry
+PASS real unsummon/RPC hooks remove old ghost HUDs while native body destruction is still deferred
+PASS real replacement leaves exactly three visible fresh actors with native protection applied
+PASS native deferred destruction finishes without removing or duplicating the three fresh summons
+Runtime detour checks: 45

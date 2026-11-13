@@ -1,0 +1,18 @@
+{
+  "base_sha256": "c455e18bc2c5e7a60ab4baf6dd2cbce40bdeddd84eeba651ec61177969924b5e",
+  "dll_sha256": "c3c686dd1751d2be3d5444215d6b3b109f4ef85df13e03b77900c4e613a0edb6",
+  "source_hashes": {
+    "mod-src/SummonTravel/FollowerRecovery.cs": "57a2384a50851ee9a861d42fec53804889cb57244d8ec9ceb735e5e2dfd2839f",
+    "mod-src/SummonTravel/GhostSummonTravel.csproj": "3acbaf7cf13278aac9d5b00efd2c7b75795f52ca35c8f312c4ea176473f51322",
+    "mod-src/SummonTravel/IdleSpacing.cs": "c49b751958df86e70c9eb3df58bc7f0087b1946784f721ecef5663d8894cd91e",
+    "mod-src/SummonTravel/LICENSE": "7457f28aa6912e216c715875685f4e5d1dd4357a0b1c86afa35dfeaa6ab015d0",
+    "mod-src/SummonTravel/PlayerShieldBar.cs": "52fc74eae3cc9ecbb55592b1723e6d7cbcd2c8cc12720de8fa755873ea1b7229",
+    "mod-src/SummonTravel/Plugin.cs": "6fce8107b36bdc1509b1756cd31af0d9df06d085d4d838cec99a4543a45eb57c",
+    "mod-src/SummonTravel/ProtectionRange.cs": "6ebb264aabdcb2fab2c16e12339d1d31b87572fe354ef6e675294197a2b9396e",
+    "mod-src/SummonTravel/ProtectionRecast.cs": "0fa23d61acdca75a6b0a8951d7210408abc4b52aab2ac06e5d8d1c9d6a404562",
+    "mod-src/SummonTravel/README.md": "b99e267811800a38adadec3491df158f7b568adc7d97b011de68e313b1a8fc9f",
+    "mod-src/SummonTravel/ShieldPresentation.cs": "61a32b9fb3e5456207325e33244cde15a0988097708d3dc553c5622eb8abbbba",
+    "mod-src/SummonTravel/SpawnRoster.cs": "0dd3664e93370c576328861e3468afac79dd1b80f786e1411264977afd13d439",
+    "mod-src/SummonTravel/SummonLifecycle.cs": "c009bf79f4b1045496801a5198fe752b5638dfa658aac4333b84f2c98c927a56"
+  }
+}

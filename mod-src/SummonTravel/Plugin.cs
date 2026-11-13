@@ -8,13 +8,13 @@ using System.Runtime.CompilerServices;
 using BepInEx;
 using HarmonyLib;
 using UnityEngine;
-[assembly: AssemblyVersion("1.0.12.0")]
-[assembly: AssemblyFileVersion("1.0.12.0")]
+[assembly: AssemblyVersion("1.0.13.0")]
+[assembly: AssemblyFileVersion("1.0.13.0")]
 namespace GhostSummonTravel {
- [BepInPlugin(Guid,"Ghost 해골 동행·방어막 표시","1.0.12")]
+ [BepInPlugin(Guid,"Ghost 해골 동행·방어막 표시","1.0.13")]
  public sealed class Plugin:BaseUnityPlugin {
   public const string Guid="ghost.valheim.summontravel";Harmony harmony;internal static Plugin Instance;
-  void Awake(){Instance=this;Travel.Faulted=false;Travel.ValidateApi();ShieldPresentation.ValidateApi();IdleSpacing.ValidateApi();PlayerShieldBar.ValidateApi();SpawnRoster.ValidateApi();harmony=new Harmony(Guid);try{harmony.PatchAll(typeof(Plugin).Assembly);}catch{harmony.UnpatchSelf();throw;}Logger.LogInfo("해골 동행 1.0.12: 머리 위 숫자만 표시·이름 위 방어막 시간·내 시간만 표시·보스 버프 기본 간격 유지·기존 해골 교체 동시 소환·장비 다양화");}
+  void Awake(){Instance=this;Travel.Faulted=false;Travel.ValidateApi();ShieldPresentation.ValidateApi();IdleSpacing.ValidateApi();PlayerShieldBar.ValidateApi();SpawnRoster.ValidateApi();harmony=new Harmony(Guid);try{harmony.PatchAll(typeof(Plugin).Assembly);}catch{harmony.UnpatchSelf();throw;}Logger.LogInfo("해골 동행 1.0.13: 낙하 피해를 방어막으로 먼저 흡수하고, 소환 해골의 분리된 이름표를 정리합니다");}
   internal static void LogShieldRecast(Character c){if(Instance){float left,max;Travel.ShieldAmounts(c,out left,out max);Instance.Logger.LogInfo("보호막 재시전 갱신: "+(c==Player.m_localPlayer?"본인":Travel.IsSkeleton(c)?"해골":"아군")+" / 방어막 "+left+" / "+max);}}
   internal static void LogFault(Exception e){if(Instance)Instance.Logger.LogError("해골 자동 동행 오류로 해당 기능을 중단하고 기본 게임 이동을 유지합니다. 게임 재시작 전 로그를 보관하세요. "+e);}
   void Update(){try{Travel.Tick();}catch(Exception e){Travel.Abort(e);}try{FollowerRecovery.Tick();}catch(Exception e){LogFault(e);}}void OnDestroy(){Travel.Clear();if(harmony!=null)harmony.UnpatchSelf();Instance=null;}
@@ -194,6 +194,41 @@ namespace GhostSummonTravel {
    capacity=(float)Total.GetValue(s);float damage=(float)Damage.GetValue(s);remaining=0;
    if(!Finite(capacity)||!Finite(damage)||capacity<0||damage<0||(s.m_ttl>0&&s.GetDuration()>s.m_ttl)||damage>capacity)return false;
    remaining=Math.Max(0,capacity-damage);return true;
+  }
+  [HarmonyPatch(typeof(SE_Shield), nameof(SE_Shield.OnDamaged))]
+  internal static class FallShieldPatch {
+   internal struct Absorption {
+    internal bool Applied;
+    internal float Overflow;
+    internal float BreakAt;
+   }
+
+   [HarmonyPrefix]
+   internal static bool Prefix(SE_Shield __instance, HitData hit, out Absorption __state){
+    __state=default;
+    if(hit.m_hitType!=HitData.HitType.Fall||__instance.NameHash()!=ProtectionShieldHash)return true;
+
+    float fallDamage=hit.m_damage.m_damage;
+    if(!Finite(fallDamage)||fallDamage<=0f)return true;
+    if(!ActiveShield(__instance,out float remaining,out float capacity)||remaining<=0f)return false;
+
+    float absorbed=Math.Min(remaining,fallDamage);
+    __state.Applied=true;
+    __state.Overflow=fallDamage-absorbed;
+    // Native IsDone checks spent > capacity. Cross that threshold when a fall
+    // uses the final point, including an exact hit, so the normal break runs.
+    if(absorbed==remaining)__state.BreakAt=capacity+Math.Max(0.001f,capacity*0.000001f);
+    hit.m_damage.m_damage=absorbed;
+    return true;
+   }
+
+   [HarmonyPostfix,HarmonyPriority(Priority.Last)]
+   internal static void Postfix(SE_Shield __instance, HitData hit, Absorption __state){
+    if(!__state.Applied)return;
+    if(__state.BreakAt>0f)Damage.SetValue(__instance,__state.BreakAt);
+    // The native modifier leaves raw damage untouched. Pass on only overflow.
+    hit.m_damage.m_damage=__state.Overflow;
+   }
   }
   internal static void RestoreShields(Character c){
    List<ShieldRecord> records;if(!ReadShieldRecords(c,out records))return;

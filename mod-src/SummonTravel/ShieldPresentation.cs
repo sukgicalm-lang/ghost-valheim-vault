@@ -94,20 +94,48 @@ namespace GhostSummonTravel {
   internal static void PruneHud(EnemyHud hud){
    var table=Huds.GetValue(hud) as IDictionary;if(table==null)return;var actors=ActiveActors;actors.Clear();foreach(var actor in Character.GetAllCharacters())actors.Add(actor);var roots=ActiveRoots;roots.Clear();var remove=RemovedKeys;remove.Clear();
    foreach(DictionaryEntry entry in table){
-    var c=entry.Key as Character;var gui=Field(entry.Value,"m_gui") as GameObject;
-    bool ours=!ReferenceEquals(gui,null)&&(Views.ContainsKey(gui)||LocalRoots.ContainsKey(gui))||SummonLifecycle.IsRetiring(c)||Managed(c);if(!ours){if(gui)roots.Add(gui);continue;}
-    if(!SummonLifecycle.Usable(c)||!actors.Contains(c)){
-     remove.Add(entry.Key);if(gui){if(Views.TryGetValue(gui,out var view)){DestroyView(view);Views.Remove(gui);}Labels.Remove(gui);LocalRoots.Remove(gui);gui.SetActive(false);UnityEngine.Object.Destroy(gui);}if(!ReferenceEquals(c,null))Pending.Remove(c);continue;
+    var actor=entry.Key as Character;
+    var gui=Field(entry.Value,"m_gui") as GameObject;
+    bool managed=gui&&(Views.ContainsKey(gui)||LocalRoots.ContainsKey(gui))||Managed(actor)||SummonLifecycle.IsRetiring(actor);
+    if(!actor||!gui||!actors.Contains(actor)||!ReferenceEquals(Field(entry.Value,"m_character"),actor)
+       ||(managed&&!SummonLifecycle.Usable(actor))){
+     remove.Add(entry.Key);
+     if(!ReferenceEquals(actor,null))Pending.Remove(actor);
+     continue;
     }
-    if(gui)roots.Add(gui);
+    roots.Add(gui);
    }
-   foreach(var key in remove)table.Remove(key);
+   foreach(var key in remove){
+    var gui=Field(table[key],"m_gui") as GameObject;
+    table.Remove(key);
+    if(gui&&!roots.Contains(gui))DestroyHudRoot(gui);
+   }
+   RemoveUnboundMobHuds(hud,roots);
    // A still-alive actor or an active GUI is not proof that this is its current
    // HUD. Native removal/rebinding can happen before the cache is revisited.
    foreach(var gui in Views.Keys.ToArray()){
     var view=Views[gui];if(!ReferenceEquals(view.Hud,hud))continue;bool bound=gui&&roots.Contains(gui)&&table.Contains(view.Character)&&ReferenceEquals(Field(table[view.Character],"m_gui"),gui);
     if(bound)continue;DestroyView(view);Views.Remove(gui);Labels.Remove(gui);LocalRoots.Remove(gui);
     if(gui&&!roots.Contains(gui)){gui.SetActive(false);UnityEngine.Object.Destroy(gui);}
+   }
+  }
+  static void DestroyHudRoot(GameObject gui){
+   if(Views.TryGetValue(gui,out var view)){DestroyView(view);Views.Remove(gui);}
+   Labels.Remove(gui);LocalRoots.Remove(gui);
+   gui.SetActive(false);UnityEngine.Object.Destroy(gui);
+  }
+  static void RemoveUnboundMobHuds(EnemyHud hud,HashSet<GameObject> bound){
+   var root=hud.m_hudRoot;
+   var template=hud.m_baseHud;
+   if(!root||!template)return;
+   string cloneName=template.name+"(Clone)";
+   // A clone can be left under the HUD canvas before it ever reaches the
+   // native table or this mod's cache. Only remove unbound native mob clones.
+   for(int i=root.transform.childCount-1;i>=0;i--){
+    var child=root.transform.GetChild(i);
+    var gui=child.gameObject;
+    if(gui&&gui!=template&&!bound.Contains(gui)&&gui.name==cloneName
+       &&child.Find("Name")&&child.Find("Health"))DestroyHudRoot(gui);
    }
   }
   internal static void UpdateHud(EnemyHud hud){
@@ -131,7 +159,7 @@ namespace GhostSummonTravel {
   internal static void ClearHud(){foreach(var view in Views.Values)DestroyView(view);Views.Clear();foreach(var entry in LocalRoots){var data=entry.Value;var table=data.Hud?Huds.GetValue(data.Hud) as IDictionary:null;if(table!=null&&table.Contains(data.Character)&&Field(table[data.Character],"m_gui") as GameObject==entry.Key)table.Remove(data.Character);if(entry.Key)UnityEngine.Object.Destroy(entry.Key);}LocalRoots.Clear();Labels.Clear();TextProperties.Clear();Pending.Clear();ActiveActors.Clear();ActiveRoots.Clear();RemovedKeys.Clear();}
   static bool hudFailed;
   [HarmonyPatch(typeof(EnemyHud),"LateUpdate")]static class HudPatch{
-   [HarmonyPrefix]static void Prefix(EnemyHud __instance){if(hudFailed)return;try{PrepareLocal(__instance);}catch(Exception e){hudFailed=true;Plugin.LogFault(e);}}
+   [HarmonyPrefix]static void Prefix(EnemyHud __instance){if(hudFailed)return;try{PruneHud(__instance);PrepareLocal(__instance);}catch(Exception e){hudFailed=true;Plugin.LogFault(e);}}
    [HarmonyPostfix,HarmonyPriority(Priority.Last)]static void Postfix(EnemyHud __instance){if(hudFailed)return;try{UpdateHud(__instance);}catch(Exception e){hudFailed=true;Plugin.LogFault(e);}}
   }
   [HarmonyPatch(typeof(EnemyHud),"UpdateHuds")]static class HoverPatch{[HarmonyPrefix]static void Prefix(EnemyHud __instance){try{KeepVisible(__instance);}catch(Exception e){Plugin.LogFault(e);}}}

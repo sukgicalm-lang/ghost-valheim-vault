@@ -226,6 +226,18 @@ class Behavior{
   Character.All.Remove(detached);ShieldPresentation.UpdateHud(staleHud);ShieldPresentation.ProcessRepairs();Check(staleHud.m_huds.Count==3&&!retiredHud.m_gui&&!detachedHud.m_gui,"one HUD update removes all retired and detached names, retaining exactly three current skeletons without teleport");Check(retired&&retired.GetComponent<ZNetView>().IsValid()&&retiredShield.VisualTriggers==0,"cleanup leaves native deferred actor destruction in charge and never recreates retiring shield effects");Check(living.All(h=>h&&ShieldPresentation.Visible(h)&&Travel.ShieldAmounts(h,out var n,out var cap)&&n==413&&cap==450),"three current summons retain real shields, visibility, health and native targeting eligibility");
   var orphan=Skeleton(95005,p);var orphanHud=Head(orphan);staleHud.m_huds[orphan]=orphanHud;ShieldPresentation.UpdateHud(staleHud);staleHud.m_huds.Remove(orphan);ShieldPresentation.UpdateHud(staleHud);Check(!orphanHud.m_gui&&orphan,"unlinked cached nameplate is destroyed even if its previous actor remains alive");
   var former=Skeleton(95006,p);var current=Skeleton(95007,p);current.Health=77;var rebound=Head(former);staleHud.m_huds[former]=rebound;ShieldPresentation.UpdateHud(staleHud);staleHud.m_huds.Remove(former);rebound.m_character=current;staleHud.m_huds[current]=rebound;ShieldPresentation.UpdateHud(staleHud);Check(rebound.m_gui&&rebound.m_gui.GetComponentsInChildren<FakeText>(true).Single(t=>t.gameObject&&t.gameObject.activeSelf&&t.gameObject.name=="GhostHealthRow").text=="77 / 100","native GUI rebound to another summon rebuilds the cached view without deleting current HUD");
+  // Native clones can survive under the canvas without ever entering either HUD cache.
+  staleHud.m_hudRoot=new GameObject();staleHud.m_baseHud=Head(p).m_gui;
+  staleHud.m_baseHud.name="MobHud";staleHud.m_baseHud.transform.parent=staleHud.m_hudRoot.transform;
+  var looseNames=new[]{Head(former).m_gui,Head(detached).m_gui};
+  foreach(var hudRoot in looseNames){hudRoot.name="MobHud(Clone)";hudRoot.transform.parent=staleHud.m_hudRoot.transform;}
+  var attachedNames=staleHud.m_huds.Values.Cast<FakeHudData>().Select(d=>d.m_gui).ToArray();
+  foreach(var hudRoot in attachedNames){hudRoot.name="MobHud(Clone)";hudRoot.transform.parent=staleHud.m_hudRoot.transform;}
+  var customWidget=new GameObject{name="Custom HUD"};customWidget.transform.parent=staleHud.m_hudRoot.transform;
+  ShieldPresentation.PruneHud(staleHud);
+  Check(looseNames.All(gui=>!gui)&&attachedNames.Length==4&&attachedNames.All(gui=>gui&&gui.activeSelf),
+   "two uncached native clones are removed from the canvas while all four current nameplates survive");
+  Check(staleHud.m_baseHud&&customWidget,"native template and unrelated canvas widgets survive cleanup");
   current.GetComponent<ZNetView>().Valid=false;ShieldPresentation.UpdateHud(staleHud);Check(!staleHud.m_huds.Contains(current)&&!rebound.m_gui,"invalid network actor removes entire native nameplate rather than only custom numbers");Travel.Clear();
   Console.WriteLine("Behavior checks: "+count);
  }
