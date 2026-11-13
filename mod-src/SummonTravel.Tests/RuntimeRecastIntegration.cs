@@ -92,6 +92,25 @@ class RuntimeRecastIntegration {
    var foreign=Ability(weapons,shield);foreign.m_spawnPrefab=new[]{new GameObject{name="Greydwarf"}};foreign.Setup(caster,Vector3.zero,0,null,new ItemDrop.ItemData(),null);Check(foreign.m_minToSpawn==1&&foreign.m_maxToSpawn==1,"real spawn detours leave other creature abilities unchanged");
    var otherCaster=Make<Player>(90001,"Player");otherCaster.PlayerName="RuntimeException";Player.m_localPlayer=otherCaster;var broken=Ability(weapons,shield);broken.Factory=()=>throw new InvalidOperationException("original spawn failed");broken.Setup(otherCaster,Vector3.zero,0,null,new ItemDrop.ItemData(),null);bool failed=false;try{broken.Enumerator.MoveNext();}catch(InvalidOperationException){failed=true;}var retry=Ability(weapons,shield);Run(retry,otherCaster);Check(failed&&retry.Spawned.Count==4,"real iterator failure preserves exception and releases reserved summon slots for retry");
    var cleanCaster=Make<Player>(96000,"Player");cleanCaster.PlayerName="DeferredRetire";Player.m_localPlayer=cleanCaster;var cleanOld=Ability(weapons,shield);cleanOld.m_levelUpSettings[0].m_maxSpawns=3;Run(cleanOld,cleanCaster);var cleanHud=new EnemyHud();var present=Production.GetType("GhostSummonTravel.ShieldPresentation");Action<Character> addHud=c=>{var gui=new GameObject{transform=new RectTransform()};var name=new GameObject{name="Name",transform=new RectTransform()};name.transform.parent=gui.transform;var text=new FakeText{text="Summon",fontSize=18};name.Add(text);cleanHud.m_huds[c]=new FakeHudData{m_character=c,m_gui=gui,m_name=text};};foreach(var h in cleanOld.Spawned)addHud(h);present.GetMethod("UpdateHud",BindingFlags.Static|BindingFlags.NonPublic).Invoke(null,new object[]{cleanHud});Tameable.DeferUnsummon=true;var cleanNew=Ability(weapons,shield);cleanNew.m_levelUpSettings[0].m_maxSpawns=3;Run(cleanNew,cleanCaster);foreach(var h in cleanNew.Spawned){NativeStatusHit(h);addHud(h);}present.GetMethod("UpdateHud",BindingFlags.Static|BindingFlags.NonPublic).Invoke(null,new object[]{cleanHud});Check(cleanOld.Spawned.TrueForAll(h=>h&&!h.VisualAlive)&&cleanHud.m_huds.Count==3,"real unsummon/RPC hooks remove old ghost HUDs while native body destruction is still deferred");Check(cleanNew.Spawned.TrueForAll(h=>h&&h.VisualAlive&&h.Manager.GetStatusEffect(Hash) is SE_Shield sh&&sh.m_totalAbsorbDamage==300&&sh.m_damage==0),"real replacement leaves exactly three visible fresh actors with native protection applied");Tameable.FlushUnsummons();Tameable.DeferUnsummon=false;Check(cleanOld.Spawned.TrueForAll(h=>!h)&&cleanNew.Spawned.TrueForAll(h=>h),"native deferred destruction finishes without removing or duplicating the three fresh summons");
+   var dismissal=Production.GetType("GhostSummonTravel.SummonDismissal");
+   var dismiss=dismissal.GetMethod("Dismiss",BindingFlags.Static|BindingFlags.NonPublic);
+   var waiting=cleanNew.Spawned[0];
+   waiting.GetComponent<MonsterAI>().Target=null;
+   waiting.GetComponent<ZNetView>().GetZDO().Set(ZDOVars.s_follow,"");
+   var friend=Make<Player>(96001,"Player");
+   friend.PlayerName="Friend";
+   var foreignSummon=Fresh(weapons,shield);
+   foreignSummon.GetComponent<ZNetView>().GetZDO().Set(ZDOVars.s_maxInstances,3);
+   foreignSummon.GetComponent<Tameable>().Command(friend,false);
+   Tameable.DeferUnsummon=true;
+   int requested=(int)dismiss.Invoke(null,new object[]{cleanCaster});
+   Check(requested==3&&cleanNew.Spawned.TrueForAll(h=>h&&!h.VisualAlive)&&foreignSummon.VisualAlive,
+    "dismissal reaches the native request and RPC detours for every local summon, including a waiting one");
+   present.GetMethod("UpdateHud",BindingFlags.Static|BindingFlags.NonPublic).Invoke(null,new object[]{cleanHud});
+   Check(cleanHud.m_huds.Count==0&&(int)dismiss.Invoke(null,new object[]{cleanCaster})==0,
+    "manual dismissal clears nameplates during deferred destruction and prevents duplicate requests");
+   Tameable.FlushUnsummons();
+   Tameable.DeferUnsummon=false;
   }finally{harmony.UnpatchAll(harmony.Id);}
   Console.WriteLine("Runtime detour checks: "+checks);
  }

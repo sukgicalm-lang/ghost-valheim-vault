@@ -15,6 +15,55 @@ class Behavior{
  static SpawnAbility Raiser(Player owner,GameObject[] weapons,GameObject shield){var go=new GameObject{name="staff_skeleton_aoe(Clone)"};var a=new SpawnAbility{m_spawnPrefab=new[]{new GameObject{name="Skeleton_Friendly"}},m_maxSpawned=0,AwakeCallback=SpawnRoster.Mark,EquipmentCallback=SpawnRoster.Apply,Factory=()=>FreshSkeleton(weapons,shield)};go.Add(a);a.m_levelUpSettings.Add(new SpawnAbility.LevelUpSettings{m_skill=Skills.SkillType.BloodMagic,m_skillLevel=0,m_maxSpawns=2});a.m_levelUpSettings.Add(new SpawnAbility.LevelUpSettings{m_skill=Skills.SkillType.BloodMagic,m_skillLevel=25,m_maxSpawns=3});a.m_levelUpSettings.Add(new SpawnAbility.LevelUpSettings{m_skill=Skills.SkillType.BloodMagic,m_skillLevel=75,m_maxSpawns=4});return a;}
  static void CastBatch(SpawnAbility a,Player p,ItemDrop.ItemData weapon){SpawnRoster.Prepare(a,p,weapon);a.Setup(p,Vector3.zero,0,null,weapon,null);var iterator=SpawnRoster.Wrap(a,a.Enumerator);while(iterator.MoveNext()){} }
  static System.Collections.IEnumerator BrokenSpawn(){yield return null;throw new InvalidOperationException("native spawn failure");}
+ static void DismissButton(){
+  Travel.Clear();
+  Character.All.Clear();
+  var player=Make<Player>(300001,"Player");
+  Player.m_localPlayer=player;
+  var friend=Make<Player>(300002,"Player");
+  var old=Skeleton(300003,player);
+  var oldZdo=old.GetComponent<ZNetView>().GetZDO();
+  oldZdo.Set(ZDOVars.s_maxInstances,3);
+  oldZdo.Set(ZDOVars.s_follow,player.GetPlayerName());
+  var waiting=Skeleton(300004,player);
+  var waitingView=waiting.GetComponent<ZNetView>();
+  SummonDismissal.RememberSummoner(waitingView,player);
+  waiting.GetComponent<MonsterAI>().Target=null;
+  waitingView.Zdo.Owner=2;
+  var remote=Skeleton(300005,friend);
+  SummonDismissal.RememberSummoner(remote.GetComponent<ZNetView>(),friend);
+  remote.GetComponent<MonsterAI>().Target=player.gameObject;
+  var unbound=Skeleton(300006,player);
+  var ambiguous=Skeleton(300007,player);
+  ambiguous.GetComponent<MonsterAI>().Target=null;
+  var saved=ambiguous.GetComponent<ZNetView>().GetZDO();
+  saved.Set(ZDOVars.s_maxInstances,3);
+  saved.Set(ZDOVars.s_follow,player.GetPlayerName());
+  Check(!SummonDismissal.CanDismiss(remote,player)&&!SummonDismissal.CanDismiss(unbound,player)&&!SummonDismissal.CanDismiss(ambiguous,player),
+   "other summoner, non-staff skeleton and ambiguous legacy name are excluded");
+  var gui=new InventoryGui();
+  gui.m_player=(RectTransform)new GameObject{transform=new RectTransform()}.transform;
+  var template=new GameObject{transform=new RectTransform()};
+  gui.m_craftButton=new UnityEngine.UI.Button();
+  template.Add(gui.m_craftButton);
+  template.Add(new TMPro.TMP_Text{text="Craft"});
+  int crafted=0;
+  gui.m_craftButton.onClick.AddListener(()=>crafted++);
+  var refresh=typeof(SummonDismissButton).GetMethod("Refresh",System.Reflection.BindingFlags.Static|System.Reflection.BindingFlags.NonPublic);
+  InventoryGui.Visible=false;
+  refresh.Invoke(null,new object[]{gui});
+  Check(gui.m_player.childCount==0,"closed inventory does not create a dismissal control");
+  InventoryGui.Visible=true;
+  refresh.Invoke(null,new object[]{gui});
+  var control=gui.m_player.Find("GhostDismissSkeletons").gameObject;
+  Check(control.activeSelf&&control.GetComponent<TMPro.TMP_Text>().text=="해골 소환 해제","open inventory displays Korean dismissal control for eligible summons");
+  control.GetComponent<UnityEngine.UI.Button>().onClick.Invoke();
+  Check(!old&&!waiting&&remote&&unbound&&ambiguous&&crafted==0,"click dispatches native unsummon only for the local legacy and remote-authority waiting summons");
+  Check(player.LastMessage=="해골 2마리 소환 해제"&&SummonDismissal.Dismiss(player)==0,"click reports requested count and repeat click is harmless");
+  refresh.Invoke(null,new object[]{gui});
+  Check(!control.activeSelf,"control hides after the last eligible summon");
+  SummonDismissButton.Clear();
+ }
  static void Main(){
   Travel.ValidateApi();var p=Make<Player>(1,"Player");Player.m_localPlayer=p;p.Teleporting=true;var c=Skeleton(2,p);Shield(c);var v=c.GetComponent<ZNetView>();string token=new string('a',32);
   Travel.Begin(c,7,p.GetZDOID(),token);Check(!Travel.Held(c),"unauthorized sender rejected");var other=Make<Player>(3,"Player");Travel.Begin(c,1,other.GetZDOID(),token);Check(!Travel.Held(c),"other player's follower excluded");Travel.Begin(c,1,p.GetZDOID(),"bad");Check(!Travel.Held(c),"invalid transaction rejected");
@@ -239,6 +288,7 @@ class Behavior{
    "two uncached native clones are removed from the canvas while all four current nameplates survive");
   Check(staleHud.m_baseHud&&customWidget,"native template and unrelated canvas widgets survive cleanup");
   current.GetComponent<ZNetView>().Valid=false;ShieldPresentation.UpdateHud(staleHud);Check(!staleHud.m_huds.Contains(current)&&!rebound.m_gui,"invalid network actor removes entire native nameplate rather than only custom numbers");Travel.Clear();
+  DismissButton();
   Console.WriteLine("Behavior checks: "+count);
  }
 }

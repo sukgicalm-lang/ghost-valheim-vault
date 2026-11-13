@@ -60,6 +60,7 @@ namespace GhostSummonTravel {
   static string SelectedRole(GameObject weapon,GameObject shield){var item=Data(weapon);return Kind(item,weapon.name)+(shield&&item.m_shared.m_itemType==ItemDrop.ItemData.ItemType.OneHandedWeapon?"+Shield":"");}
   internal static void Mark(Humanoid h){
    var plan=Active;if(plan==null||plan.Done||!plan.Owner||!SkeletonPrefab(h.gameObject))return;var view=h.GetComponent<ZNetView>();if(!view||!view.IsValid()||!view.IsOwner()||Loadouts.TryGetValue(h,out var prior))return;
+   SummonDismissal.RememberSummoner(view,plan.Owner);
    var weapons=Prefabs(h).Where(Weapon).GroupBy(x=>x.name,StringComparer.Ordinal).Select(x=>x.First()).ToArray();if(weapons.Length==0)return;
    var shields=h.m_randomShield!=null&&h.m_randomShield.Length>0?h.m_randomShield:new GameObject[]{null};Loadout chosen=null;string role="";int best=int.MaxValue,bestVariant=int.MaxValue;
    foreach(var weapon in weapons)foreach(var shield in shields){string candidate=SelectedRole(weapon,shield),category=Category(candidate);int count=plan.Roles.Where(x=>Category(x.Key)==category).Sum(x=>x.Value),variant;plan.Roles.TryGetValue(candidate,out variant);if(count<best||count==best&&variant<bestVariant){best=count;bestVariant=variant;role=candidate;chosen=new Loadout{Weapon=weapon,Shield=shield};}}
