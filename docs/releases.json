@@ -1,5 +1,21 @@
 [
   {
+    "version": "1.0.54",
+    "date": "2026-11-13",
+    "file": "downloads/Ghost-GhostValheimSuite-1.0.54.zip",
+    "bytes": 398949309,
+    "sha256": "0e474a61672eb79659848ceb0cbd2d7e792c3ee8a14063e4fd756c7c4df62c26",
+    "appIntegration": true,
+    "dependencies": [
+      "denikson-BepInExPack_Valheim-5.4.2351",
+      "ValheimModding-JsonDotNET-13.0.4",
+      "shudnal-ConfigurationManager-1.1.25",
+      "Ghost-GhostSmelterControl-1.0.3"
+    ],
+    "notes": "낙하 피해 보호막 우선 흡수 및 해골 이름표 잔상 정리",
+    "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.54/Ghost-GhostValheimSuite-1.0.54.zip"
+  },
+  {
     "version": "1.0.53",
     "date": "2026-11-04",
     "file": "downloads/Ghost-GhostValheimSuite-1.0.53.zip",
