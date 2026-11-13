@@ -67,7 +67,18 @@ namespace GhostSummonTravel {
   }
   static void SetProperty(object obj,string name,object value){var p=obj.GetType().GetProperty(name,BindingFlags.Instance|BindingFlags.Public);if(p!=null&&p.CanWrite)p.SetValue(obj,value,null);}
   internal static bool Managed(Character c){return c&&(c==Player.m_localPlayer||(Travel.IsSkeleton(c)&&c.IsTamed()));}
-  internal static bool Visible(Character c){var p=Player.m_localPlayer;if(!p||!SummonLifecycle.Usable(c))return false;if(c==p){float left,max;return PlayerShieldBar.Active(p,out left,out max);}return Managed(c)&&Vector3.Distance(c.transform.position,p.transform.position)<=30f;}
+  internal static bool CanShowSkeleton(Character c) {
+   if (!SummonLifecycle.Usable(c) || c.GetHealth() <= 0f)
+    return false;
+   var view = c.GetComponent<ZNetView>();
+   var zdo = view.GetZDO();
+   // Character.CustomFixedUpdate hides the model when HasOwner is false.
+   var visual = c.GetVisual();
+   var scene = ZNetScene.instance;
+   return Travel.IsSkeletonPrefab(zdo) && zdo.HasOwner() && visual && visual.activeInHierarchy &&
+    scene && scene.FindInstance(zdo) == view;
+  }
+  internal static bool Visible(Character c){var p=Player.m_localPlayer;if(!p||!SummonLifecycle.Usable(c))return false;if(c==p){float left,max;return PlayerShieldBar.Active(p,out left,out max);}return Managed(c)&&CanShowSkeleton(c)&&Vector3.Distance(c.transform.position,p.transform.position)<=30f;}
   internal static void PrepareLocal(EnemyHud hud){var p=Player.m_localPlayer;if(!p||!Visible(p))return;var table=Huds.GetValue(hud) as IDictionary;bool existed=table!=null&&table.Contains(p);ShowHud.Invoke(hud,new object[]{p,false});if(!existed&&table!=null&&table.Contains(p)){var gui=Field(table[p],"m_gui") as GameObject;if(gui)LocalRoots[gui]=new LocalHud{Hud=hud,Character=p};}}
   internal static void KeepVisible(EnemyHud hud){var table=Huds.GetValue(hud) as IDictionary;if(table==null)return;foreach(DictionaryEntry entry in table){var c=entry.Key as Character;if(Managed(c)&&Visible(c))AccessTools.Field(entry.Value.GetType(),"m_hoverTimer")?.SetValue(entry.Value,0f);}}
   static float NameSize(Component template){var value=template.GetType().GetProperty("fontSize")?.GetValue(template,null);float size=value is float?(float)value:0;return Travel.Finite(size)&&size>0?size:14;}
@@ -87,7 +98,18 @@ namespace GhostSummonTravel {
   internal static string HealthFormat(Character c){return Math.Ceiling(Math.Max(0,c.GetHealth())).ToString("0",CultureInfo.InvariantCulture)+" / "+Math.Ceiling(Math.Max(0,c.GetMaxHealth())).ToString("0",CultureInfo.InvariantCulture);}
   static void Remember(Vitals view,GameObject root){if(root)view.Hidden.Add(new Native{Root=root,Active=root.activeSelf});}
   static void DestroyView(Vitals view){foreach(var row in new[]{view.Health,view.Shield,view.Timer})if(row?.Root){row.Root.SetActive(false);UnityEngine.Object.Destroy(row.Root);}foreach(var native in view.Hidden)if(native.Root)native.Root.SetActive(native.Active);}
-  internal static void Forget(Character c){Pending.Remove(c);foreach(var entry in Views)if(ReferenceEquals(entry.Value.Character,c)&&entry.Key)entry.Key.SetActive(false);}
+  internal static void Forget(Character c){
+   Pending.Remove(c);
+   foreach(var entry in Views)
+    if(ReferenceEquals(entry.Value.Character,c)&&entry.Key)entry.Key.SetActive(false);
+   var hud = EnemyHud.instance;
+   var table = hud ? Huds.GetValue(hud) as IDictionary : null;
+   if (table != null && table.Contains(c)) {
+    var gui = Field(table[c], "m_gui") as GameObject;
+    if (gui)
+     gui.SetActive(false);
+   }
+  }
   static readonly HashSet<Character> ActiveActors=new HashSet<Character>();
   static readonly HashSet<GameObject> ActiveRoots=new HashSet<GameObject>();
   static readonly List<object> RemovedKeys=new List<object>();
@@ -98,7 +120,7 @@ namespace GhostSummonTravel {
     var gui=Field(entry.Value,"m_gui") as GameObject;
     bool managed=gui&&(Views.ContainsKey(gui)||LocalRoots.ContainsKey(gui))||Managed(actor)||SummonLifecycle.IsRetiring(actor);
     if(!actor||!gui||!actors.Contains(actor)||!ReferenceEquals(Field(entry.Value,"m_character"),actor)
-       ||(managed&&!SummonLifecycle.Usable(actor))){
+       ||(managed&&!SummonLifecycle.Usable(actor))||(Travel.IsKnownSkeleton(actor)&&!CanShowSkeleton(actor))){
      remove.Add(entry.Key);
      if(!ReferenceEquals(actor,null))Pending.Remove(actor);
      continue;
@@ -163,6 +185,15 @@ namespace GhostSummonTravel {
    [HarmonyPostfix,HarmonyPriority(Priority.Last)]static void Postfix(EnemyHud __instance){if(hudFailed)return;try{UpdateHud(__instance);}catch(Exception e){hudFailed=true;Plugin.LogFault(e);}}
   }
   [HarmonyPatch(typeof(EnemyHud),"UpdateHuds")]static class HoverPatch{[HarmonyPrefix]static void Prefix(EnemyHud __instance){try{KeepVisible(__instance);}catch(Exception e){Plugin.LogFault(e);}}}
-  [HarmonyPatch(typeof(EnemyHud),"TestShow")]static class VisibilityPatch{[HarmonyPostfix]static void Postfix(Character c,ref bool __result){if(Managed(c))__result=Visible(c);}}
+  [HarmonyPatch(typeof(EnemyHud),"ShowHud")]static class CreatePatch {
+   [HarmonyPrefix]
+   static bool Prefix(Character c) => !Travel.IsKnownSkeleton(c) || CanShowSkeleton(c);
+  }
+  [HarmonyPatch(typeof(EnemyHud),"TestShow")]static class VisibilityPatch{
+   [HarmonyPostfix]static void Postfix(Character c,ref bool __result){
+    if (Travel.IsKnownSkeleton(c) && !CanShowSkeleton(c)) __result=false;
+    else if(Managed(c))__result=Visible(c);
+   }
+  }
  }
 }

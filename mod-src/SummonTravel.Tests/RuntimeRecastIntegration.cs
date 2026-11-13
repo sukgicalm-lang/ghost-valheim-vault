@@ -11,7 +11,7 @@ class RuntimeRecastIntegration {
  static int Hash= (int)Travel.GetField("ProtectionShieldHash",BindingFlags.Static|BindingFlags.NonPublic).GetValue(null);
  static void Check(bool b,string name){if(!b)throw new Exception("FAIL "+name);checks++;Console.WriteLine("PASS "+name);}
  static MethodInfo Hook(string nested){return Refresh.GetNestedType(nested,BindingFlags.NonPublic).GetMethod("Postfix",BindingFlags.Static|BindingFlags.NonPublic);}
- static T Make<T>(int id,string prefab)where T:Character,new(){var go=new GameObject();var c=new T();go.Add(c);int hash=(int)Travel.GetMethod("StableHash",BindingFlags.Static|BindingFlags.NonPublic).Invoke(null,new object[]{prefab});go.Add(new ZNetView{Zdo=new ZDO{m_uid=new ZDOID{Value=id},Prefab=hash}});c.Manager=new SEMan{m_character=c};Character.All.Add(c);return c;}
+ static T Make<T>(int id,string prefab)where T:Character,new(){var go=new GameObject();var c=new T();go.Add(c);int hash=(int)Travel.GetMethod("StableHash",BindingFlags.Static|BindingFlags.NonPublic).Invoke(null,new object[]{prefab});go.Add(new ZNetView{Zdo=new ZDO{m_uid=new ZDOID{Value=id},Prefab=hash}});c.Manager=new SEMan{m_character=c};Character.All.Add(c);ZNetScene.instance.Objects[c.GetZDOID()]=go;return c;}
  static SE_Shield Existing(Character c){var s=new SE_Shield{Hash=Hash,m_character=c,m_totalAbsorbDamage=300,m_damage=245,m_time=45,m_ttl=120};c.Manager.Effects.Clear();c.Manager.Effects.Add(s);return s;}
  // Faithful existing-effect branch of the supplied native Character.RPC_Damage:
  // it calls ResetTime/SetLevel directly and never calls SEMan.AddStatusEffect.
@@ -109,6 +109,18 @@ class RuntimeRecastIntegration {
    present.GetMethod("UpdateHud",BindingFlags.Static|BindingFlags.NonPublic).Invoke(null,new object[]{cleanHud});
    Check(cleanHud.m_huds.Count==0&&(int)dismiss.Invoke(null,new object[]{cleanCaster})==0,
     "manual dismissal clears nameplates during deferred destruction and prevents duplicate requests");
+   var createPatch=present.GetNestedType("CreatePatch",BindingFlags.NonPublic).GetMethod("Prefix",BindingFlags.Static|BindingFlags.NonPublic);
+   harmony.Patch(typeof(EnemyHud).GetMethod("ShowHud",BindingFlags.NonPublic|BindingFlags.Instance),prefix:new HarmonyMethod(createPatch));
+   var ownerless=Fresh(weapons,shield);
+   var ownerlessView=ownerless.GetComponent<ZNetView>();
+   ownerlessView.Zdo.Owner=0;
+   cleanHud.PopulateOnShow=true;
+   cleanHud.SimulateShowHud(ownerless);
+   cleanHud.SimulateShowHud(waiting);
+   Check(cleanHud.ShowCalls==0&&cleanHud.m_huds.Count==0,"real ShowHud prefix blocks both ownerless and dismissed summons before any UI is made");
+   ownerlessView.Zdo.Owner=2;
+   cleanHud.SimulateShowHud(ownerless);
+   Check(cleanHud.ShowCalls==1&&cleanHud.m_huds.Contains(ownerless),"real ShowHud prefix permits a live summon when network ownership returns");
    Tameable.FlushUnsummons();
    Tameable.DeferUnsummon=false;
   }finally{harmony.UnpatchAll(harmony.Id);}

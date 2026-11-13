@@ -8,16 +8,16 @@ using System.Runtime.CompilerServices;
 using BepInEx;
 using HarmonyLib;
 using UnityEngine;
-[assembly: AssemblyVersion("1.0.14.0")]
-[assembly: AssemblyFileVersion("1.0.14.0")]
+[assembly: AssemblyVersion("1.0.15.0")]
+[assembly: AssemblyFileVersion("1.0.15.0")]
 namespace GhostSummonTravel {
- [BepInPlugin(Guid,"Ghost 해골 동행·방어막 표시","1.0.14")]
+ [BepInPlugin(Guid,"Ghost 해골 동행·방어막 표시","1.0.15")]
  public sealed class Plugin:BaseUnityPlugin {
   public const string Guid="ghost.valheim.summontravel";Harmony harmony;internal static Plugin Instance;
-  void Awake(){Instance=this;Travel.Faulted=false;Travel.ValidateApi();ShieldPresentation.ValidateApi();IdleSpacing.ValidateApi();PlayerShieldBar.ValidateApi();SpawnRoster.ValidateApi();harmony=new Harmony(Guid);try{harmony.PatchAll(typeof(Plugin).Assembly);}catch{harmony.UnpatchSelf();throw;}Logger.LogInfo("해골 동행 1.0.14: 인벤토리에서 내 해골의 소환을 해제할 수 있습니다");}
+  void Awake(){Instance=this;Travel.Faulted=false;Travel.ValidateApi();ShieldPresentation.ValidateApi();IdleSpacing.ValidateApi();PlayerShieldBar.ValidateApi();SpawnRoster.ValidateApi();harmony=new Harmony(Guid);try{harmony.PatchAll(typeof(Plugin).Assembly);}catch{harmony.UnpatchSelf();throw;}Logger.LogInfo("해골 동행 1.0.15: 해제된 해골과 몸체가 없는 해골의 이름표가 다시 표시되지 않도록 처리합니다");}
   internal static void LogShieldRecast(Character c){if(Instance){float left,max;Travel.ShieldAmounts(c,out left,out max);Instance.Logger.LogInfo("보호막 재시전 갱신: "+(c==Player.m_localPlayer?"본인":Travel.IsSkeleton(c)?"해골":"아군")+" / 방어막 "+left+" / "+max);}}
   internal static void LogFault(Exception e){if(Instance)Instance.Logger.LogError("해골 자동 동행 오류로 해당 기능을 중단하고 기본 게임 이동을 유지합니다. 게임 재시작 전 로그를 보관하세요. "+e);}
-  void Update(){try{Travel.Tick();}catch(Exception e){Travel.Abort(e);}try{FollowerRecovery.Tick();}catch(Exception e){LogFault(e);}}void OnDestroy(){SummonDismissButton.Clear();Travel.Clear();if(harmony!=null)harmony.UnpatchSelf();Instance=null;}
+  void Update(){try{Travel.Tick();}catch(Exception e){Travel.Abort(e);}try{FollowerRecovery.Tick();SummonLifecycle.RetryDismissals();}catch(Exception e){LogFault(e);}}void OnDestroy(){SummonDismissButton.Clear();Travel.Clear();SummonLifecycle.Clear();if(harmony!=null)harmony.UnpatchSelf();Instance=null;}
  }
  internal static class Travel {
   internal static bool Faulted;
@@ -48,6 +48,18 @@ namespace GhostSummonTravel {
   internal static double Now {get{return ZNet.instance?ZNet.instance.GetTimeSeconds():0;}}
   internal static int StableHash(string s){unchecked{int a=5381,b=a;for(int i=0;i<s.Length&&s[i]!='\0';i+=2){a=((a<<5)+a)^s[i];if(i==s.Length-1||s[i+1]=='\0')break;b=((b<<5)+b)^s[i+1];}return a+b*1566083941;}}
   internal static bool Finite(float n){return !float.IsNaN(n)&&!float.IsInfinity(n);}
+  internal static bool IsSkeletonPrefab(ZDO zdo) => zdo != null && zdo.GetPrefab() == SkeletonPrefab;
+  internal static bool IsKnownSkeleton(Character c) {
+   if (!c || c is Player)
+    return false;
+   if (Kinds.TryGetValue(c, out var kind))
+    return kind.Skeleton;
+   if (IsSkeleton(c))
+    return true;
+   var name = c.gameObject.name;
+   return (name == "Skeleton_Friendly" || name == "Skeleton_Friendly(Clone)") &&
+    c.GetComponent<Tameable>() && c.GetComponent<MonsterAI>();
+  }
   internal static bool IsSkeleton(Character c){if(!c||c is Player)return false;CharacterKind kind;if(Kinds.TryGetValue(c,out kind))return kind.Skeleton&&kind.View&&kind.View.IsValid();var v=c.GetComponent<ZNetView>();if(!v||!v.IsValid()||v.GetZDO().GetPrefab()==0)return false;kind=new CharacterKind{View=v,Skeleton=v.GetZDO().GetPrefab()==SkeletonPrefab&&c.GetComponent<Tameable>()&&c.GetComponent<MonsterAI>()};Kinds.Add(c,kind);return kind.Skeleton;}
   internal static bool Follows(Character c,Player p){if(!IsSkeleton(c)||!p||!c.IsTamed()||!SummonLifecycle.Usable(c))return false;var target=c.GetComponent<MonsterAI>().GetFollowTarget();return target?target==p.gameObject:c.GetComponent<ZNetView>().GetZDO().GetString(ZDOVars.s_follow)==p.GetPlayerName();}
   internal static void ValidateApi(){
@@ -152,7 +164,7 @@ namespace GhostSummonTravel {
    if(c){var view=c.GetComponent<ZNetView>();if(view&&view.IsValid())Followers.Remove(c.GetZDOID());if(local!=null){local.Views.RemoveAll(v=>!v||ReferenceEquals(v.GetComponent<Character>(),c));if(local.Views.Count==0)local=null;}}
    Shields.Remove(c);Searches.Remove(c);IdleSpacing.Forget(c);
   }
-  internal static void Clear(){foreach(var t in Moving.Values)try{Release(t);}catch{}Moving.Clear();Followers.Clear();Finished.Clear();local=null;nextCheck=0;lastTickFrame=lastArrivalFrame=searchFrame=-1;searchProbes=0;Shields=new ConditionalWeakTable<Character,ShieldState>();Kinds=new ConditionalWeakTable<Character,CharacterKind>();Searches=new ConditionalWeakTable<Character,SearchState[]>();ShieldPresentation.ClearHud();PlayerShieldBar.Clear();IdleSpacing.Clear();ProtectionRecast.Clear();FollowerRecovery.Clear();SpawnRoster.Clear();SummonLifecycle.Clear();}
+  internal static void Clear(){foreach(var t in Moving.Values)try{Release(t);}catch{}Moving.Clear();Followers.Clear();Finished.Clear();local=null;nextCheck=0;lastTickFrame=lastArrivalFrame=searchFrame=-1;searchProbes=0;Shields=new ConditionalWeakTable<Character,ShieldState>();Kinds=new ConditionalWeakTable<Character,CharacterKind>();Searches=new ConditionalWeakTable<Character,SearchState[]>();ShieldPresentation.ClearHud();PlayerShieldBar.Clear();IdleSpacing.Clear();ProtectionRecast.Clear();FollowerRecovery.Clear();SpawnRoster.Clear();}
   internal static void RestoreIfNewOwner(Character c){if(!IsSkeleton(c)||!SummonLifecycle.Usable(c))return;var v=c.GetComponent<ZNetView>();var state=Shields.GetOrCreateValue(c);bool owner=v.IsOwner();if(owner&&!state.WasOwner)RestoreShields(c);state.WasOwner=owner;}
   internal static void SaveShields(Character c){
    if(!IsSkeleton(c)||!SummonLifecycle.Usable(c)||!c.GetComponent<ZNetView>().IsOwner())return;var rows=new List<string>{Now.ToString("R",Inv)};

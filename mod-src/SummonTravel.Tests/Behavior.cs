@@ -15,6 +15,63 @@ class Behavior{
  static SpawnAbility Raiser(Player owner,GameObject[] weapons,GameObject shield){var go=new GameObject{name="staff_skeleton_aoe(Clone)"};var a=new SpawnAbility{m_spawnPrefab=new[]{new GameObject{name="Skeleton_Friendly"}},m_maxSpawned=0,AwakeCallback=SpawnRoster.Mark,EquipmentCallback=SpawnRoster.Apply,Factory=()=>FreshSkeleton(weapons,shield)};go.Add(a);a.m_levelUpSettings.Add(new SpawnAbility.LevelUpSettings{m_skill=Skills.SkillType.BloodMagic,m_skillLevel=0,m_maxSpawns=2});a.m_levelUpSettings.Add(new SpawnAbility.LevelUpSettings{m_skill=Skills.SkillType.BloodMagic,m_skillLevel=25,m_maxSpawns=3});a.m_levelUpSettings.Add(new SpawnAbility.LevelUpSettings{m_skill=Skills.SkillType.BloodMagic,m_skillLevel=75,m_maxSpawns=4});return a;}
  static void CastBatch(SpawnAbility a,Player p,ItemDrop.ItemData weapon){SpawnRoster.Prepare(a,p,weapon);a.Setup(p,Vector3.zero,0,null,weapon,null);var iterator=SpawnRoster.Wrap(a,a.Enumerator);while(iterator.MoveNext()){} }
  static System.Collections.IEnumerator BrokenSpawn(){yield return null;throw new InvalidOperationException("native spawn failure");}
+ static void PreventReturningNameplates(){
+  Travel.Clear();
+  SummonLifecycle.Clear();
+  Character.All.Clear();
+  var scene=ZNetScene.instance;
+  var player=Make<Player>(400001,"Player");
+  Player.m_localPlayer=player;
+  var retired=Skeleton(400002,player);
+  var visible=Skeleton(400003,player);
+  var ghost=Skeleton(400004,player);
+  var ghostView=ghost.GetComponent<ZNetView>();
+  ghostView.Zdo.Owner=0;
+  var hud=new EnemyHud();
+  EnemyHud.instance=hud;
+  var retiredHud=Head(retired);
+  var ghostHud=Head(ghost);
+  hud.m_huds[retired]=retiredHud;
+  hud.m_huds[ghost]=ghostHud;
+  var tame=retired.GetComponent<Tameable>();
+  tame.DropFirstRequest=true;
+  SummonDismissal.RememberSummoner(retired.GetComponent<ZNetView>(),player);
+  Check(SummonDismissal.Dismiss(player)==1&&tame.UnsummonRequests==1&&retired&&!retiredHud.m_gui.activeSelf,
+   "first dropped native dismissal immediately hides an uncached nameplate");
+  ShieldPresentation.UpdateHud(hud);
+  Check(hud.m_huds.Count==0&&!ghostHud.m_gui&&!ShieldPresentation.Visible(ghost)&&ShieldPresentation.Visible(visible),
+   "ownerless invisible actor loses its entire nameplate while live summons keep theirs");
+  ghostView.Zdo.Owner=2;
+  Check(ShieldPresentation.Visible(ghost),"normal network ownership return makes an undismissed summon visible again");
+  ghost.ModelActive=false;
+  Check(!ShieldPresentation.Visible(ghost),"missing model does not display a nameplate despite valid ownership");
+  ghost.ModelActive=true;
+  ghost.Health=0;
+  Check(!ShieldPresentation.Visible(ghost),"zero health is suppressed before the death flag is set");
+  ghost.Health=45;
+  scene.Objects.Remove(ghost.GetZDOID());
+  Check(!ShieldPresentation.Visible(ghost),"stale unregistered body does not display a nameplate");
+
+  ZNet.instance.Time+=2;
+  SummonLifecycle.RetryDismissals();
+  Check(tame.UnsummonRequests==2&&!retired,"lost native request is retried when a network owner can remove the actor");
+  var reloaded=Skeleton(400002,player);
+  var reloadedHud=Head(reloaded);
+  hud.m_huds[reloaded]=reloadedHud;
+  ShieldPresentation.UpdateHud(hud);
+  Check(reloaded&&!reloadedHud.m_gui&&!ShieldPresentation.Visible(reloaded)&&!SummonDismissal.CanDismiss(reloaded,player),
+   "a recreated character with the same network ID cannot recreate its dismissed nameplate");
+  ZNet.instance.Time+=5;
+  SummonLifecycle.RetryDismissals();
+  Check(!reloaded,"retry resolves the current object for the dismissed network ID");
+
+  ZNetScene.instance=new ZNetScene();
+  var newWorld=Skeleton(400002,player);
+  Check(ShieldPresentation.Visible(newWorld),"new world can use the same network ID without inheriting a dismissal");
+  EnemyHud.instance=null;
+  ZNetScene.instance=scene;
+  SummonLifecycle.Clear();
+ }
  static void DismissButton(){
   Travel.Clear();
   Character.All.Clear();
@@ -289,6 +346,7 @@ class Behavior{
   Check(staleHud.m_baseHud&&customWidget,"native template and unrelated canvas widgets survive cleanup");
   current.GetComponent<ZNetView>().Valid=false;ShieldPresentation.UpdateHud(staleHud);Check(!staleHud.m_huds.Contains(current)&&!rebound.m_gui,"invalid network actor removes entire native nameplate rather than only custom numbers");Travel.Clear();
   DismissButton();
+  PreventReturningNameplates();
   Console.WriteLine("Behavior checks: "+count);
  }
 }

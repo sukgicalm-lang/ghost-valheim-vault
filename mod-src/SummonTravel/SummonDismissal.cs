@@ -47,11 +47,15 @@ namespace GhostSummonTravel {
    foreach (var summon in summons) {
     if (!CanDismiss(summon, player))
      continue;
-    Unsummon.Invoke(summon.GetComponent<Tameable>(), null);
+    SummonLifecycle.TrackDismissal(summon);
+    RequestNative(summon);
     requested++;
    }
    return requested;
   }
+
+  internal static void RequestNative(Character summon) =>
+   Unsummon.Invoke(summon.GetComponent<Tameable>(), null);
 
   [HarmonyPatch(typeof(Tameable), "RPC_Command")]
   static class RememberBeforeStay {
