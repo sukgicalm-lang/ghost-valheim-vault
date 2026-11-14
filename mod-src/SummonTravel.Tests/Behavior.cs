@@ -15,6 +15,72 @@ class Behavior{
  static SpawnAbility Raiser(Player owner,GameObject[] weapons,GameObject shield){var go=new GameObject{name="staff_skeleton_aoe(Clone)"};var a=new SpawnAbility{m_spawnPrefab=new[]{new GameObject{name="Skeleton_Friendly"}},m_maxSpawned=0,AwakeCallback=SpawnRoster.Mark,EquipmentCallback=SpawnRoster.Apply,Factory=()=>FreshSkeleton(weapons,shield)};go.Add(a);a.m_levelUpSettings.Add(new SpawnAbility.LevelUpSettings{m_skill=Skills.SkillType.BloodMagic,m_skillLevel=0,m_maxSpawns=2});a.m_levelUpSettings.Add(new SpawnAbility.LevelUpSettings{m_skill=Skills.SkillType.BloodMagic,m_skillLevel=25,m_maxSpawns=3});a.m_levelUpSettings.Add(new SpawnAbility.LevelUpSettings{m_skill=Skills.SkillType.BloodMagic,m_skillLevel=75,m_maxSpawns=4});return a;}
  static void CastBatch(SpawnAbility a,Player p,ItemDrop.ItemData weapon){SpawnRoster.Prepare(a,p,weapon);a.Setup(p,Vector3.zero,0,null,weapon,null);var iterator=SpawnRoster.Wrap(a,a.Enumerator);while(iterator.MoveNext()){} }
  static System.Collections.IEnumerator BrokenSpawn(){yield return null;throw new InvalidOperationException("native spawn failure");}
+ static void ClearWorldSummons(){
+  Travel.Clear();
+  SummonLifecycle.Clear();
+  Character.All.Clear();
+  var net=ZNet.instance;
+  var manager=ZDOMan.instance;
+  net.Server=true;
+  var player=Make<Player>(500001,"Player");
+  player.PlayerName="Owner";
+  Player.m_localPlayer=player;
+  var friend=Make<Player>(500002,"Player");
+  friend.PlayerName="Friend";
+  var friendZdo=friend.GetComponent<ZNetView>().GetZDO();
+  friendZdo.Owner=2;
+  friendZdo.Set(ZDOVars.s_playerName,friend.PlayerName);
+  friendZdo.Set(ZDOVars.s_playerID.ToString(),friend.GetPlayerID());
+  var peer=new ZNetPeer{m_uid=2,m_characterID=friend.GetZDOID()};
+  net.Peers.Add(peer);
+  net.Players.Add(friendZdo);
+  var loaded=Skeleton(500003,player);
+  var loadedView=loaded.GetComponent<ZNetView>();
+  SummonDismissal.RememberSummoner(loadedView,player);
+  loadedView.Zdo.Owner=0;
+
+  ZDO AddSaved(int id,string prefab,long owner,string follow,int limit,bool tamed){
+   var saved=new ZDO{m_uid=new ZDOID{Value=id},Prefab=Travel.StableHash(prefab),Owner=0};
+   saved.Set("ghost.summontravel.summoner.v1",owner);
+   saved.Set(ZDOVars.s_follow,follow);
+   saved.Set(ZDOVars.s_maxInstances,limit);
+   saved.Set(ZDOVars.s_tamed,tamed?1:0);
+   manager.Unloaded.Add(saved.m_uid,saved);
+   return saved;
+  }
+  var tagged=AddSaved(500004,"Skeleton_Friendly",player.GetPlayerID(),"",0,false);
+  var legacy=AddSaved(500005,"Skeleton_Friendly",0,player.PlayerName,3,true);
+  var foreign=AddSaved(500006,"Skeleton_Friendly",friend.GetPlayerID(),player.PlayerName,3,true);
+  var wild=AddSaved(500007,"Skeleton",0,player.PlayerName,3,true);
+  var nonSummon=AddSaved(500008,"Skeleton_Friendly",0,player.PlayerName,0,true);
+  var delayed=Raiser(player,new GameObject[0],null);
+  delayed.m_initialSpawnDelay=1;
+  var item=new ItemDrop.ItemData();
+  SpawnRoster.Prepare(delayed,player,item);
+  delayed.Setup(player,Vector3.zero,0,null,item,null);
+  var cast=SpawnRoster.Wrap(delayed,delayed.Enumerator);
+  Check(cast.MoveNext()&&delayed.Spawned.Count==0,"queued cast is waiting before the dismissal");
+  Check(SummonDismissal.Dismiss(player,out int cancelled)==3&&cancelled==1&&!loaded,
+   "host destroys the loaded ownerless summon and both unloaded owned records");
+  Check(manager.GetZDO(tagged.m_uid)==null&&manager.GetZDO(legacy.m_uid)==null,
+   "world records are deleted so zone loading has no old summons to instantiate");
+  Check(manager.GetZDO(foreign.m_uid)==foreign&&manager.GetZDO(wild.m_uid)==wild&&manager.GetZDO(nonSummon.m_uid)==nonSummon,
+   "other players, wild skeletons and non-staff friendly creatures survive world cleanup");
+  Check(!cast.MoveNext()&&delayed.Spawned.Count==0&&SummonDismissal.Dismiss(player)==0,
+   "delayed native cast cannot resume and repeated world cleanup is harmless");
+
+  var register=typeof(SummonDismissal).GetNestedType("RegisterDismissRequest",System.Reflection.BindingFlags.NonPublic);
+  register.GetMethod("Postfix",System.Reflection.BindingFlags.NonPublic|System.Reflection.BindingFlags.Static).Invoke(null,new object[]{net,peer});
+  peer.m_rpc.Handler(new ZRpc());
+  Check(manager.GetZDO(foreign.m_uid)==foreign,"a request from another connection cannot remove world objects");
+  peer.m_rpc.Handler(peer.m_rpc);
+  Check(manager.GetZDO(foreign.m_uid)==null&&manager.GetZDO(wild.m_uid)==wild,
+   "server resolves the authenticated peer and removes only that player's saved summon");
+  manager.Unloaded.Clear();
+  net.Players.Clear();
+  net.Peers.Clear();
+  net.Server=false;
+ }
  static void PreventReturningNameplates(){
   Travel.Clear();
   SummonLifecycle.Clear();
@@ -347,6 +413,7 @@ class Behavior{
   current.GetComponent<ZNetView>().Valid=false;ShieldPresentation.UpdateHud(staleHud);Check(!staleHud.m_huds.Contains(current)&&!rebound.m_gui,"invalid network actor removes entire native nameplate rather than only custom numbers");Travel.Clear();
   DismissButton();
   PreventReturningNameplates();
+  ClearWorldSummons();
   Console.WriteLine("Behavior checks: "+count);
  }
 }

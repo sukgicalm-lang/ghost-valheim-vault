@@ -9,6 +9,7 @@ namespace GhostSummonTravel {
   sealed class Retired {}
   static ConditionalWeakTable<Character,Retired> Retiring=new ConditionalWeakTable<Character,Retired>();
   static readonly HashSet<ZDOID> RetiredIds = new HashSet<ZDOID>();
+  static readonly HashSet<ZDOID> WorldRemovals = new HashSet<ZDOID>();
   static readonly Dictionary<ZDOID,double> PendingDismissals = new Dictionary<ZDOID,double>();
   static readonly List<ZDOID> Due = new List<ZDOID>();
   static ZNetScene scene;
@@ -48,6 +49,17 @@ namespace GhostSummonTravel {
    Retire(c);
   }
 
+  internal static bool WorldRemovalQueued(ZDOID id) {
+   UpdateScene();
+   return WorldRemovals.Contains(id);
+  }
+
+  internal static void MarkWorldRemoval(ZDOID id) {
+   UpdateScene();
+   RetiredIds.Add(id);
+   WorldRemovals.Add(id);
+  }
+
   internal static void RetryDismissals() {
    UpdateScene();
    if (!scene || PendingDismissals.Count == 0 || ZDOMan.instance == null)
@@ -82,6 +94,7 @@ namespace GhostSummonTravel {
   internal static void Clear() {
    Retiring = new ConditionalWeakTable<Character,Retired>();
    RetiredIds.Clear();
+   WorldRemovals.Clear();
    PendingDismissals.Clear();
    Due.Clear();
    nextCheck = 0;

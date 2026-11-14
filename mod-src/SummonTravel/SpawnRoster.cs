@@ -12,7 +12,7 @@ namespace GhostSummonTravel {
   const string LoadoutKey="ghost.summontravel.loadout.v1";
   sealed class Loadout {internal GameObject Weapon,Shield;internal bool Applied;}
   static ConditionalWeakTable<Humanoid,Loadout> Loadouts=new ConditionalWeakTable<Humanoid,Loadout>();
-  sealed class Cast {internal SpawnAbility Ability;internal Player Owner;internal double Started;internal bool Done;internal readonly Dictionary<string,int> Roles=new Dictionary<string,int>(StringComparer.Ordinal);}
+  sealed class Cast {internal SpawnAbility Ability;internal Player Owner;internal double Started;internal bool Done,Cancelled;internal readonly Dictionary<string,int> Roles=new Dictionary<string,int>(StringComparer.Ordinal);}
   static ConditionalWeakTable<SpawnAbility,Cast> Plans=new ConditionalWeakTable<SpawnAbility,Cast>();
   static readonly List<Cast> Pending=new List<Cast>();static Cast Active;
   internal static void ValidateApi(){if(AccessTools.Method(typeof(Humanoid),"GiveDefaultItems")==null)throw new MissingFieldException("해골 일괄 소환: 게임의 장비 선택 저장값 구조가 맞지 않습니다.");}
@@ -35,8 +35,17 @@ namespace GhostSummonTravel {
    ability.m_minToSpawn=ability.m_maxToSpawn=limit;ability.m_spawnDelay=0f;ability.m_preSpawnDelay=0f;ability.m_circleSpawn=true;ability.m_spawnRadius=Math.Max(ability.m_spawnRadius,3f);return limit;
   }
   internal static IEnumerator Wrap(SpawnAbility ability,IEnumerator original){Cast plan;return Plans.TryGetValue(ability,out plan)?Run(plan,original):original;}
+  internal static int CancelPending(Player player) {
+   int count = 0;
+   foreach (var plan in Pending)
+    if (plan.Owner == player && !plan.Cancelled) {
+     plan.Cancelled = true;
+     count++;
+    }
+   return count;
+  }
   static IEnumerator Run(Cast plan,IEnumerator original){
-   try{while(true){bool more;object value=null;var before=Active;try{Active=plan;more=original.MoveNext();if(more)value=original.Current;}finally{Active=before;}if(!more)yield break;yield return value;}}
+   try{while(!plan.Cancelled){bool more;object value=null;var before=Active;try{Active=plan;more=original.MoveNext();if(more)value=original.Current;}finally{Active=before;}if(!more)yield break;yield return value;}}
    finally{plan.Done=true;Pending.Remove(plan);Plans.Remove(plan.Ability);(original as IDisposable)?.Dispose();}
   }
   static ItemDrop.ItemData Data(GameObject prefab){return prefab?prefab.GetComponent<ItemDrop>()?.m_itemData:null;}

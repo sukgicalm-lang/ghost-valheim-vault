@@ -8,14 +8,15 @@ using System.Runtime.CompilerServices;
 using BepInEx;
 using HarmonyLib;
 using UnityEngine;
-[assembly: AssemblyVersion("1.0.15.0")]
-[assembly: AssemblyFileVersion("1.0.15.0")]
+[assembly: AssemblyVersion("1.0.16.0")]
+[assembly: AssemblyFileVersion("1.0.16.0")]
 namespace GhostSummonTravel {
- [BepInPlugin(Guid,"Ghost 해골 동행·방어막 표시","1.0.15")]
+ [BepInPlugin(Guid,"Ghost 해골 동행·방어막 표시","1.0.16")]
  public sealed class Plugin:BaseUnityPlugin {
   public const string Guid="ghost.valheim.summontravel";Harmony harmony;internal static Plugin Instance;
-  void Awake(){Instance=this;Travel.Faulted=false;Travel.ValidateApi();ShieldPresentation.ValidateApi();IdleSpacing.ValidateApi();PlayerShieldBar.ValidateApi();SpawnRoster.ValidateApi();harmony=new Harmony(Guid);try{harmony.PatchAll(typeof(Plugin).Assembly);}catch{harmony.UnpatchSelf();throw;}Logger.LogInfo("해골 동행 1.0.15: 해제된 해골과 몸체가 없는 해골의 이름표가 다시 표시되지 않도록 처리합니다");}
+  void Awake(){Instance=this;Travel.Faulted=false;Travel.ValidateApi();ShieldPresentation.ValidateApi();IdleSpacing.ValidateApi();PlayerShieldBar.ValidateApi();SpawnRoster.ValidateApi();harmony=new Harmony(Guid);try{harmony.PatchAll(typeof(Plugin).Assembly);}catch{harmony.UnpatchSelf();throw;}Logger.LogInfo("해골 동행 1.0.16: 소환 해제 시 월드에 저장된 내 해골까지 제거합니다");}
   internal static void LogShieldRecast(Character c){if(Instance){float left,max;Travel.ShieldAmounts(c,out left,out max);Instance.Logger.LogInfo("보호막 재시전 갱신: "+(c==Player.m_localPlayer?"본인":Travel.IsSkeleton(c)?"해골":"아군")+" / 방어막 "+left+" / "+max);}}
+  internal static void LogDismissal(int count){if(Instance)Instance.Logger.LogInfo($"해골 소환 해제: 월드 개체 {count}개 제거 요청");}
   internal static void LogFault(Exception e){if(Instance)Instance.Logger.LogError("해골 자동 동행 오류로 해당 기능을 중단하고 기본 게임 이동을 유지합니다. 게임 재시작 전 로그를 보관하세요. "+e);}
   void Update(){try{Travel.Tick();}catch(Exception e){Travel.Abort(e);}try{FollowerRecovery.Tick();SummonLifecycle.RetryDismissals();}catch(Exception e){LogFault(e);}}void OnDestroy(){SummonDismissButton.Clear();Travel.Clear();SummonLifecycle.Clear();if(harmony!=null)harmony.UnpatchSelf();Instance=null;}
  }

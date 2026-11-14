@@ -30,7 +30,8 @@ namespace GhostSummonTravel {
    if (Time.unscaledTime < nextRefresh)
     return;
    nextRefresh = Time.unscaledTime + 0.25f;
-   bool show = SummonDismissal.HasSummons(Player.m_localPlayer);
+   var player = Player.m_localPlayer;
+   bool show = SummonDismissal.CanClearWorld(player) || SummonDismissal.HasSummons(player);
    if (show && !button)
     Create(gui);
    if (button && button.gameObject.activeSelf != show)
@@ -77,9 +78,15 @@ namespace GhostSummonTravel {
     if (!InventoryGui.IsVisible())
      return;
     var player = Player.m_localPlayer;
-    int count = SummonDismissal.Dismiss(player);
+    int count = SummonDismissal.Dismiss(player, out int cancelled);
     if (count > 0)
      player.Message(MessageHud.MessageType.Center, $"해골 {count}마리 소환 해제");
+    else if (cancelled > 0)
+     player.Message(MessageHud.MessageType.Center, "진행 중인 해골 소환 취소");
+    else if (SummonDismissal.CanClearWorld(player))
+     player.Message(MessageHud.MessageType.Center, ZNet.instance.IsServer()
+      ? "해제할 소환 해골이 없습니다"
+      : "서버에 해골 소환 해제를 요청했습니다");
     if (inventory)
      nextRefresh = 0;
    } catch (Exception error) {
