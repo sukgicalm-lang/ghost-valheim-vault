@@ -1,6 +1,22 @@
 {
   "siteUpdates": [
     {
+      "id": "module:GhostLineageMusic:1.0.0",
+      "kind": "module",
+      "component": "GhostLineageMusic",
+      "version": "1.0.0",
+      "date": "2026-11-14",
+      "title": "리니지 II 상황별 배경음악 추가",
+      "changes": [
+        "등록한 침대에서 수평 거리 100m 이내는 마을곡, 바깥이나 침대 미등록 시에는 필드곡을 재생합니다.",
+        "전투 중에는 전투곡을 우선 재생하고, 전투가 끝나면 위치에 맞는 음악으로 돌아갑니다.",
+        "각 목록의 곡을 섞어 재생합니다. 발헤임 음악 볼륨과 모드 볼륨 설정을 함께 적용합니다."
+      ],
+      "notes": [
+        "개별 프로필에 설치하는 음악 모드입니다. 로컬에 준비한 음원을 사용하며, 음원과 모드는 통합팩 자동 업데이트에 포함되지 않습니다."
+      ]
+    },
+    {
       "id": "module:GhostSmelterControl:1.0.3",
       "kind": "module",
       "component": "GhostSmelterControl",
