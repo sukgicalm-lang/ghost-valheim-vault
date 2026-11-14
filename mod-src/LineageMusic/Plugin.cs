@@ -4,23 +4,26 @@ using BepInEx;
 using BepInEx.Configuration;
 using HarmonyLib;
 
-[assembly: AssemblyVersion("1.0.2.0")]
-[assembly: AssemblyFileVersion("1.0.2.0")]
+[assembly: AssemblyVersion("1.0.3.0")]
+[assembly: AssemblyFileVersion("1.0.3.0")]
 
 namespace GhostLineageMusic {
-    [BepInPlugin(Id, "Ghost 리니지 II 배경음악", "1.0.2")]
+    [BepInPlugin(Id, "Ghost 리니지 II 배경음악", Version)]
     public sealed class Plugin : BaseUnityPlugin {
         const string Id = "ghost.valheim.lineagemusic";
+        const string Version = "1.0.3";
         internal static Plugin Instance;
         internal ConfigEntry<bool> Enabled;
         internal ConfigEntry<string> MusicFolder;
         internal ConfigEntry<string> LineageFolder;
         internal ConfigEntry<float> Radius;
         internal ConfigEntry<float> Volume;
+        internal string BundledMusic { get; private set; }
         internal bool PlaybackFailed;
         Harmony harmony;
 
         void Awake() {
+            BundledMusic = Path.Combine(Path.GetDirectoryName(Info.Location), "Music");
             Enabled = Config.Bind("음악", "Enabled", true, "상황에 따라 설정된 배경음악을 재생합니다.");
             MusicFolder = Config.Bind("음악", "MusicFolder", Path.Combine(Paths.ConfigPath, "GhostLineageMusic"),
                 "Town, Field, Battle 폴더가 들어 있는 경로입니다. OGG, MP3, WAV를 읽습니다.");
@@ -36,7 +39,7 @@ namespace GhostLineageMusic {
             Enabled.SettingChanged += (_, __) => PlaybackFailed = false;
             harmony = new Harmony(Id);
             harmony.PatchAll(typeof(Plugin).Assembly);
-            Logger.LogInfo("리니지 II 배경음악 1.0.2 로드 완료");
+            Logger.LogInfo($"리니지 II 배경음악 {Version} 로드 완료");
         }
 
         void OnDestroy() {

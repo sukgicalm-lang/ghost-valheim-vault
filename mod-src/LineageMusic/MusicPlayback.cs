@@ -64,17 +64,7 @@ namespace GhostLineageMusic {
             if (now >= nextScan) {
                 nextScan = now + 5f;
                 try {
-                    string configured = plugin.LineageFolder.Value;
-                    if (clientSetting != configured || now >= nextClientScan) {
-                        bool initial = clientSetting == null;
-                        clientSetting = configured;
-                        nextClientScan = now + 60f;
-                        var found = LineageClient.FindMusic(configured, LineageClient.LocalDrives());
-                        if (initial || !StringComparer.OrdinalIgnoreCase.Equals(clientMusic, found))
-                            plugin.LogSource(found != null);
-                        clientMusic = found;
-                    }
-                    library.Refresh(musicRoot, clientMusic);
+                    library.Refresh(musicRoot, plugin.BundledMusic, () => FindClientMusic(now));
                 } catch (IOException error) {
                     plugin.Warn("음원 폴더를 읽지 못했습니다. " + error.Message);
                 } catch (UnauthorizedAccessException error) {
@@ -133,6 +123,21 @@ namespace GhostLineageMusic {
                 MuteNative();
             else
                 RestoreNative();
+        }
+
+        string FindClientMusic(float now) {
+            var plugin = Plugin.Instance;
+            var configured = plugin.LineageFolder.Value;
+            if (clientSetting != configured || now >= nextClientScan) {
+                bool initial = clientSetting == null;
+                clientSetting = configured;
+                nextClientScan = now + 60f;
+                var found = LineageClient.FindMusic(configured, LineageClient.LocalDrives());
+                if (initial || !StringComparer.OrdinalIgnoreCase.Equals(clientMusic, found))
+                    plugin.LogSource(found != null);
+                clientMusic = found;
+            }
+            return clientMusic;
         }
 
         void LoadNext(float now) {

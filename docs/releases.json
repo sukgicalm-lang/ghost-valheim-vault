@@ -1,5 +1,21 @@
 [
   {
+    "version": "1.0.59",
+    "date": "2026-11-14",
+    "file": "downloads/Ghost-GhostValheimSuite-1.0.59.zip",
+    "bytes": 530074097,
+    "sha256": "8a8f0b024ceef0729e62346782c8d9e9d2020627439784d8a026105f68482261",
+    "appIntegration": true,
+    "dependencies": [
+      "denikson-BepInExPack_Valheim-5.4.2351",
+      "ValheimModding-JsonDotNET-13.0.4",
+      "shudnal-ConfigurationManager-1.1.25",
+      "Ghost-GhostSmelterControl-1.0.3"
+    ],
+    "notes": "리니지 II 배경음악 202곡 내장",
+    "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.59/Ghost-GhostValheimSuite-1.0.59.zip"
+  },
+  {
     "version": "1.0.58",
     "date": "2026-11-14",
     "file": "downloads/Ghost-GhostValheimSuite-1.0.58.zip",

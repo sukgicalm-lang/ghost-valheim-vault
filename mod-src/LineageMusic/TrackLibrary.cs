@@ -79,16 +79,29 @@ namespace GhostLineageMusic {
             }
         }
 
-        internal void Refresh(string root, string clientMusic) {
-            var clientTracks = clientMusic == null ? Array.Empty<string>() :
-                Directory.EnumerateFiles(clientMusic, "*.ogg").ToArray();
+        internal void Refresh(string root, string bundledMusic, Func<string> findClientMusic) {
+            string[] clientTracks = null;
             foreach (var entry in lists) {
-                var folder = Path.Combine(root, entry.Key.ToString());
-                var personal = Directory.Exists(folder)
-                    ? Directory.EnumerateFiles(folder).Where(Supported).ToArray() : Array.Empty<string>();
-                entry.Value.Refresh(personal.Length > 0 ? personal :
-                    clientTracks.Where(file => LineageClient.Classify(file) == entry.Key));
+                var tracks = ReadCategory(root, entry.Key);
+                if (tracks.Length == 0)
+                    tracks = ReadCategory(bundledMusic, entry.Key);
+                if (tracks.Length > 0) {
+                    entry.Value.Refresh(tracks);
+                    continue;
+                }
+                if (clientTracks == null) {
+                    var clientMusic = findClientMusic();
+                    clientTracks = clientMusic == null ? Array.Empty<string>() :
+                        Directory.EnumerateFiles(clientMusic, "*.ogg").ToArray();
+                }
+                entry.Value.Refresh(clientTracks.Where(file => LineageClient.Classify(file) == entry.Key));
             }
+        }
+
+        static string[] ReadCategory(string root, MusicContext category) {
+            var folder = Path.Combine(root, category.ToString());
+            return Directory.Exists(folder)
+                ? Directory.EnumerateFiles(folder).Where(Supported).ToArray() : Array.Empty<string>();
         }
     }
 }
