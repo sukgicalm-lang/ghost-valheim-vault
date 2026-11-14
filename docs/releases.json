@@ -1,5 +1,21 @@
 [
   {
+    "version": "1.0.57",
+    "date": "2026-11-14",
+    "file": "downloads/Ghost-GhostValheimSuite-1.0.57.zip",
+    "bytes": 398986163,
+    "sha256": "9bf0cf491d200a7aeb4180eebb81579963bfcd484eeae8d72a6913667863c022",
+    "appIntegration": true,
+    "dependencies": [
+      "denikson-BepInExPack_Valheim-5.4.2351",
+      "ValheimModding-JsonDotNET-13.0.4",
+      "shudnal-ConfigurationManager-1.1.25",
+      "Ghost-GhostSmelterControl-1.0.3"
+    ],
+    "notes": "소환 해제 후 해골 개체가 다시 나타나는 현상 수정",
+    "downloadUrl": "https://github.com/sukgicalm-lang/ghost-valheim-vault/releases/download/suite-1.0.57/Ghost-GhostValheimSuite-1.0.57.zip"
+  },
+  {
     "version": "1.0.56",
     "date": "2026-11-14",
     "file": "downloads/Ghost-GhostValheimSuite-1.0.56.zip",

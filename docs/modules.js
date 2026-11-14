@@ -17,5 +17,5 @@ const modules = [
 ,
  {"id":"GhostSmelterControl","name":"Ghost 제련·제분 설정","author":"Ghost","category":"life","icon":"♨","version":"1.0.3","description":"원래 속도·2배·5배·10배 선택 · 원료 최대 보관량 100개","points":["F1 → Ghost 제련·제분 설정에서 일반 제련소·용광로·숯가마·풍차를 선택합니다.","생산 속도는 원래 속도·2배·5배·10배 버튼이나 원하는 배수로 조절합니다. 현재 배수는 게임에서 읽은 기준으로 표시합니다.","원료·석탄 최대 보관량은 안에 넣어 둘 수 있는 개수입니다. 기본 100개이며 생산량이나 클릭 한 번의 투입량이 아닙니다.","풍차는 바람과 주변 가림의 영향을 계속 받습니다. 처리 주기와 묶음 배출 때문에 매초 한 개씩 나온다는 뜻은 아닙니다.","Ghost 외형·생활·성장과 지도 순간이동의 F1 설정도 한글 이름·설명·단위로 표시합니다."],"note":"Ghost 기본 구성에 포함됩니다. 기존 FrizzQOL Smelter Control은 함께 설치하지 마세요.","config":"BepInEx/config/ghost.valheim.smeltercontrol.cfg"}
 ,
- {"id":"GhostSummonTravel","name":"Ghost 해골 동행·방어막 표시","author":"Ghost","category":"world","icon":"◈","version":"1.0.15","description":"소환 해제 후 해골 이름표가 다시 나타나는 현상 수정","points":["해제된 해골이 같은 네트워크 ID로 다시 로드돼도 이름표가 표시되지 않습니다.","네트워크 소유자가 없거나 몸체가 숨겨진 해골의 이름표를 감춥니다."],"note":"GhostR2 업데이트 후 게임을 다시 실행하세요."}
+ {"id":"GhostSummonTravel","name":"Ghost 해골 동행·방어막 표시","author":"Ghost","category":"world","icon":"◈","version":"1.0.16","description":"소환 해제 후 해골 개체가 다시 나타나는 현상 수정","points":["해골 소환 해제 시 다른 구역에 저장된 내 소환 해골까지 월드에서 제거합니다.","진행 중인 소환도 함께 취소합니다. 다른 구역의 해골을 정리할 수 있도록 인벤토리 버튼을 계속 표시합니다."],"note":"GhostR2 업데이트 후 게임을 다시 실행하세요."}
 ];
