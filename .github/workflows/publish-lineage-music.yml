@@ -1,0 +1,32 @@
+name: Verify and publish Ghost music auto-install
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'mod-ci/lineagemusic-1.0.2/**'
+      - 'mod-src/LineageMusic/**'
+      - '.github/workflows/publish-lineage-music.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  pages: write
+concurrency:
+  group: ghost-smelter-release
+  cancel-in-progress: false
+jobs:
+  publish:
+    if: github.repository == 'sukgicalm-lang/ghost-valheim-vault' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify archive, publish asset and update launcher feed
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PYTHONUTF8: '1'
+        run: python mod-ci/lineagemusic-1.0.2/publish.py

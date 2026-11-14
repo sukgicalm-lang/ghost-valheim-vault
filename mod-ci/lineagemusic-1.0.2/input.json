@@ -1,0 +1,22 @@
+{
+  "base_bytes": 398986163,
+  "base_sha256": "9bf0cf491d200a7aeb4180eebb81579963bfcd484eeae8d72a6913667863c022",
+  "dependencies": [
+    "denikson-BepInExPack_Valheim-5.4.2351",
+    "ValheimModding-JsonDotNET-13.0.4",
+    "shudnal-ConfigurationManager-1.1.25",
+    "Ghost-GhostSmelterControl-1.0.3"
+  ],
+  "binary_hashes": {
+    "GhostLineageMusic.dll": "a6c6bc03ef5074d0bdbff6a1a921585d024475cd8b842228a7f6e821300ac7d5",
+    "NVorbis.dll": "2c6c2281c29344679c97df33a283897ab60c6a676c858d7c675209195315e982"
+  },
+  "source_hashes": {
+    "mod-src/LineageMusic/LineageClient.cs": "d871b3f814cbdf7f455df64f9a1b4e6a74c2d2cf7a68dc7dbc7eea37e034d65c",
+    "mod-src/LineageMusic/MusicPlayback.cs": "0ced399acd3667dda5160012eb06dfe20c70eab75ac70281a5085e160065d053",
+    "mod-src/LineageMusic/Plugin.cs": "997173e6840e980da8f04dc3ea01ff0804cfffdc14d4d35800e20a0492a3b334",
+    "mod-src/LineageMusic/README.md": "13172034af1528a6b7d6757cd9f8ec0e2de9c757108e4008d71159036777cd54",
+    "mod-src/LineageMusic/TrackLibrary.cs": "322dfd62c9944db434c5ec7e8f88823a2fb9c1702d0a898e1a10ffcef278f79b",
+    "mod-src/LineageMusic/VorbisTrack.cs": "e2af3815b727873b9fd937c1b8fd884aeb14989506a817bd0f3b7e17cf9ce5f0"
+  }
+}
