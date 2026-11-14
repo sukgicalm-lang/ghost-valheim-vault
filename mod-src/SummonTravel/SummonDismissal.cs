@@ -18,6 +18,25 @@ namespace GhostSummonTravel {
     view.GetZDO().Set(SummonerKey, id);
   }
 
+  internal static long Summoner(ZDO zdo) => zdo.GetLong(SummonerKey,0);
+
+  internal static bool UniqueName(ZNet net,long playerId,string name) => !string.IsNullOrEmpty(name) &&
+   !net.GetAllCharacterZDOS().Any(other => other != null && other.GetLong(ZDOVars.s_playerID,0) != playerId && other.GetString(ZDOVars.s_playerName) == name);
+
+  internal static bool CanIdentifyFollower(ZDO zdo,Player player) {
+   var owner=Summoner(zdo);
+   if(owner!=0)return owner==player.GetPlayerID();
+   var name=player.GetPlayerName();
+   return zdo.GetInt(ZDOVars.s_maxInstances,0)>0 && !string.IsNullOrEmpty(name) &&
+    zdo.GetString(ZDOVars.s_follow)==name && !Player.GetAllPlayers().Any(other=>other&&other!=player&&other.GetPlayerName()==name);
+  }
+
+  internal static HashSet<ZDOID> SavedCandidates() {
+   var candidates=new HashSet<ZDOID>(ZDOExtraData.GetAllZDOIDsWithHash(ZDOExtraData.Type.Long,SummonerHash));
+   candidates.UnionWith(ZDOExtraData.GetAllZDOIDsWithHash(ZDOExtraData.Type.String,ZDOVars.s_follow));
+   return candidates;
+  }
+
   internal static bool CanDismiss(Character character, Player player) {
    if (!player || player != Player.m_localPlayer || player.IsDead() || player.IsTeleporting())
     return false;
@@ -78,16 +97,21 @@ namespace GhostSummonTravel {
    Unsummon.Invoke(summon.GetComponent<Tameable>(), null);
 
   static void OnDismissRequest(ZNet net, ZNetPeer peer, ZRpc connection) {
+   var playerZdo=AuthenticatedPlayer(net,peer,connection);
+   if(playerZdo==null)return;
+   var player=ZNetScene.instance ? ZNetScene.instance.FindInstance(peer.m_characterID) : null;
+   DestroyWorldSummons(net,playerZdo.GetLong(ZDOVars.s_playerID,0),playerZdo.GetString(ZDOVars.s_playerName),player);
+  }
+
+  internal static ZDO AuthenticatedPlayer(ZNet net,ZNetPeer peer,ZRpc connection) {
    if (!net || !net.IsServer() || ZDOMan.instance == null || peer.m_uid == 0 ||
        !ReferenceEquals(peer.m_rpc, connection) || !ReferenceEquals(net.GetPeer(peer.m_uid), peer))
-    return;
+    return null;
    var playerZdo = ZDOMan.instance.GetZDO(peer.m_characterID);
    if (playerZdo == null || playerZdo.GetOwner() != peer.m_uid ||
        playerZdo.GetPrefab() != Travel.StableHash("Player"))
-    return;
-   var player = ZNetScene.instance ? ZNetScene.instance.FindInstance(peer.m_characterID) : null;
-   DestroyWorldSummons(net, playerZdo.GetLong(ZDOVars.s_playerID, 0),
-    playerZdo.GetString(ZDOVars.s_playerName), player);
+    return null;
+   return playerZdo;
   }
 
   internal static int DestroyWorldSummons(ZNet net, long playerId, string name, UnityEngine.GameObject player) {
@@ -98,14 +122,11 @@ namespace GhostSummonTravel {
 
    // This runs on a dismissal request, so records outside the loaded scene
    // are included without scanning the world's objects every frame.
-   var candidates = new HashSet<ZDOID>(ZDOExtraData.GetAllZDOIDsWithHash(ZDOExtraData.Type.Long, SummonerHash));
-   candidates.UnionWith(ZDOExtraData.GetAllZDOIDsWithHash(ZDOExtraData.Type.String, ZDOVars.s_follow));
+   var candidates = SavedCandidates();
    foreach (var character in Character.GetAllCharacters())
     if (Travel.IsSkeleton(character))
      candidates.Add(character.GetZDOID());
-   var peers = net.GetAllCharacterZDOS();
-   bool uniqueName = !string.IsNullOrEmpty(name) && !peers.Any(other =>
-    other != null && other.GetLong(ZDOVars.s_playerID, 0) != playerId && other.GetString(ZDOVars.s_playerName) == name);
+   bool uniqueName = UniqueName(net,playerId,name);
    int removed = 0;
    foreach (var id in candidates) {
     var zdo = manager.GetZDO(id);
@@ -125,29 +146,32 @@ namespace GhostSummonTravel {
      continue;
     }
 
-    if (SummonLifecycle.WorldRemovalQueued(id))
-     continue;
-    if (character)
-     SummonLifecycle.Retire(character);
-    zdo.SetOwner(ZDOMan.GetSessionID());
-    if (view)
-     scene.Destroy(view.gameObject);
-    else
-     manager.DestroyZDO(zdo);
-    SummonLifecycle.MarkWorldRemoval(id);
-    removed++;
+    if(DestroySaved(zdo,view))removed++;
    }
    if (removed > 0)
     Plugin.LogDismissal(removed);
    return removed;
   }
 
+  internal static bool DestroySaved(ZDO zdo,ZNetView view) {
+   if(SummonLifecycle.WorldRemovalQueued(zdo.m_uid))return false;
+   var id=zdo.m_uid;
+   if(view)SummonLifecycle.Retire(view.GetComponent<Character>());
+   zdo.SetOwner(ZDOMan.GetSessionID());
+   if(view)ZNetScene.instance.Destroy(view.gameObject);
+   else ZDOMan.instance.DestroyZDO(zdo);
+   SummonLifecycle.MarkWorldRemoval(id);
+   return true;
+  }
+
   [HarmonyPatch(typeof(ZNet), "OnNewConnection")]
   static class RegisterDismissRequest {
    [HarmonyPostfix]
    static void Postfix(ZNet __instance, ZNetPeer peer) {
-    if (__instance.IsServer())
+    if (__instance.IsServer()) {
      peer.m_rpc.Register(DismissRpc, connection => OnDismissRequest(__instance, peer, connection));
+     SavedFollowers.Register(__instance,peer);
+    }
    }
   }
 

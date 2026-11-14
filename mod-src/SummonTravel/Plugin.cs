@@ -8,17 +8,17 @@ using System.Runtime.CompilerServices;
 using BepInEx;
 using HarmonyLib;
 using UnityEngine;
-[assembly: AssemblyVersion("1.0.16.0")]
-[assembly: AssemblyFileVersion("1.0.16.0")]
+[assembly: AssemblyVersion("1.0.17.0")]
+[assembly: AssemblyFileVersion("1.0.17.0")]
 namespace GhostSummonTravel {
- [BepInPlugin(Guid,"Ghost 해골 동행·방어막 표시","1.0.16")]
+ [BepInPlugin(Guid,"Ghost 해골 동행·방어막 표시","1.0.17")]
  public sealed class Plugin:BaseUnityPlugin {
   public const string Guid="ghost.valheim.summontravel";Harmony harmony;internal static Plugin Instance;
-  void Awake(){Instance=this;Travel.Faulted=false;Travel.ValidateApi();ShieldPresentation.ValidateApi();IdleSpacing.ValidateApi();PlayerShieldBar.ValidateApi();SpawnRoster.ValidateApi();harmony=new Harmony(Guid);try{harmony.PatchAll(typeof(Plugin).Assembly);}catch{harmony.UnpatchSelf();throw;}Logger.LogInfo("해골 동행 1.0.16: 소환 해제 시 월드에 저장된 내 해골까지 제거합니다");}
+  void Awake(){Instance=this;Travel.Faulted=false;Travel.ValidateApi();ShieldPresentation.ValidateApi();IdleSpacing.ValidateApi();PlayerShieldBar.ValidateApi();SpawnRoster.ValidateApi();harmony=new Harmony(Guid);try{harmony.PatchAll(typeof(Plugin).Assembly);}catch{harmony.UnpatchSelf();throw;}Logger.LogInfo("해골 동행 1.0.17: 장애물 통과와 저장된 소환 해골 복귀");}
   internal static void LogShieldRecast(Character c){if(Instance){float left,max;Travel.ShieldAmounts(c,out left,out max);Instance.Logger.LogInfo("보호막 재시전 갱신: "+(c==Player.m_localPlayer?"본인":Travel.IsSkeleton(c)?"해골":"아군")+" / 방어막 "+left+" / "+max);}}
   internal static void LogDismissal(int count){if(Instance)Instance.Logger.LogInfo($"해골 소환 해제: 월드 개체 {count}개 제거 요청");}
   internal static void LogFault(Exception e){if(Instance)Instance.Logger.LogError("해골 자동 동행 오류로 해당 기능을 중단하고 기본 게임 이동을 유지합니다. 게임 재시작 전 로그를 보관하세요. "+e);}
-  void Update(){try{Travel.Tick();}catch(Exception e){Travel.Abort(e);}try{FollowerRecovery.Tick();SummonLifecycle.RetryDismissals();}catch(Exception e){LogFault(e);}}void OnDestroy(){SummonDismissButton.Clear();Travel.Clear();SummonLifecycle.Clear();if(harmony!=null)harmony.UnpatchSelf();Instance=null;}
+  void Update(){try{Travel.Tick();}catch(Exception e){Travel.Abort(e);}try{FollowerRecovery.Tick();SummonLifecycle.RetryDismissals();SavedFollowers.Tick();}catch(Exception e){LogFault(e);}}void OnDestroy(){SummonDismissButton.Clear();Travel.Clear();SummonLifecycle.Clear();if(harmony!=null)harmony.UnpatchSelf();Instance=null;}
  }
  internal static class Travel {
   internal static bool Faulted;
@@ -29,7 +29,8 @@ namespace GhostSummonTravel {
   static readonly Dictionary<ZDOID,Transit> Moving=new Dictionary<ZDOID,Transit>();
   static readonly Dictionary<ZDOID,Progress> Followers=new Dictionary<ZDOID,Progress>();
   static ConditionalWeakTable<Character,ShieldState> Shields=new ConditionalWeakTable<Character,ShieldState>();
-  static LocalTrip local;static double nextCheck;static int lastTickFrame=-1,lastArrivalFrame=-1,searchFrame=-1,searchProbes;
+  static LocalTrip local;static double nextCheck,nextShieldCheck,nextCatchUp;static int lastTickFrame=-1,lastArrivalFrame=-1,searchFrame=-1,searchProbes,areaFrame=-1;
+  static bool areaReady;
   static readonly List<ZDOID> Finished=new List<ZDOID>();
   static ConditionalWeakTable<Character,CharacterKind> Kinds=new ConditionalWeakTable<Character,CharacterKind>();
   static ConditionalWeakTable<Character,SearchState[]> Searches=new ConditionalWeakTable<Character,SearchState[]>();
@@ -45,7 +46,7 @@ namespace GhostSummonTravel {
   internal sealed class Transit {internal Character C;internal ZNetView V;internal ZDOID Leader;internal long Sender;internal string Token;internal double Started,Finished;internal bool Done,Kinematic,Gravity;internal Vector3 Target;internal Quaternion Rotation;}
   sealed class LocalTrip {internal Player Player;internal string Token;internal List<ZNetView> Views;internal double NextLandingAttempt;}
   sealed class ShieldState {internal bool WasOwner;internal double SavedAt=-1;}
-  sealed class Progress {internal Vector3 Position;internal double StationarySince;internal bool Tracking;}
+  sealed class Progress {internal Vector3 Position;internal double StationarySince,PinUntil;internal bool Tracking;}
   internal static double Now {get{return ZNet.instance?ZNet.instance.GetTimeSeconds():0;}}
   internal static int StableHash(string s){unchecked{int a=5381,b=a;for(int i=0;i<s.Length&&s[i]!='\0';i+=2){a=((a<<5)+a)^s[i];if(i==s.Length-1||s[i+1]=='\0')break;b=((b<<5)+b)^s[i+1];}return a+b*1566083941;}}
   internal static bool Finite(float n){return !float.IsNaN(n)&&!float.IsInfinity(n);}
@@ -63,6 +64,9 @@ namespace GhostSummonTravel {
   }
   internal static bool IsSkeleton(Character c){if(!c||c is Player)return false;CharacterKind kind;if(Kinds.TryGetValue(c,out kind))return kind.Skeleton&&kind.View&&kind.View.IsValid();var v=c.GetComponent<ZNetView>();if(!v||!v.IsValid()||v.GetZDO().GetPrefab()==0)return false;kind=new CharacterKind{View=v,Skeleton=v.GetZDO().GetPrefab()==SkeletonPrefab&&c.GetComponent<Tameable>()&&c.GetComponent<MonsterAI>()};Kinds.Add(c,kind);return kind.Skeleton;}
   internal static bool Follows(Character c,Player p){if(!IsSkeleton(c)||!p||!c.IsTamed()||!SummonLifecycle.Usable(c))return false;var target=c.GetComponent<MonsterAI>().GetFollowTarget();return target?target==p.gameObject:c.GetComponent<ZNetView>().GetZDO().GetString(ZDOVars.s_follow)==p.GetPlayerName();}
+  internal static bool FollowsOwner(Character c,Player p) => Follows(c,p) && SummonDismissal.CanIdentifyFollower(c.GetComponent<ZNetView>().GetZDO(),p);
+  internal static Rigidbody GetBody(Character c) => (Rigidbody)Body.GetValue(c);
+  internal static void ResetFall(Character c,float altitude) => Altitude.SetValue(c,altitude);
   internal static void ValidateApi(){
    if(new[]{Total,Damage,EffectTime,EffectCharacter,Body,Altitude,ManagerCharacter}.Any(x=>x==null))throw new MissingFieldException("해골 동행: 게임 필드가 달라 시작을 중단합니다.");
    var t=Body.FieldType;BodyPosition=t.GetProperty("position");BodyRotation=t.GetProperty("rotation");BodyVelocity=t.GetProperty("linearVelocity");BodyAngular=t.GetProperty("angularVelocity");BodyKinematic=t.GetProperty("isKinematic");BodyGravity=t.GetProperty("useGravity");
@@ -82,6 +86,7 @@ namespace GhostSummonTravel {
   internal static void Begin(Character c,long sender,ZDOID leader,string token){
    if(!IsSkeleton(c)||token==null||token.Length!=32)return;var obj=ZNetScene.instance.FindInstance(leader);var p=obj?obj.GetComponent<Player>():null;
    if(!p||p.GetOwner()!=sender||!Follows(c,p))return;var v=c.GetComponent<ZNetView>();var id=v.GetZDO().m_uid;if(Moving.ContainsKey(id))return;
+   GhostFollow.CancelPhase(c);
    var body=Body.GetValue(c);var t=new Transit{C=c,V=v,Leader=leader,Sender=sender,Token=token,Started=Now,Kinematic=(bool)BodyKinematic.GetValue(body,null),Gravity=(bool)BodyGravity.GetValue(body,null)};
    Moving.Add(id,t);if(v.IsOwner()){RestoreIfNewOwner(c);SaveShields(c);}Freeze(t);
   }
@@ -106,38 +111,55 @@ namespace GhostSummonTravel {
   internal static bool ProtectFollowDistance(Character c){if(Faulted||!IsSkeleton(c)||!SummonLifecycle.Usable(c)||!c.IsTamed())return false;var go=c.GetComponent<MonsterAI>().GetFollowTarget();var p=go?go.GetComponent<Player>():null;return p&&!p.IsDead();}
   internal static bool Held(Character c){return Moving.Count>0&&c&&Moving.ContainsKey(c.GetZDOID());}
   internal static void Tick(){
-   if(Faulted||lastTickFrame==Time.frameCount)return;lastTickFrame=Time.frameCount;IdleSpacing.RefreshSpeeds();
+   if(Faulted||lastTickFrame==Time.frameCount)return;lastTickFrame=Time.frameCount;IdleSpacing.RefreshSpeeds();GhostFollow.Tick();
    if(local!=null){if(!local.Player||local.Player.IsDead()){Clear();return;}if(!local.Player.IsTeleporting())CompleteLocal(local.Player);}
    Finished.Clear();foreach(var item in Moving){var t=item.Value;bool bad=!t.C||!t.V||!t.V.IsValid()||t.C.IsDead();bool expired=Now-t.Started>120;
     bool ready=t.Done&&Now-t.Finished>1&&(!t.V.IsOwner()||(ZNetScene.instance&&ZNetScene.instance.IsAreaReady(t.Target)));
     if(bad||expired||ready){Release(t);Finished.Add(item.Key);continue;}if(t.Done&&Vector3.Distance(t.C.transform.position,t.Target)>0.05f){if(t.V.IsOwner())Move(t);else MoveVisual(t);}
    }foreach(var id in Finished)Moving.Remove(id);
-   if(Now>=nextCheck){nextCheck=Now+0.5;RescueFollowers();foreach(var c in Character.GetAllCharacters())if(IsSkeleton(c))ShieldPresentation.RequestRepair(c,false,0);}
+   if(Now>=nextCheck){nextCheck=Now+0.25;RescueFollowers();}
+   if(Now>=nextShieldCheck){nextShieldCheck=Now+0.5;foreach(var c in Character.GetAllCharacters())if(IsSkeleton(c))ShieldPresentation.RequestRepair(c,false,0);}
    ShieldPresentation.ProcessRepairs();
   }
-  internal static bool ShouldRecall(float gap,double stuckSeconds){return gap>=100f||stuckSeconds>=10;}
+  internal const float RecallDistance=65f;
+  internal static bool ShouldRecall(float gap,double stuckSeconds)=>gap>=RecallDistance||stuckSeconds>=7;
+  internal static bool ShouldPhase(float gap,float heightGap,double stuckSeconds)=>gap>=4f&&gap<RecallDistance&&heightGap<=48f&&stuckSeconds>=2.5&&stuckSeconds<7;
+  internal static bool MakingProgress(Vector3 position,Vector3 last,Vector3 leader)=>Vector3.Distance(last,leader)-Vector3.Distance(position,leader)>=0.8f;
   static void RescueFollowers(){
-   var p=Player.m_localPlayer;if(!p||p.IsDead()||p.IsTeleporting()||!p.IsOnGround()||local!=null)return;
+   var p=Player.m_localPlayer;if(!p||p.IsDead()||p.IsTeleporting()||local!=null)return;
    var active=new HashSet<ZDOID>();int index=0;
    foreach(var c in Character.GetAllCharacters()){
-    if(!Follows(c,p)||Held(c))continue;var id=c.GetZDOID();active.Add(id);float gap=Vector3.Distance(c.transform.position,p.transform.position);Progress state;
+    if(!FollowsOwner(c,p))continue;var id=c.GetZDOID();active.Add(id);float gap=Vector3.Distance(c.transform.position,p.transform.position);Progress state;
     if(!Followers.TryGetValue(id,out state))Followers[id]=state=new Progress{Position=c.transform.position,StationarySince=Now};
+    if(gap<12f)state.PinUntil=0;
+    SavedFollowers.Observe(c,p);
+    if(Held(c)||GhostFollow.IsPhasing(c))continue;
     float heightGap=Mathf.Abs(c.transform.position.y-p.transform.position.y);
-    bool wantsMove=!c.GetComponent<MonsterAI>().HaveTarget()&&(IdleSpacing.Crowded(c,p)||IdleSpacing.HorizontalGap(c,p)>Mathf.Max(4f,IdleSpacing.Minimum(c,p)+2f)||(heightGap>=1.5f&&gap>=2.5f));
-    if(!wantsMove||!state.Tracking||Vector3.Distance(c.transform.position,state.Position)>=0.5f){state.Position=c.transform.position;state.StationarySince=Now;}
+    bool wantsMove=!c.GetComponent<MonsterAI>().HaveTarget()&&(IdleSpacing.HorizontalGap(c,p)>Mathf.Max(4f,IdleSpacing.Minimum(c,p)+2f)||(heightGap>=1.5f&&gap>=4));
+    if(!wantsMove||!state.Tracking||MakingProgress(c.transform.position,state.Position,p.transform.position)){state.Position=c.transform.position;state.StationarySince=Now;}
     state.Tracking=wantsMove;double stuck=wantsMove?Now-state.StationarySince:0;
-    if(!ShouldRecall(gap,stuck))continue;
-    if(lastArrivalFrame==Time.frameCount)break;
+    bool recall=ShouldRecall(gap,stuck), phase=ShouldPhase(gap,heightGap,stuck);
+    if(!p.IsOnGround()||Now<nextCatchUp||lastArrivalFrame==Time.frameCount||(!recall&&!phase))continue;
     Vector3 pos;if(!FindLanding(p,c,index++,out pos))continue;
+    if(phase&&GhostFollow.StartPhase(c,p,pos)){nextCatchUp=Now+0.35;continue;}
+    if(!recall)continue;
     string token=System.Guid.NewGuid().ToString("N");Begin(c,ZDOMan.GetSessionID(),p.GetZDOID(),token);c.GetComponent<ZNetView>().InvokeRPC(ZNetView.Everybody,BeginRpc,p.GetZDOID(),token);SendFinish(c,p,token,pos);
-    state.Position=c.transform.position;state.StationarySince=Now;state.Tracking=false;lastArrivalFrame=Time.frameCount;
+    state.Position=c.transform.position;state.StationarySince=Now;state.Tracking=false;lastArrivalFrame=Time.frameCount;nextCatchUp=Now+0.35;
    }
    foreach(var id in Followers.Keys.Where(id=>!active.Contains(id)&&!Moving.ContainsKey(id)).ToArray())Followers.Remove(id);
   }
-  internal static bool FindLanding(Player p,Character c,int index,out Vector3 result,float bodyClearance=1f,bool retreat=false){
-   result=Vector3.zero;if(!ZoneSystem.instance||!ZNetScene.instance||!ZNetScene.instance.IsAreaReady(p.transform.position))return false;
+  internal static bool FindLanding(Player p,Character c,int index,out Vector3 result,float bodyClearance=1f,bool retreat=false,bool requireReady=true){
+   return FindLanding(p,c,index,c.GetRadius(),c.GetHeight(),out result,bodyClearance,retreat,requireReady);
+  }
+  internal static bool FindSavedLanding(Player p,int index,out Vector3 result)=>FindLanding(p,p,index,0.6f,2.2f,out result,1.8f,false,true);
+  static bool FindLanding(Player p,Character c,int index,float radius,float height,out Vector3 result,float bodyClearance,bool retreat,bool requireReady){
+   result=Vector3.zero;if(!ZoneSystem.instance||!ZNetScene.instance)return false;
+   if(requireReady){
+    if(areaFrame!=Time.frameCount){areaFrame=Time.frameCount;areaReady=ZNetScene.instance.IsAreaReady(p.transform.position);}
+    if(!areaReady)return false;
+   }
    int mask=LayerMask.GetMask("Default","static_solid","Default_small","piece","terrain","vehicle","character","character_net");
-   float radius=Mathf.Max(0.3f,c.GetRadius());float height=Mathf.Max(radius*2+0.2f,c.GetHeight());
+   radius=Mathf.Max(0.3f,radius);height=Mathf.Max(radius*2+0.2f,height);
    // Rear half only. Radius leaves at least one metre between the two bodies.
    float first=Mathf.Max(1.8f,p.GetRadius()+radius+Mathf.Max(1f,bodyClearance));
    float dx=c.transform.position.x-p.transform.position.x,dz=c.transform.position.z-p.transform.position.z;
@@ -151,21 +173,40 @@ namespace GhostSummonTravel {
     Vector3 offset;
     if(retreat){a=(float)Math.Atan2(dx,dz)+EscapeAngles[i%EscapeAngles.Length]*Mathf.Deg2Rad;offset=new Vector3(Mathf.Sin(a)*d,0,Mathf.Cos(a)*d);}
     else offset=p.transform.rotation*new Vector3(Mathf.Sin(a)*d,0,Mathf.Cos(a)*d);
-    var pos=p.transform.position+offset+Vector3.up*1.5f;float floor;
+    var pos=p.transform.position+offset+Vector3.up*1.5f;float floor;if(!ZoneSystem.instance.IsZoneLoaded(pos))continue;
     if(!ZoneSystem.instance.FindFloor(pos,out floor)||Mathf.Abs(floor-p.transform.position.y)>1.5f)continue;pos.y=floor+0.15f;
     var bottom=pos+Vector3.up*(radius+0.1f);var top=pos+Vector3.up*Mathf.Max(radius+0.1f,height-radius);
     if((bool)CheckCapsule.Invoke(null,new object[]{bottom,top,radius,mask,IgnoreTriggers}))continue;
     state.Cursor=0;result=pos;return true;
    }return false;
   }
-  internal static void Pin(List<ZDO> near){if(Faulted)return;foreach(var t in Moving.Values)if(t.V&&t.V.IsValid()){if(!near.Contains(t.V.GetZDO()))near.Add(t.V.GetZDO());ShieldPresentation.PinEffects(t.C,near);}}
-  internal static void BeforeUnload(ZNetView view){if(!view||!view.IsValid()||!view.IsOwner()||view.GetZDO().GetPrefab()!=SkeletonPrefab)return;var c=view.GetComponent<Character>();if(IsSkeleton(c)&&SummonLifecycle.Usable(c))SaveShields(c);}
+  internal static void Pin(List<ZDO> near,List<ZDO> distant){
+   if(Faulted)return;
+   foreach(var t in Moving.Values)if(t.V&&t.V.IsValid()){if(!near.Contains(t.V.GetZDO()))near.Add(t.V.GetZDO());ShieldPresentation.PinEffects(t.C,near);}
+   var player=Player.m_localPlayer;var scene=ZNetScene.instance;
+   if(!player||player.IsDead()||!scene||ZDOMan.instance==null)return;
+   foreach(var pair in Followers){
+    var zdo=ZDOMan.instance.GetZDO(pair.Key);
+    if(zdo==null||near.Contains(zdo)||distant.Contains(zdo))continue;
+    var view=scene.FindInstance(zdo);var c=view?view.GetComponent<Character>():null;
+    if(!FollowsOwner(c,player))continue;
+    if(pair.Value.PinUntil==0)pair.Value.PinUntil=Now+8;
+    if(Now<pair.Value.PinUntil){near.Add(zdo);ShieldPresentation.PinEffects(c,near);}
+   }
+  }
+  internal static void BeforeUnload(ZNetView view){
+   if(!view||!view.IsValid()||view.GetZDO().GetPrefab()!=SkeletonPrefab)return;
+   var c=view.GetComponent<Character>();var player=Player.m_localPlayer;
+   if(FollowsOwner(c,player))SavedFollowers.Observe(c,player);
+   GhostFollow.Forget(c);
+   if(view.IsOwner())SaveShields(c);
+  }
   internal static void Forget(Character c){
    foreach(var entry in Moving.Where(x=>ReferenceEquals(x.Value.C,c)).ToArray()){Release(entry.Value);Moving.Remove(entry.Key);Followers.Remove(entry.Key);}
    if(c){var view=c.GetComponent<ZNetView>();if(view&&view.IsValid())Followers.Remove(c.GetZDOID());if(local!=null){local.Views.RemoveAll(v=>!v||ReferenceEquals(v.GetComponent<Character>(),c));if(local.Views.Count==0)local=null;}}
-   Shields.Remove(c);Searches.Remove(c);IdleSpacing.Forget(c);
+   Shields.Remove(c);Searches.Remove(c);GhostFollow.Forget(c);IdleSpacing.Forget(c);
   }
-  internal static void Clear(){foreach(var t in Moving.Values)try{Release(t);}catch{}Moving.Clear();Followers.Clear();Finished.Clear();local=null;nextCheck=0;lastTickFrame=lastArrivalFrame=searchFrame=-1;searchProbes=0;Shields=new ConditionalWeakTable<Character,ShieldState>();Kinds=new ConditionalWeakTable<Character,CharacterKind>();Searches=new ConditionalWeakTable<Character,SearchState[]>();ShieldPresentation.ClearHud();PlayerShieldBar.Clear();IdleSpacing.Clear();ProtectionRecast.Clear();FollowerRecovery.Clear();SpawnRoster.Clear();}
+  internal static void Clear(){foreach(var t in Moving.Values)try{Release(t);}catch{}Moving.Clear();Followers.Clear();Finished.Clear();local=null;nextCheck=nextShieldCheck=nextCatchUp=0;lastTickFrame=lastArrivalFrame=searchFrame=areaFrame=-1;searchProbes=0;Shields=new ConditionalWeakTable<Character,ShieldState>();Kinds=new ConditionalWeakTable<Character,CharacterKind>();Searches=new ConditionalWeakTable<Character,SearchState[]>();ShieldPresentation.ClearHud();PlayerShieldBar.Clear();GhostFollow.Clear();SavedFollowers.Clear();IdleSpacing.Clear();ProtectionRecast.Clear();FollowerRecovery.Clear();SpawnRoster.Clear();}
   internal static void RestoreIfNewOwner(Character c){if(!IsSkeleton(c)||!SummonLifecycle.Usable(c))return;var v=c.GetComponent<ZNetView>();var state=Shields.GetOrCreateValue(c);bool owner=v.IsOwner();if(owner&&!state.WasOwner)RestoreShields(c);state.WasOwner=owner;}
   internal static void SaveShields(Character c){
    if(!IsSkeleton(c)||!SummonLifecycle.Usable(c)||!c.GetComponent<ZNetView>().IsOwner())return;var rows=new List<string>{Now.ToString("R",Inv)};
@@ -259,14 +300,14 @@ namespace GhostSummonTravel {
   [HarmonyPatch(typeof(Character),"Awake")]static class RegisterPatch{[HarmonyPostfix]static void Postfix(Character __instance){try{Register(__instance);}catch(Exception e){Abort(e);}}}
   [HarmonyPatch(typeof(Player),"TeleportTo")]static class StartPatch{[HarmonyPostfix]static void Postfix(Player __instance,bool __result){try{if(__result)Start(__instance);}catch(Exception e){Abort(e);}}}
   [HarmonyPatch(typeof(Player),"UpdateTeleport")]static class FinishPatch{[HarmonyPostfix,HarmonyPriority(Priority.Last)]static void Postfix(Player __instance){try{if(!Faulted)CompleteLocal(__instance);}catch(Exception e){Abort(e);}}}
-  [HarmonyPatch(typeof(ZNetScene),"RemoveObjects")]static class PinPatch{[HarmonyPrefix]static void Prefix(List<ZDO> currentNearObjects){try{Pin(currentNearObjects);}catch(Exception e){Abort(e);}}}
+  [HarmonyPatch(typeof(ZNetScene),"RemoveObjects")]static class PinPatch{[HarmonyPrefix]static void Prefix(List<ZDO> __0,List<ZDO> __1){try{Pin(__0,__1);}catch(Exception e){Abort(e);}}}
   [HarmonyPatch(typeof(ZNetView),"ResetZDO")]static class UnloadPatch{[HarmonyPrefix]static void Prefix(ZNetView __instance){try{BeforeUnload(__instance);}catch(Exception e){Abort(e);}}}
-  [HarmonyPatch(typeof(Character),"CustomFixedUpdate")]static class OwnerPatch{[HarmonyPrefix]static void Prefix(Character __instance){try{if(!Faulted)RestoreIfNewOwner(__instance);}catch(Exception e){Abort(e);}}[HarmonyPostfix]static void Postfix(Character __instance){try{Transit t;if(Moving.Count>0&&__instance&&Moving.TryGetValue(__instance.GetZDOID(),out t))Freeze(t);}catch(Exception e){Abort(e);}}}
+  [HarmonyPatch(typeof(Character),"CustomFixedUpdate")]static class OwnerPatch{[HarmonyPrefix]static void Prefix(Character __instance){try{if(!Faulted)RestoreIfNewOwner(__instance);}catch(Exception e){Abort(e);}}[HarmonyPostfix]static void Postfix(Character __instance,float __0){try{Transit t;if(Moving.Count>0&&__instance&&Moving.TryGetValue(__instance.GetZDOID(),out t))Freeze(t);else GhostFollow.Advance(__instance,__0);}catch(Exception e){Abort(e);}}}
   [HarmonyPatch(typeof(Tameable),"UpdateSummon")]static class DistancePatch{[HarmonyPrefix]static bool Prefix(Tameable __instance){try{var c=__instance.GetComponent<Character>();return !Held(c)&&!ProtectFollowDistance(c);}catch(Exception e){Abort(e);return true;}}}
   [HarmonyPatch(typeof(Tameable),"UpdateSavedFollowTarget")]static class LogoutPatch{[HarmonyPrefix]static bool Prefix(Tameable __instance){return !Held(__instance.GetComponent<Character>());}}
-  [HarmonyPatch(typeof(MonsterAI),"UpdateAI")]static class AiPatch{[HarmonyPrefix]static bool Prefix(MonsterAI __instance){try{IdleSpacing.UpdateSpeed(__instance);return !Held(__instance.GetComponent<Character>());}catch(Exception e){Abort(e);return true;}}}
-  [HarmonyPatch(typeof(Character),"UpdateMotion")]static class MotionPatch{[HarmonyPrefix]static bool Prefix(Character __instance){return !Held(__instance);}}
-  [HarmonyPatch(typeof(Character),"UnderWorldCheck")]static class FloorPatch{[HarmonyPrefix]static bool Prefix(Character __instance){return !Held(__instance);}}
+  [HarmonyPatch(typeof(MonsterAI),"UpdateAI")]static class AiPatch{[HarmonyPrefix]static bool Prefix(MonsterAI __instance){try{IdleSpacing.UpdateSpeed(__instance);var c=__instance.GetComponent<Character>();return !Held(c)&&!GhostFollow.IsPhasing(c);}catch(Exception e){Abort(e);return true;}}}
+  [HarmonyPatch(typeof(Character),"UpdateMotion")]static class MotionPatch{[HarmonyPrefix]static bool Prefix(Character __instance){return !Held(__instance)&&!GhostFollow.IsPhasing(__instance);}}
+  [HarmonyPatch(typeof(Character),"UnderWorldCheck")]static class FloorPatch{[HarmonyPrefix]static bool Prefix(Character __instance){return !Held(__instance)&&!GhostFollow.IsPhasing(__instance);}}
   [HarmonyPatch(typeof(SEMan),"Update")]static class SavePatch{[HarmonyPostfix]static void Postfix(SEMan __instance){try{var c=ManagerCharacter.GetValue(__instance) as Character;if(IsSkeleton(c)&&Now-Shields.GetOrCreateValue(c).SavedAt>=0.1)SaveShields(c);}catch(Exception e){Abort(e);}}}
   [HarmonyPatch(typeof(SE_Shield),"OnDamaged")]static class DamagePatch{[HarmonyPostfix]static void Postfix(SE_Shield __instance){try{var c=EffectCharacter.GetValue(__instance) as Character;SaveShields(c);if(IsSkeleton(c)&&c.GetComponent<ZNetView>().IsOwner())ZDOMan.instance.ForceSendZDO(c.GetZDOID());}catch(Exception e){Abort(e);}}}
 

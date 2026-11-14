@@ -12,7 +12,7 @@ namespace GhostSummonTravel {
   const string LoadoutKey="ghost.summontravel.loadout.v1";
   sealed class Loadout {internal GameObject Weapon,Shield;internal bool Applied;}
   static ConditionalWeakTable<Humanoid,Loadout> Loadouts=new ConditionalWeakTable<Humanoid,Loadout>();
-  sealed class Cast {internal SpawnAbility Ability;internal Player Owner;internal double Started;internal bool Done,Cancelled;internal readonly Dictionary<string,int> Roles=new Dictionary<string,int>(StringComparer.Ordinal);}
+  sealed class Cast {internal SpawnAbility Ability;internal Player Owner;internal double Started;internal bool Done,Cancelled;internal int Limit;internal string Id;internal readonly List<ZDOID> Spawned=new List<ZDOID>();internal readonly Dictionary<string,int> Roles=new Dictionary<string,int>(StringComparer.Ordinal);}
   static ConditionalWeakTable<SpawnAbility,Cast> Plans=new ConditionalWeakTable<SpawnAbility,Cast>();
   static readonly List<Cast> Pending=new List<Cast>();static Cast Active;
   internal static void ValidateApi(){if(AccessTools.Method(typeof(Humanoid),"GiveDefaultItems")==null)throw new MissingFieldException("해골 일괄 소환: 게임의 장비 선택 저장값 구조가 맞지 않습니다.");}
@@ -26,7 +26,7 @@ namespace GhostSummonTravel {
    var player=owner as Player;if(!ability||!player||player!=Player.m_localPlayer||player.IsDead()||ability.m_spawnOnAwake||ability.m_spawnPrefab==null||ability.m_spawnPrefab.Length==0||!ability.m_spawnPrefab.All(SkeletonPrefab))return -1;
    var view=player.GetComponent<ZNetView>();if(!view||!view.IsValid()||!view.IsOwner())return -1;int limit=Limit(ability,player,item);if(limit<=0)return -1;
    Pending.RemoveAll(c=>c.Done||!c.Ability||Travel.Now-c.Started>60);
-   Plans.Remove(ability);var plan=new Cast{Ability=ability,Owner=player,Started=Travel.Now};Plans.Add(ability,plan);Pending.Add(plan);
+   Plans.Remove(ability);var plan=new Cast{Ability=ability,Owner=player,Started=Travel.Now,Limit=limit,Id=System.Guid.NewGuid().ToString("N")};Plans.Add(ability,plan);Pending.Add(plan);
    // Keep the original coroutine, costs, native skill scaling, command RPC,
    // effects and limit enforcement. Every cast creates a full new roster;
    // native Tameable.Command -> UnsummonMaxInstances retires older summons.
@@ -46,7 +46,12 @@ namespace GhostSummonTravel {
   }
   static IEnumerator Run(Cast plan,IEnumerator original){
    try{while(!plan.Cancelled){bool more;object value=null;var before=Active;try{Active=plan;more=original.MoveNext();if(more)value=original.Current;}finally{Active=before;}if(!more)yield break;yield return value;}}
-   finally{plan.Done=true;Pending.Remove(plan);Plans.Remove(plan.Ability);(original as IDisposable)?.Dispose();}
+   finally{
+    plan.Done=true;Pending.Remove(plan);
+    if(Plans.TryGetValue(plan.Ability,out var current)&&ReferenceEquals(current,plan))Plans.Remove(plan.Ability);
+    (original as IDisposable)?.Dispose();
+    if(!plan.Cancelled)SavedFollowers.CastEnded(plan.Owner,plan.Id,plan.Spawned,plan.Limit);
+   }
   }
   static ItemDrop.ItemData Data(GameObject prefab){return prefab?prefab.GetComponent<ItemDrop>()?.m_itemData:null;}
   static bool Weapon(GameObject prefab){var item=Data(prefab);return item!=null&&item.IsWeapon();}
@@ -70,6 +75,8 @@ namespace GhostSummonTravel {
   internal static void Mark(Humanoid h){
    var plan=Active;if(plan==null||plan.Done||!plan.Owner||!SkeletonPrefab(h.gameObject))return;var view=h.GetComponent<ZNetView>();if(!view||!view.IsValid()||!view.IsOwner()||Loadouts.TryGetValue(h,out var prior))return;
    SummonDismissal.RememberSummoner(view,plan.Owner);
+   SavedFollowers.MarkCast(view,plan.Id);
+   plan.Spawned.Add(view.GetZDO().m_uid);
    var weapons=Prefabs(h).Where(Weapon).GroupBy(x=>x.name,StringComparer.Ordinal).Select(x=>x.First()).ToArray();if(weapons.Length==0)return;
    var shields=h.m_randomShield!=null&&h.m_randomShield.Length>0?h.m_randomShield:new GameObject[]{null};Loadout chosen=null;string role="";int best=int.MaxValue,bestVariant=int.MaxValue;
    foreach(var weapon in weapons)foreach(var shield in shields){string candidate=SelectedRole(weapon,shield),category=Category(candidate);int count=plan.Roles.Where(x=>Category(x.Key)==category).Sum(x=>x.Value),variant;plan.Roles.TryGetValue(candidate,out variant);if(count<best||count==best&&variant<bestVariant){best=count;bestVariant=variant;role=candidate;chosen=new Loadout{Weapon=weapon,Shield=shield};}}

@@ -1,10 +1,11 @@
+using System.Collections.Generic;
 using System;using System.Linq;using GhostSummonTravel;using UnityEngine;
 class Behavior{
  class Setting<T>{public T Value{get;set;}}
  class RegenSettings{public static Setting<bool> modEnabled=new Setting<bool>{Value=true};public static Setting<float> healthRegenMult=new Setting<float>{Value=2},healthRegenTimeMult=new Setting<float>{Value=0.5f};}
  static int count;static void Check(bool b,string s){if(!b)throw new Exception("FAIL "+s);count++;Console.WriteLine("PASS "+s);}
- static T Make<T>(int id,string prefab)where T:Character,new(){var go=new GameObject();var c=new T();go.Add(c);go.Add(new ZNetView{Zdo=new ZDO{m_uid=new ZDOID{Value=id},Prefab=Travel.StableHash(prefab)}});c.Manager=new SEMan{m_character=c};Character.All.Add(c);ZNetScene.instance.Objects[c.GetZDOID()]=go;return c;}
- static Character Skeleton(int id,Player p){var c=Make<Character>(id,"Skeleton_Friendly");c.gameObject.Add(new Tameable());c.gameObject.Add(new MonsterAI{Target=p.gameObject});return c;}
+ static T Make<T>(int id,string prefab)where T:Character,new(){var go=new GameObject();var c=new T();go.Add(c);c.m_body.gameObject=go;go.Add(new ZNetView{Zdo=new ZDO{m_uid=new ZDOID{Value=id},Prefab=Travel.StableHash(prefab)}});c.Manager=new SEMan{m_character=c};Character.All.Add(c);ZNetScene.instance.Objects[c.GetZDOID()]=go;return c;}
+ static Character Skeleton(int id,Player p){var c=Make<Character>(id,"Skeleton_Friendly");c.gameObject.Add(new Tameable());c.gameObject.Add(new MonsterAI{Target=p.gameObject});var zdo=c.GetComponent<ZNetView>().Zdo;zdo.Set(ZDOVars.s_follow,p.GetPlayerName());zdo.Set(ZDOVars.s_maxInstances,3);zdo.Set(ZDOVars.s_tamed,1);return c;}
  static void Shield(Character c,float time=12,float damage=37){c.Manager.Effects.Add(new SE_Shield{Hash=123,m_ttl=120,m_time=time,m_totalAbsorbDamage=450,m_damage=damage,m_character=c});ObjectDB.instance.Templates[123]=new SE_Shield{Hash=123,m_ttl=120};}
  static void Step(){Time.frameCount++;Travel.Tick();}
  static void Complete(Player p){Time.frameCount++;Travel.CompleteLocal(p);}
@@ -93,6 +94,8 @@ class Behavior{
   var ghost=Skeleton(400004,player);
   var ghostView=ghost.GetComponent<ZNetView>();
   ghostView.Zdo.Owner=0;
+  visible.GetComponent<ZNetView>().Zdo.Set(ZDOVars.s_maxInstances,0);
+  ghostView.Zdo.Set(ZDOVars.s_maxInstances,0);
   var hud=new EnemyHud();
   EnemyHud.instance=hud;
   var retiredHud=Head(retired);
@@ -157,6 +160,7 @@ class Behavior{
   SummonDismissal.RememberSummoner(remote.GetComponent<ZNetView>(),friend);
   remote.GetComponent<MonsterAI>().Target=player.gameObject;
   var unbound=Skeleton(300006,player);
+  unbound.GetComponent<ZNetView>().Zdo.Set(ZDOVars.s_maxInstances,0);
   var ambiguous=Skeleton(300007,player);
   ambiguous.GetComponent<MonsterAI>().Target=null;
   var saved=ambiguous.GetComponent<ZNetView>().GetZDO();
@@ -187,19 +191,54 @@ class Behavior{
   Check(!control.activeSelf,"control hides after the last eligible summon");
   SummonDismissButton.Clear();
  }
+ static void CatchUpAcrossZones(){
+  Travel.Clear();SummonLifecycle.Clear();Character.All.Clear();ZNetScene.instance=new ZNetScene();ZDOMan.instance=new ZDOMan();
+  ZNet.instance=new ZNet{Server=true};var p=Make<Player>(710001,"Player");Player.m_localPlayer=p;
+  var player=p.GetComponent<ZNetView>().Zdo;player.Set(ZDOVars.s_playerID,p.GetPlayerID());player.Set(ZDOVars.s_playerName,p.GetPlayerName());
+  var c=Skeleton(710002,p);var view=c.GetComponent<ZNetView>();var record=view.Zdo;
+  c.transform.position=c.m_body.position=new Vector3(0,-12,15);
+  Step();Check(Physics.GetIgnoreCollision(c.GetCollider(),p.GetCollider()),"owned skeleton cannot physically push the local player");
+  ZNet.instance.Time+=2.6;Step();
+  Check(GhostFollow.IsPhasing(c)&&!Travel.Held(c)&&!c.m_body.detectCollisions&&!c.GetVisual().activeSelf,"blocked skeleton enters temporary collision-free passage first");
+  var old=c.m_body.position;GhostFollow.Advance(c,0.02f);
+  Check(Vector3.Distance(old,c.m_body.position)>0.1f&&Vector3.Distance(old,c.m_body.position)<1f,"phase advances a physics step without a long jump");
+  ZoneSystem.instance.Floor=0;
+  for(int i=0;i<100&&GhostFollow.IsPhasing(c);i++)GhostFollow.Advance(c,0.02f);
+  ZoneSystem.instance.Floor=null;
+  Check(!GhostFollow.IsPhasing(c)&&c.m_body.detectCollisions&&c.m_body.useGravity&&!c.m_body.isKinematic&&c.GetVisual().activeSelf&&c.GetZDOID()==record.m_uid,"phase restores physics and visibility on arrival and keeps the same skeleton");
+  c.GetComponent<MonsterAI>().Target=null;record.Set(ZDOVars.s_follow,"");
+  Check(!GhostFollow.StartPhase(c,p,new Vector3(0,0,3)),"a skeleton ordered to stay cannot enter phase");
+  record.Set(ZDOVars.s_follow,p.GetPlayerName());c.GetComponent<MonsterAI>().Target=p.gameObject;
+  Travel.BeforeUnload(view);record.Position=new Vector3(0,-30,150);Character.All.Remove(c);ZNetScene.instance.Objects.Remove(record.m_uid);ZDOMan.instance.Unloaded.Add(record.m_uid,record);
+  Time.frameCount++;SavedFollowers.Tick();
+  Check(ZDOMan.instance.GetZDO(record.m_uid)==record&&Vector3.Distance(record.Position,p.transform.position)<9,"unloaded skeleton returns by moving the same saved world record");
+  record.Position=new Vector3(0,0,180);record.Set(ZDOVars.s_spawnTime,100L);
+  var waiting=Skeleton(710003,p);var waitingRecord=waiting.GetComponent<ZNetView>().Zdo;waitingRecord.Set(ZDOVars.s_follow,"");waitingRecord.Set(ZDOVars.s_spawnTime,99L);
+  var successor=Skeleton(710004,p);var successorView=successor.GetComponent<ZNetView>();successorView.Zdo.Set(ZDOVars.s_spawnTime,200L);successorView.Zdo.Set(ZDOVars.s_maxInstances,1);
+  const string cast="123456789012345678901234567890ab";
+  SummonDismissal.RememberSummoner(successorView,p);SavedFollowers.MarkCast(successorView,cast);
+  SavedFollowers.CastEnded(p,cast,new List<ZDOID>{successor.GetZDOID()},2);
+  ZNet.instance.Time+=1;SavedFollowers.Tick();
+  Check(ZDOMan.instance.GetZDO(record.m_uid)==record,"a partial cast never retires the existing unloaded roster");
+  SavedFollowers.CastEnded(p,cast,new List<ZDOID>{successor.GetZDOID()},1);
+  ZNet.instance.Time+=1;SavedFollowers.Tick();
+  Check(ZDOMan.instance.GetZDO(record.m_uid)==null&&ZDOMan.instance.GetZDO(waitingRecord.m_uid)==waitingRecord&&successor,"complete recast retires the older unloaded follower and keeps waiting and current summoned skeletons");
+  Travel.Clear();SummonLifecycle.Clear();
+ }
+
  static void Main(){
   Travel.ValidateApi();var p=Make<Player>(1,"Player");Player.m_localPlayer=p;p.Teleporting=true;var c=Skeleton(2,p);Shield(c);var v=c.GetComponent<ZNetView>();string token=new string('a',32);
-  Travel.Begin(c,7,p.GetZDOID(),token);Check(!Travel.Held(c),"unauthorized sender rejected");var other=Make<Player>(3,"Player");Travel.Begin(c,1,other.GetZDOID(),token);Check(!Travel.Held(c),"other player's follower excluded");Travel.Begin(c,1,p.GetZDOID(),"bad");Check(!Travel.Held(c),"invalid transaction rejected");
-  Travel.Start(p);Check(Travel.Held(c),"native teleport captures existing follower");Check(c.m_body.isKinematic&&!c.m_body.useGravity,"physics held during loading");var near=new System.Collections.Generic.List<ZDO>();Travel.Pin(near);Check(near.Contains(v.Zdo),"scene unload pins existing network object");Check(c.Health==45&&c.Manager.Effects.Count==1,"no heal or replacement summon");
+  Travel.Begin(c,7,p.GetZDOID(),token);Check(!Travel.Held(c),"unauthorized sender rejected");var other=Make<Player>(3,"Player");other.PlayerName="Other";Travel.Begin(c,1,other.GetZDOID(),token);Check(!Travel.Held(c),"other player's follower excluded");Travel.Begin(c,1,p.GetZDOID(),"bad");Check(!Travel.Held(c),"invalid transaction rejected");
+  Travel.Start(p);Check(Travel.Held(c),"native teleport captures existing follower");Check(c.m_body.isKinematic&&!c.m_body.useGravity,"physics held during loading");var near=new System.Collections.Generic.List<ZDO>();Travel.Pin(near,new List<ZDO>());Check(near.Contains(v.Zdo),"scene unload pins existing network object");Check(c.Health==45&&c.Manager.Effects.Count==1,"no heal or replacement summon");
   p.transform.position=new Vector3(1000,80,1000);p.Teleporting=false;Complete(p);Check(c.transform.position.x>990&&v.Zdo.Position.x>990,"same character and ZDO reach native final location");Check(c.GetZDOID().Value==2&&c.Health==45,"identity and health preserved");var s=(SE_Shield)c.Manager.Effects[0];Check(s.m_damage==37&&s.m_totalAbsorbDamage==450&&s.m_time==12,"live shield capacity and elapsed time preserved");ZNet.instance.Time+=2;Step();Check(!Travel.Held(c)&&!c.m_body.isKinematic&&c.m_body.useGravity,"normal physics restored after landing");
   Travel.SaveShields(c);c.Manager.Effects.Clear();ZNet.instance.Time+=7;Travel.RestoreShields(c);s=(SE_Shield)c.Manager.Effects[0];Check(s.m_time==19&&s.m_damage==37&&s.m_totalAbsorbDamage==450,"reload deducts loading time without renewing absorb");Travel.RestoreShields(c);Check(c.Manager.Effects.Count==1&&s.m_time==19,"restore is idempotent");s.m_damage=451;Travel.SaveShields(c);c.Manager.Effects.Clear();Travel.RestoreShields(c);Check(c.Manager.Effects.Count==0,"broken shield stays broken");Shield(c,119);Travel.SaveShields(c);c.Manager.Effects.Clear();ZNet.instance.Time+=3;Travel.RestoreShields(c);Check(c.Manager.Effects.Count==0,"expired shield stays expired");Shield(c);Travel.SaveShields(c);c.Manager.Effects.Clear();v.Zdo.Owner=2;Travel.RestoreIfNewOwner(c);v.Zdo.Owner=1;Travel.RestoreIfNewOwner(c);Check(c.Manager.Effects.Count==1,"authority transfer restores shield");
-  var stay=Skeleton(4,p);stay.GetComponent<MonsterAI>().Target=null;p.Teleporting=true;Travel.Start(p);Check(!Travel.Held(stay),"stay command respected");var wild=Make<Character>(5,"Skeleton");wild.gameObject.Add(new Tameable());wild.gameObject.Add(new MonsterAI{Target=p.gameObject});Check(!Travel.IsSkeleton(wild),"hostile skeleton excluded");var wolf=Make<Character>(6,"Wolf");Check(!Travel.IsSkeleton(wolf),"other animals excluded");c.Dead=true;Step();Check(!Travel.Held(c)&&c.Dead,"death never resurrects summon");c.Dead=false;
+  var stay=Skeleton(4,p);stay.GetComponent<MonsterAI>().Target=null;stay.GetComponent<ZNetView>().Zdo.Set(ZDOVars.s_follow,"");p.Teleporting=true;Travel.Start(p);Check(!Travel.Held(stay),"stay command respected");var wild=Make<Character>(5,"Skeleton");wild.gameObject.Add(new Tameable());wild.gameObject.Add(new MonsterAI{Target=p.gameObject});Check(!Travel.IsSkeleton(wild),"hostile skeleton excluded");var wolf=Make<Character>(6,"Wolf");Check(!Travel.IsSkeleton(wolf),"other animals excluded");c.Dead=true;Step();Check(!Travel.Held(c)&&c.Dead,"death never resurrects summon");c.Dead=false;
   Travel.Clear();Travel.Begin(c,1,p.GetZDOID(),token);Travel.Finish(c,7,p.GetZDOID(),token,new Vector3(2,0,0),Quaternion.identity);Check(c.transform.position.x>990,"forged finish rejected");Travel.Finish(c,1,p.GetZDOID(),token,new Vector3(float.NaN,0,0),Quaternion.identity);Check(c.transform.position.x>990,"nonfinite destination rejected");ZNet.instance.Time+=121;Step();Check(!Travel.Held(c)&&!c.m_body.isKinematic,"lost finish cannot freeze indefinitely");
   Travel.Clear();v.Zdo.Owner=2;Travel.Begin(c,1,p.GetZDOID(),token);ZDOMan.Session=2;Travel.Finish(c,1,p.GetZDOID(),token,new Vector3(3000,80,4000),Quaternion.identity);Check(v.Zdo.Owner==1&&v.Zdo.Position.x==3000,"source owner hands authority to destination player");ZDOMan.Session=1;Travel.Clear();p.Teleporting=true;Travel.Start(p);p.Teleporting=false;p.transform.position=new Vector3(0,2,0);Complete(p);Check(c.transform.position.x<5,"blocked portal follows native rollback");Travel.Clear();
   Travel.ShieldRecord r;Check(!Travel.ShieldRecord.TryParse("123,120,0,NaN,0",0,out r),"invalid capacity rejected");Check(!Travel.ShieldRecord.TryParse("123,120,0,10,-1",0,out r),"negative damage rejected");Check(!Travel.ShieldRecord.TryParse("123,120,0,10,1",-10,out r),"backward clock cannot extend shield");Check(Travel.ShieldRecord.TryParse("123,120,10,450,37",5,out r)&&r.Elapsed==15&&r.Total-r.Damage==413,"exact remaining shield arithmetic");
-  Check(!Travel.ShouldRecall(99.99f,9.99),"neither threshold reached means no teleport");Check(Travel.ShouldRecall(100,0),"100 metre boundary triggers recovery");Check(Travel.ShouldRecall(3,10),"10 second stationary boundary triggers recovery");Check(!Travel.ShouldRecall(99,0),"moving follower below 100 metres never distance-teleports");
+  Check(!Travel.ShouldRecall(64.99f,6.99),"neither threshold reached means no teleport");Check(Travel.ShouldRecall(65,0),"65 metre boundary triggers recovery");Check(Travel.ShouldRecall(4,7),"7 second stationary boundary triggers recovery");Check(!Travel.ShouldRecall(64,0),"moving follower below 65 metres never distance-teleports");
   Vector3 pos;Physics.Blocked=true;Check(!Landing(p,c,0,out pos),"blocked landing is rejected");Physics.Blocked=false;ZoneSystem.instance.HasFloor=false;Check(!Landing(p,c,0,out pos),"no floor means no recall");ZoneSystem.instance.HasFloor=true;ZoneSystem.instance.Floor=p.transform.position.y-5;Check(!Landing(p,c,0,out pos),"cliff below player rejected");ZoneSystem.instance.Floor=null;Check(Landing(p,c,0,out pos),"grounded clear landing accepted");ZNetScene.instance.Ready=false;Check(!Landing(p,c,0,out pos),"unloaded destination rejected");ZNetScene.instance.Ready=true;
-  Travel.Clear();p.Teleporting=false;p.Grounded=true;c.transform.position=new Vector3(0,0,0);p.transform.position=new Vector3(0,3,0);Step();ZNet.instance.Time+=10;Step();Check(Travel.Held(c)&&c.transform.position.y>2,"actual stuck-ledge controller recalls existing follower");Travel.Clear();p.Grounded=false;c.transform.position=new Vector3(0,0,0);Step();ZNet.instance.Time+=6;Step();Check(!Travel.Held(c),"player in air never triggers landing recall");
+  Travel.Clear();p.Teleporting=false;p.Grounded=true;c.transform.position=new Vector3(0,0,0);p.transform.position=new Vector3(0,5,0);Step();ZNet.instance.Time+=10;Step();Check(Travel.Held(c)&&c.transform.position.y>4,"actual stuck-ledge controller recalls existing follower");Travel.Clear();p.Grounded=false;c.transform.position=new Vector3(0,0,0);Step();ZNet.instance.Time+=6;Step();Check(!Travel.Held(c),"player in air never triggers landing recall");
   Travel.Clear();p.Grounded=true;p.transform.rotation=Quaternion.identity;c.transform.position=new Vector3(0,0,0);p.transform.position=new Vector3(0,3,0);
   Check(Landing(p,c,0,out pos)&&pos.z<p.transform.position.z,"landing prefers behind the player");
   float horizontal=(float)Math.Sqrt((pos.x-p.transform.position.x)*(pos.x-p.transform.position.x)+(pos.z-p.transform.position.z)*(pos.z-p.transform.position.z));
@@ -228,27 +267,27 @@ class Behavior{
   UnityEngine.Object.Destroy(gui);ShieldPresentation.UpdateHud(hud);Check(labels.Count==0,"destroyed HUD releases its shield label cache");Travel.Clear();
   Travel.Clear();p.transform.position=new Vector3(0,0,0);p.transform.rotation=Quaternion.identity;p.Grounded=true;p.Teleporting=false;c.transform.position=new Vector3(0,0,0.7f);c.Dead=false;v.Zdo.Owner=1;
   var ai=c.GetComponent<MonsterAI>();ai.Target=p.gameObject;ai.Combat=false;IdleSpacing.ValidateApi();
-  Check(IdleSpacing.Crowded(c,p),"idle inner band detects bodies too close");
+
   Check(!IdleSpacing.Handle(ai,p.gameObject,0.02f)&&ai.Moves==1,"close idle skeleton actively walks away instead of only stopping");
   Check(ai.MoveGoal.z>c.transform.position.z,"close retreat stays on same side and never targets through player");
   Check(Vector3.Distance(ai.MoveGoal,p.transform.position)>3.4f,"retreat goal gives generous room beyond one metre");
   c.transform.position=new Vector3(0,0,3);int moved=ai.Moves,stopped=ai.Stopped;
   Check(!IdleSpacing.Handle(ai,p.gameObject,0.02f)&&ai.Moves==moved&&ai.Stopped==stopped+1,"safe idle distance holds position without approaching player centre");
-  Check(!IdleSpacing.Crowded(c,p),"comfortable body gap is not treated as crowding");
-  c.transform.position=new Vector3(0,0,-20);Check(!IdleSpacing.Handle(ai,p.gameObject,0.02f)&&ai.Running,"far follower still catches up using native run and pathfinding");
-  Check(ai.MoveGoal.z<0&&Vector3.Distance(ai.MoveGoal,p.transform.position)>3.4f,"far idle follower aims at rear waiting area rather than player centre");
+
+  c.transform.position=new Vector3(0,0,-20);Check(IdleSpacing.Handle(ai,p.gameObject,0.02f),"far follower uses native run and pathfinding");
+
   ai.Combat=true;moved=ai.Moves;Check(IdleSpacing.Handle(ai,p.gameObject,0.02f)&&ai.Moves==moved,"combat target keeps native AI untouched");ai.Combat=false;
   v.Zdo.Owner=2;Check(IdleSpacing.Handle(ai,p.gameObject,0.02f),"nonowner never directs creature movement");v.Zdo.Owner=1;
   ai.Target=null;Check(IdleSpacing.Handle(ai,p.gameObject,0.02f),"stay command does not get an idle formation order");ai.Target=p.gameObject;
   Physics.Blocked=true;c.transform.position=new Vector3(0,0,0.7f);ZNet.instance.Time+=1;stopped=ai.Stopped;moved=ai.Moves;
   Check(!IdleSpacing.Handle(ai,p.gameObject,0.02f)&&ai.Stopped==stopped+1&&ai.Moves==moved,"blocked retreat stops instead of walking into player");Physics.Blocked=false;
   Travel.Clear();c.transform.position=new Vector3(0,0,0.7f);Step();ZNet.instance.Time+=4.5;Step();
-  Check(!Travel.Held(c),"crowding alone never triggers early teleport");ZNet.instance.Time+=5.5;Step();Check(Travel.Held(c),"crowded follower only recovers after ten actual stationary seconds");Travel.Clear();
+  Check(!Travel.Held(c),"crowding alone never triggers early teleport");ZNet.instance.Time+=5.5;Step();Check(!Travel.Held(c)&&!GhostFollow.IsPhasing(c),"nearby crowding does not cause rescue");Travel.Clear();
   c.transform.position=new Vector3(0,0,0.7f);ai.Combat=true;Step();ZNet.instance.Time+=5;Step();Check(!Travel.Held(c),"close combat creature is not recalled just for personal space");ai.Combat=false;Travel.Clear();
   Character.All.Clear();Character.All.Add(p);Character.All.Add(c);p.Grounded=true;p.Teleporting=false;p.transform.position=Vector3.zero;c.transform.position=new Vector3(0,0,30);ai.Target=p.gameObject;
-  Check(Travel.ProtectFollowDistance(c),"following skeleton survives native distance unsummon while approaching 100m recovery");ai.Target=null;Check(!Travel.ProtectFollowDistance(c),"distance protection excludes stay command");ai.Target=p.gameObject;
+  Check(Travel.ProtectFollowDistance(c),"following skeleton survives native distance unsummon while approaching 65m recovery");ai.Target=null;Check(!Travel.ProtectFollowDistance(c),"distance protection excludes stay command");ai.Target=p.gameObject;
   float walk=c.m_speed,run=c.m_runSpeed;var beforePosition=c.transform.position;
-  IdleSpacing.UpdateSpeed(ai);Check(c.m_runSpeed==run*6&&c.m_speed==walk*6,"20m gap enables sixfold native movement speed");
+  IdleSpacing.UpdateSpeed(ai);Check(c.m_runSpeed==run*6&&c.m_speed==walk*6,"16m gap enables sixfold native movement speed");
   Check(Vector3.Distance(beforePosition,c.transform.position)==0,"catch-up speed does not reposition or teleport creature");
   c.transform.position=new Vector3(0,0,12);IdleSpacing.UpdateSpeed(ai);Check(c.m_runSpeed>run,"catch-up hysteresis keeps boost until within eight metres");
   c.m_body.linearVelocity=new Vector3(30,2,0);c.transform.position=new Vector3(0,0,8);IdleSpacing.UpdateSpeed(ai);Check(c.m_runSpeed==run&&c.m_speed==walk&&c.GetVelocity().x==run&&c.GetVelocity().y==2,"close arrival restores speed and clamps horizontal overshoot only");
@@ -257,12 +296,12 @@ class Behavior{
   IdleSpacing.UpdateSpeed(ai);c.Dead=true;IdleSpacing.RefreshSpeeds();Check(c.m_runSpeed==run,"dead follower cannot retain speed boost");c.Dead=false;
   IdleSpacing.UpdateSpeed(ai);v.Zdo.Owner=2;IdleSpacing.RefreshSpeeds();Check(c.m_runSpeed==run,"ownership loss restores local speed fields");v.Zdo.Owner=1;
   IdleSpacing.UpdateSpeed(ai);Travel.Clear();Check(c.m_runSpeed==run,"world cleanup restores every active speed boost");
-  c.transform.position=new Vector3(0,0,99);Step();Check(!Travel.Held(c),"99m moving recovery starts with no teleport");
-  for(int k=0;k<12;k++){c.transform.position=new Vector3(k%2==0?2:0,0,99);ZNet.instance.Time+=1;Step();}Check(!Travel.Held(c),"actual creature movement resets ten-second stuck timer even when player distance stays large");
-  Travel.Clear();c.transform.position=new Vector3(0,0,100);Step();Check(Travel.Held(c),"actual 100m controller recalls immediately without initial wait");Travel.Clear();
+  c.transform.position=new Vector3(0,0,64);Step();Check(!Travel.Held(c),"64m moving recovery starts with no teleport");
+  for(int k=0;k<12;k++){c.transform.position=new Vector3(0,0,63-k);ZNet.instance.Time+=1;Step();}Check(!Travel.Held(c)&&!GhostFollow.IsPhasing(c),"movement toward the player prevents phased or instant rescue");
+  Travel.Clear();c.transform.position=new Vector3(0,0,65);Step();Check(Travel.Held(c),"actual 65m controller recalls immediately without initial wait");Travel.Clear();
   c.transform.position=new Vector3(0,0,3);Step();ZNet.instance.Time+=20;Step();Check(!Travel.Held(c),"stationary normal waiting is never classified as stuck");Travel.Clear();
-  c.transform.position=new Vector3(0,0,30);Step();ZNet.instance.Time+=9.5;Step();Check(!Travel.Held(c),"actual stuck controller waits beyond nine seconds");ZNet.instance.Time+=0.5;Step();Check(Travel.Held(c),"actual stuck controller triggers at exactly ten seconds");Travel.Clear();
-  p.Teleporting=true;Travel.Start(p);p.Teleporting=false;ZNetScene.instance.SharedCurrent.Add(p.GetComponent<ZNetView>().Zdo);int areaReads=ZNetScene.instance.AreaReadyCalls,allReads=Character.AllReads;Travel.Pin(ZNetScene.instance.SharedCurrent);
+  c.transform.position=new Vector3(0,-50,30);Step();ZNet.instance.Time+=6.5;Step();Check(!Travel.Held(c),"deep terrain fallback waits for seven seconds");ZNet.instance.Time+=0.5;Step();Check(Travel.Held(c),"deep terrain fallback recalls at seven seconds");Travel.Clear();
+  p.Teleporting=true;Travel.Start(p);p.Teleporting=false;ZNetScene.instance.SharedCurrent.Add(p.GetComponent<ZNetView>().Zdo);int areaReads=ZNetScene.instance.AreaReadyCalls,allReads=Character.AllReads;Travel.Pin(ZNetScene.instance.SharedCurrent,new List<ZDO>());
   Check(ZNetScene.instance.SharedCurrent.Contains(p.GetComponent<ZNetView>().Zdo)&&ZNetScene.instance.SharedCurrent.Contains(v.Zdo),"scene removal hook preserves the native shared loading list");
   Check(ZNetScene.instance.AreaReadyCalls==areaReads&&Character.AllReads==allReads,"scene removal hook never runs area readiness or scans characters");Travel.Clear();p.Teleporting=false;
   Physics.Blocked=true;int probes=Physics.Calls;Time.frameCount++;for(int k=0;k<15;k++)Travel.FindLanding(p,c,0,out pos);Check(Physics.Calls-probes==4,"landing searches share a hard four-probe budget per rendered frame");
@@ -414,6 +453,7 @@ class Behavior{
   DismissButton();
   PreventReturningNameplates();
   ClearWorldSummons();
+  CatchUpAcrossZones();
   Console.WriteLine("Behavior checks: "+count);
  }
 }
