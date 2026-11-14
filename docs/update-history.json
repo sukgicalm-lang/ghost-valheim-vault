@@ -1,6 +1,20 @@
 {
   "siteUpdates": [
     {
+      "id": "module:GhostLineageMusic:1.0.1",
+      "kind": "module",
+      "component": "GhostLineageMusic",
+      "version": "1.0.1",
+      "date": "2026-11-14",
+      "title": "리니지 II 배경음악 재생 오류 수정",
+      "changes": [
+        "발헤임이 일부 Ogg 파일을 읽지 못해 기본 음악이 재생되던 경로를 수정했습니다. 모드에서 Ogg를 직접 디코딩해 재생합니다."
+      ],
+      "notes": [
+        "음악 모드와 음원은 각 PC의 프로필에 별도로 설치합니다. 통합팩 자동 업데이트와 별도로 적용됩니다."
+      ]
+    },
+    {
       "id": "module:GhostLineageMusic:1.0.0",
       "kind": "module",
       "component": "GhostLineageMusic",
